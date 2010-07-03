@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# author: Sylvain Rabot <srabot@abstraction.fr>
+# date: 03/07/2010
+# copyright: All rights reserved
+
+TAG_REALPATH=$(realpath $0)
+TAG_DIRNAME=$(dirname $TAG_REALPATH)
+MIKE_DIRNAME=$(dirname $TAG_DIRNAME)
+
+# loading lib.sh
+. $TAG_DIRNAME/lib.sh
+
+# =====================================================
+
+TEMP=`getopt --long major,minor,maint -n "$0" -- $0 $@`
+
+if [ $? != 0 ] ; then
+    die "Terminating ...";
+fi
+
+eval set -- "$TEMP"
+
+# =====================================================
+
+while true ;
+do
+    case "$1" in
+        --major)    TAG_TYPE="MAJOR";   shift;;
+        --minor)    TAG_TYPE="MINOR";   shift;;
+        --maint)    TAG_TYPE="MAINT";   shift;;
+        --)         shift;              break;;
+        *)          usage;              exit 1;;
+    esac
+done
+
+# =====================================================
+
+LAST_TAG="$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=0 2>/dev/null)"
+
+# testing if a tag already exists
+if test -z "$LAST_TAG"; then
+    die "No parent tag found"
+fi
+
+# parsing last tag
+LAST_TAG_DIGITS=$(parse_tag $LAST_TAG)
+LAST_TAG_MAJOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f1)
+LAST_TAG_MINOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f2)
+LAST_TAG_MAINT=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f3)
+
+# genrating new version
+if [ "$TAG_TYPE" == "MAJOR" ]; then
+    NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1));
+    NEXT_TAG_MINOR=0;
+    NEXT_TAG_MAINT=0;
+elif [ "$TAG_TYPE" == "MINOR" ]; then
+    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
+    NEXT_TAG_MINOR=$(($LAST_TAG_MINOR + 1));
+    NEXT_TAG_MAINT=0;
+elif [ "$TAG_TYPE" == "MAINT" ]; then
+    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
+    NEXT_TAG_MINOR=$LAST_TAG_MINOR;
+    NEXT_TAG_MAINT=$(($LAST_TAG_MAINT + 1));
+else
+    die "You must specify either --major --minor or --maint option"
+fi
+
+# abort ?
+echo "About to tag v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
+abort
+
+# tag
+git tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT" \
+        -m "Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
+
