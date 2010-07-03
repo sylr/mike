@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+MIKE_VERSION=v0.1.1
+
+if $(which git > /dev/null 2>&1); then
+
+    MIKE_COMMIT=$(git log HEAD --pretty=oneline | cut -d ' ' -f1)
+
+    if ! test -z "$(git diff-index --name-only HEAD --)"; then
+	    MIKE_COMMIT="$MIKE_COMMIT-dirty";
+	    echo "$(git diff --no-color HEAD --)" > MIKE_COMMIT_DIFF
+    else
+        rm -f MIKE_COMMIT_DIFF
+    fi
+
+    if ! test -z "$(git describe --match "v[0-9]*" --dirty 2>/dev/null)"; then
+        MIKE_VERSION=$(git describe --match "v[0-9]*" --dirty 2>/dev/null)
+    fi
+
+else
+	MIKE_COMMIT=000000
+fi
+
+echo -n "" > MIKE_VERSION_FILE
+echo "MIKE_VERSION=$MIKE_VERSION" >> MIKE_VERSION_FILE
+echo "MIKE_COMMIT=$MIKE_COMMIT" >> MIKE_VERSION_FILE
+
