@@ -9,7 +9,7 @@ $treepath = $_TD->{new}{treepath};
 $treepath = $_TD->{old}{treepath} unless defined($treepath);
 
 # recalculating directory size and sub inodes counts
-my $select_inode_sql        = "SELECT id_inode FROM directory WHERE treepath @> subpath('$treepath'::ltree, 0, -1) ORDER BY nlevel(treepath) DESC";
+my $select_inode_sql        = "SELECT id_inode FROM directory WHERE treepath @> subpath('$treepath'::ltree, 0, -1) ORDER BY nlevel(treepath) DESC FOR UPDATE";
 my $select_inode_request    = spi_query($select_inode_sql);
 
 while (defined($row = spi_fetchrow($select_inode_request)))
