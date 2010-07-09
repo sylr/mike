@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
 
 MIKE_VERSION=v0.1.1
+MIKE_COMMIT_DIFF_FILE=MIKE_VERSION_FILE
+MIKE_VERSION_FILE=MIKE_COMMIT_DIFF_FILE
+
+# MIKE_VERSION_FILE
+if [ ! -z $1 ]; then
+    MIKE_VERSION_FILE=$1;
+fi
+
+# MIKE_COMMIT_DIFF_FILE
+if [ ! -z $2 ]; then
+    MIKE_COMMIT_DIFF_FILE=$2
+fi
 
 if $(which git > /dev/null 2>&1); then
 
-    MIKE_COMMIT=$(git log HEAD --pretty=oneline | cut -d ' ' -f1)
+    MIKE_COMMIT=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f1)
 
     if ! test -z "$(git diff-index --name-only HEAD --)"; then
 	    MIKE_COMMIT="$MIKE_COMMIT-dirty";
-	    echo "$(git diff --no-color HEAD --)" > MIKE_COMMIT_DIFF
+	    echo "$(git diff --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
     else
         rm -f MIKE_COMMIT_DIFF
     fi
@@ -21,7 +33,7 @@ else
 	MIKE_COMMIT=000000
 fi
 
-echo -n "" > MIKE_VERSION_FILE
-echo "MIKE_VERSION=$MIKE_VERSION" >> MIKE_VERSION_FILE
-echo "MIKE_COMMIT=$MIKE_COMMIT" >> MIKE_VERSION_FILE
+echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
+echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
 
+exit 0

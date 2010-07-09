@@ -6,28 +6,30 @@
 # The default target of this Makefile is...
 dry-run::
 
-ECHO                = echo
-CAT                 = cat
-RM                  = rm -f
-SLEEP               = sleep
-SLEEP_TIME          = 0.1
-DATE                = `date`
-PSQL                ?= psql -v 'ON_ERROR_STOP=on'
-DATABASE_USER       ?= mike
-DATABASE_NAME       ?= mike
-DATABASE_TRIGGERS   = $(wildcard triggers/*.pl)
-DATABASE_TRIGGERS   += $(wildcard triggers/*.sql)
-DATABASE_FILES      = mike.sql
-DATABASE_FILES      += $(DATABASE_TRIGGERS)
-DATABASE_DUMPS      = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
-DATABASE_DUMPS      += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
-TARGET_FILE         = mike.o
+ECHO                    = echo
+CAT                     = cat
+RM                      = rm -f
+GIT                     = git
+SLEEP                   = sleep
+SLEEP_TIME              = 0.1
+DATE                    = `date`
+PSQL                    ?= psql
+PSQL                    += -v 'ON_ERROR_STOP=on'
+DATABASE_USER           ?= mike
+DATABASE_NAME           ?= mike
+DATABASE_TRIGGERS       = $(wildcard triggers/*.pl)
+DATABASE_TRIGGERS       += $(wildcard triggers/*.sql)
+DATABASE_FILES          = mike.sql
+DATABASE_FILES          += $(DATABASE_TRIGGERS)
+DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
+DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
+TARGET_FILE             = mike.o
+MIKE_VERSION_FILE       = MIKE_VERSION_FILE
+MIKE_COMMIT_DIFF_FILE   = MIKE_COMMIT_DIFF_FILE
 
-MIKE_VERSION_GEN: FORCE
-	@$(SHELL_PATH) ./MIKE_VERSION_GEN
--include MIKE_VERSION_FILE
-
-#-include MIKE_VERSION
+$(MIKE_VERSION_FILE):
+	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME)
+-include $(MIKE_VERSION_FILE)
 
 ifeq ($(CREATE_SCHEMA),Yes)
 	CREATE_SCHEMA = "DROP SCHEMA IF EXISTS mike CASCADE; CREATE SCHEMA mike;"
@@ -39,23 +41,18 @@ clean-target:
 	@echo '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 info:
-	@echo '    ' GENERATING MIKE_VERSION $(MIKE_VERSION);   echo "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE)
-	@echo '    ' GENERATING MIKE_COMMIT $(MIKE_COMMIT);     echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE)
+	@echo '    ' LINK MIKE_VERSION $(MIKE_VERSION);   echo "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);     echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@echo -n; \
 	if test -f MIKE_COMMIT_DIFF; then \
-	echo '    ' GENERATING MIKE_COMMIT_DIFF;                (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
+	echo '    ' LINK MIKE_COMMIT_DIFF;                (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
 	                                                        cat MIKE_COMMIT_DIFF | sed "s/\(['\\]\)/\1\1/g"; \
-	                                                        echo "');";) >> $(TARGET_FILE); \
+	                                                        echo "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
-	@echo '    ' GENERATING INSTALL_DATE $(DATE);           echo "INSERT INTO mike.info VALUES ('INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE)
+	@echo '    ' LINK INSTALL_DATE $(DATE);           echo "INSERT INTO mike.info VALUES ('INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
     
 dumps: clean-target $(DATABASE_DUMPS) info
 
-dry-run:: dumps
-	@echo '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
-	@echo; ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
-	@echo 
-	@echo "THIS WAS A DRY RUN !!!!"
 	
 %.dump : %.sql
 	@echo '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
@@ -63,16 +60,28 @@ dry-run:: dumps
 %.dump : %.pl
 	@echo '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
-all: dumps
+dry-run:: dumps
+	@echo '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
+	@echo; ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
+	@echo 
+	@echo "THIS WAS A DRY RUN !!!!"
+
+install: dumps
 	@echo '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "COMMIT;") | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
 
-clean-sql:
+gitclean:
+	@$(GIT) clean -fdx
+
+mikeclean:
 	@echo '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME);
-	@echo '    ' REMOVING MIKE_VERSION_FILE; $(RM) MIKE_VERSION_FILE; $(SLEEP) $(SLEEP_TIME);
+	@echo '    ' REMOVING MIKE_FILE_VERSION; $(RM) $(MIKE_VERSION_FILE); $(SLEEP) $(SLEEP_TIME);
+	@echo '    ' REMOVING MIKE_COMMIT_DIFF; $(RM) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME);
 
 drop-schema:
 	@echo '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
+
+.PHONY: $(MIKE_VERSION_FILE)
 
 # ------------------------------------------------------------------------------
 
@@ -119,4 +128,3 @@ clean-doc:
 	$(RM) $(DOC_PDF)
 	$(RM) *~
 
-.PHONY: FORCE
