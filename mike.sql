@@ -21,7 +21,9 @@ DROP TABLE IF EXISTS mike.user CASCADE;
 CREATE TABLE mike.user (
     id_user                 bigserial NOT NULL PRIMARY KEY,
     id_user_sso             character varying(512) DEFAULT NULL,
-    state                   integer NOT NULL DEFAULT 1
+    nickname                character varying(64) DEFAULT NULL,
+    state                   integer NOT NULL DEFAULT 1,
+    datec                   timestamp with time zone NOT NULL DEFAULT NOW()
 );
 
 --------------------------------------------------------------------------------
