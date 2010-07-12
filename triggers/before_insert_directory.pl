@@ -30,12 +30,13 @@ if (defined($id_inode_parent))
         $path           = $request->{rows}[0]{path};
         $treepath       = $request->{rows}[0]{treepath};
         my @id_inodes   = split('.', $treepath);
-        
-        if ($id_inodes >= 20)
+        my $length      = @id_inodes;
+
+        if ($length >= 20)
         {
             elog(ERROR, "treepath too deep");
         }
-        
+
         $treepath   .= ".";
     }
 }
@@ -46,8 +47,7 @@ else
 }
 
 # update trigger values
-$_TD->{new}{id_inode}           = $id_inode;
-$_TD->{new}{id_inode_parent}    = $id_inode unless defined($_TD->{new}{id_inode_parent});
+$_TD->{new}{id_inode_parent}    = $_TD->{new}{id_inode} unless defined($_TD->{new}{id_inode_parent});
 $_TD->{new}{path}               = $path."/".$_TD->{new}{name};
 $_TD->{new}{treepath}           = $treepath.$_TD->{new}{id_inode};
 $_TD->{new}{mimetype}           = "application/x-folder";
