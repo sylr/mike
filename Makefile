@@ -28,7 +28,8 @@ MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_COMMIT_DIFF_FILE   = MIKE_COMMIT_DIFF_FILE
 
 $(MIKE_VERSION_FILE):
-	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(RM) $(MIKE_VERSION_FILE)
+	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE)
 -include $(MIKE_VERSION_FILE)
 
 ifeq ($(CREATE_SCHEMA),Yes)
@@ -41,19 +42,19 @@ clean-target:
 	@echo '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 info:
-	@echo '    ' LINK MIKE_VERSION $(MIKE_VERSION);   echo "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@echo '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);     echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo '    ' LINK MIKE_VERSION $(MIKE_VERSION);     echo "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);       echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@echo -n; \
-	if test -f MIKE_COMMIT_DIFF; then \
-	echo '    ' LINK MIKE_COMMIT_DIFF;                (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
-	                                                        cat MIKE_COMMIT_DIFF | sed "s/\(['\\]\)/\1\1/g"; \
+	if test -f $(MIKE_COMMIT_DIFF_FILE); then \
+	echo '    ' LINK MIKE_COMMIT_DIFF_FILE;                  (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
+	                                                        cat $(MIKE_COMMIT_DIFF_FILE) | sed "s/\(['\\]\)/\1\1/g"; \
 	                                                        echo "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
-	@echo '    ' LINK INSTALL_DATE $(DATE);           echo "INSERT INTO mike.info VALUES ('INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo '    ' LINK INSTALL_DATE $(DATE);             echo "INSERT INTO mike.info VALUES ('INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo '    ' LINK MIKE_USER;                        echo "INSERT INTO mike.user VALUES (1, 'mike', 'mike');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
     
 dumps: clean-target $(DATABASE_DUMPS) info
 
-	
 %.dump : %.sql
 	@echo '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
