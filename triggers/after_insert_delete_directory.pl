@@ -4,59 +4,75 @@ DROP FUNCTION IF EXISTS mike.after_insert_delete_directory() CASCADE;
 CREATE OR REPLACE FUNCTION mike.after_insert_delete_directory(
 ) RETURNS trigger AS $__$
 
+my $id_inode;
 my $treepath;
-$treepath = $_TD->{new}{treepath};
-$treepath = $_TD->{old}{treepath} unless defined($treepath);
+my $operand;
 
-# recalculating directory size and sub inodes counts
-my $select_inode_sql        = "SELECT id_inode FROM directory WHERE treepath @> '$treepath'::ltree ORDER BY nlevel(treepath) DESC FOR UPDATE";
-my $select_inode_request    = spi_query($select_inode_sql);
+$treepath   = $_TD->{new}{treepath};
+$treepath   = $_TD->{old}{treepath} unless defined($treepath);
+$id_inode   = $_TD->{new}{id_inode};
+$id_inode   = $_TD->{old}{id_inode} unless defined($id_inode);
+
+# selecting directories for recalculation
+my $select_inode_sql = <<SQL;
+
+    SELECT id_inode
+    FROM mike.directory
+    WHERE
+        treepath @> '$treepath'::ltree
+        AND
+        id_inode != $id_inode
+    ORDER BY nlevel(treepath) DESC FOR UPDATE
+
+SQL
+
+my $select_inode_request = spi_query($select_inode_sql);
+
+if ($_TD->{new}{treepath} eq 'DELETE')
+{
+    $operand = '-';
+}
+
+my $directory_update_sql = <<SQL;
+
+    UPDATE mike.directory SET
+        dir_count               = dir_count + ${operand}1,
+        dir_inner_count         = dir_inner_count + ${operand}1
+    WHERE id_inode_parent = \$1
+
+SQL
+
+my $row;
+my $directory_data_plan;
+my $directory_update_plan;
 
 while (defined($row = spi_fetchrow($select_inode_request)))
 {
-    my $file_data_sql       = <<SQL;
+    # plans
+    if (!defined($directory_update_plan))
+    {
+        # -- directory update plan ---------------------------------------------
 
-    SELECT
-        COUNT(id_inode) AS count,
-        COALESCE(SUM(size), 0) AS size,
-        COALESCE(SUM(versioning_size), 0) AS versioning_size
-    FROM mike.file
-    WHERE id_inode_parent = $row->{id_inode}
+        my $directory_update_sql = <<SQL;
 
-SQL
-
-    my $file_data_request   = spi_exec_query($file_data_sql);
-    
-    my $update_directory_sql = <<SQL;
-
-    UPDATE mike.directory SET 
-        dir_count               =
-                (SELECT COUNT(id_inode) FROM mike.directory WHERE id_inode_parent = $row->{id_inode} AND id_inode_parent != id_inode),
-        dir_inner_count         =
-                (SELECT COALESCE(SUM(dir_inner_count), 0) + COUNT(id_inode) FROM mike.directory WHERE id_inode_parent = $row->{id_inode} AND id_inode_parent != id_inode),
-        file_count              =
-                $file_data_request->{rows}[0]{count},
-        file_inner_count        =
-                (SELECT COALESCE(SUM(file_inner_count), 0) + $file_data_request->{rows}[0]{count} FROM mike.directory WHERE id_inode_parent = $row->{id_inode} AND id_inode_parent != id_inode)
-        size                    =
-                $file_data_request->{rows}[0]{size},
-        inner_size              =
-                (SELECT COALESCE(SUM(inner_size), 0) + $file_data_request->{rows}[0]{size} FROM mike.directory WHERE id_inode_parent = $row->{id_inode} AND id_inode_parent != id_inode),
-        versioning_size         =
-                $file_data_request->{rows}[0]{versioning_size},
-        versioning_inner_size   =
-                (SELECT COALESCE(SUM(versioning_inner_size), 0) + $file_data_request->{rows}[0]{versioning_size} FROM mike.directory WHERE id_inode_parent = $row->{id_inode} AND id_inode_parent != id_inode),
-    WHERE id_inode = $row->{id_inode};
+    UPDATE mike.directory SET
+        dir_count               = dir_count + ${operand}1,
+        dir_inner_count         = dir_inner_count + ${operand}1
+    WHERE id_inode_parent = \$1;
 
 SQL
+        $directory_update_plan = spi_prepare($directory_update_sql, 'bigint');
+    }
 
-    #elog(INFO, $update_directory_sql);
-    spi_exec_query($update_directory_sql);
+    # plans execution
+    my $directory_update_request = spi_exec_prepared($directory_update_plan, $row->{id_inode});
 }
 
 return undef;
 
 $__$ LANGUAGE plperl;
+
+COMMENT ON FUNCTION mike.after_insert_delete_directory() IS 'this function is called by the trigger on directory when an insert or delete is made';
 
 CREATE TRIGGER after_insert_delete_directory AFTER INSERT OR DELETE ON mike.directory
 FOR EACH ROW EXECUTE PROCEDURE mike.after_insert_delete_directory();
