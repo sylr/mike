@@ -45,11 +45,6 @@ else
     $treepath   = "";
 }
 
-# id_inode
-my $id_inode_sql                = "SELECT nextval('inode_id_inode_seq'::regclass) AS id_inode;";
-my $id_inode_request            = spi_exec_query($id_inode_sql);
-my $id_inode                    = $id_inode_request->{rows}[0]{id_inode};
-
 # update trigger values
 $_TD->{new}{id_inode}           = $id_inode;
 $_TD->{new}{path}               = $path."/".$_TD->{new}{name};
