@@ -1,3 +1,7 @@
+-- # Mike's Trigger
+-- # author: Sylvain Rabot <sylvain@abstraction.fr>
+-- # date: 16/07/2010
+-- # copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.after_insert_delete_directory() CASCADE;
 

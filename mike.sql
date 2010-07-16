@@ -1,7 +1,14 @@
 -- Mike's Schema
 -- author: Sylvain Rabot <sylvain@abstraction.fr>
--- date : 03/07/2010
--- copyright : All rights reserved
+-- date: 03/07/2010
+-- copyright: All rights reserved
+
+--         __  _________ ______
+--        /  |/  /  _/ //_/ __/
+--       / /|_/ // // ,< / _/  
+--      /_/  /_/___/_/|_/___/  
+--
+
 
 SET search_path TO mike,public;
 

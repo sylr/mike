@@ -3,6 +3,12 @@
 # date : 03/07/2010
 # copyright : All rights reserved
 
+#          __  _________ ______
+#         /  |/  /  _/ //_/ __/
+#        / /|_/ // // ,< / _/  
+#       /_/  /_/___/_/|_/___/  
+#
+
 # The default target of this Makefile is...
 dry-run::
 
@@ -46,7 +52,7 @@ info:
 	@echo '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);       echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@echo -n; \
 	if test -f $(MIKE_COMMIT_DIFF_FILE); then \
-	echo '    ' LINK MIKE_COMMIT_DIFF_FILE;                  (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
+	echo '    ' LINK MIKE_COMMIT_DIFF_FILE;             (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
 	                                                        cat $(MIKE_COMMIT_DIFF_FILE) | sed "s/\(['\\]\)/\1\1/g"; \
 	                                                        echo "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
