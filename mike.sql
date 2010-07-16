@@ -21,6 +21,8 @@ CREATE TABLE mike.info (
     value                   text
 );
 
+COMMENT ON TABLE mike.info IS 'informations about database deployement';
+
 -- mike.user -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.user CASCADE;
@@ -33,6 +35,8 @@ CREATE TABLE mike.user (
     datec                   timestamptz     NOT NULL DEFAULT NOW()
 );
 
+COMMENT ON TABLE mike.user IS 'user informations';
+
 -- mike.group ------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.group CASCADE;
@@ -44,6 +48,8 @@ CREATE TABLE mike.group (
     descrition              varchar(512)    DEFAULT NULL
 );
 
+COMMENT ON TABLE mike.group IS 'group informations';
+
 -- mike.as_user_group ----------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.as_user_group CASCADE;
@@ -52,6 +58,8 @@ CREATE TABLE mike.as_user_group (
     id_group                bigint  NOT NULL REFERENCES mike.group(id_group),
     id_user                 bigint  NOT NULL REFERENCES mike.user(id_user)
 );
+
+COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
 
 -- mike.inode ------------------------------------------------------------------
 
@@ -74,6 +82,8 @@ CREATE TABLE mike.inode (
     group_readable          bigint[],
     group_writable          bigint[]
 );
+
+COMMENT ON TABLE mike.inode IS 'inodes are extended by each vfs items';
 
 CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
@@ -100,6 +110,8 @@ CREATE TABLE mike.directory (
     UNIQUE (id_inode_parent, name)
 ) INHERITS (mike.inode);
 
+COMMENT ON TABLE mike.directory IS 'table containing all the directory inodes';
+
 CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode);
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent);
 CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name);
@@ -118,6 +130,8 @@ CREATE TABLE mike.file (
     id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE CASCADE,
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode);
+
+COMMENT ON TABLE mike.file IS 'table containing all the file inodes';
 
 CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode);
 CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent);
@@ -139,6 +153,8 @@ CREATE TABLE mike.volume (
     max_size                bigint          NOT NULL
 );
 
+COMMENT ON TABLE mike.volume IS 'volumes informations';
+
 -- mike.xfile ------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.xfile CASCADE;
@@ -151,6 +167,8 @@ CREATE TABLE mike.xfile (
     md5                     varchar(32)
 );
 
+COMMENT ON TABLE mike.volume IS 'xfile represents files on the file system';
+
 CREATE INDEX xfile_sha1_btree_idx   ON mike.xfile   USING btree (sha1);
 CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5);
 
@@ -162,6 +180,8 @@ CREATE TABLE mike.as_file_xfile (
     id_inode                bigint  NOT NULL REFERENCES mike.file(id_inode) ON DELETE CASCADE,
     id_xfile                bigint  NOT NULL REFERENCES mike.xfile(id_xfile) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
 
 CREATE INDEX as_file_xfile_id_inode_btree_idx   ON mike.as_file_xfile   USING btree (id_inode);
 
