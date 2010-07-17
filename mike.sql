@@ -12,6 +12,10 @@
 
 SET search_path TO mike,public;
 
+-- mike ------------------------------------------------------------------------
+
+COMMENT ON SCHEMA mike IS 'mike, a light, robust, efficient vitual file system';
+
 -- mike.info -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.info CASCADE;
