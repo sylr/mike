@@ -65,6 +65,23 @@ CREATE TABLE mike.as_user_group (
 
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
 
+-- mike.inode_state ------------------------------------------------------------
+
+DROP TABLE IF EXISTS mike.inode_state CASCADE;
+
+CREATE TABLE mike.inode_state (
+    state                   integer         NOT NULL PRIMARY KEY,
+    description             varchar(160)    NOT NULL CHECK(description != '')
+);
+
+COMMENT ON TABLE mike.inode_state IS 'list of inode states';
+COMMENT ON COLUMN mike.inode_state.state IS 'state identifier';
+COMMENT ON COLUMN mike.inode_state.description IS 'state description';
+
+INSERT INTO mike.inode_state (state, description) VALUES (0, 'alive');
+INSERT INTO mike.inode_state (state, description) VALUES (1, 'waiting for physical removal');
+INSERT INTO mike.inode_state (state, description) VALUES (2, 'waiting for logical removal');
+
 -- mike.inode ------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.inode CASCADE;
@@ -73,7 +90,7 @@ CREATE TABLE mike.inode (
     id_inode                bigserial       NOT NULL PRIMARY KEY,
     id_inode_parent         bigint          REFERENCES mike.inode(id_inode) ON DELETE CASCADE,
     id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
-    state                   integer         NOT NULL DEFAULT 0,
+    state                   bigint          NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
     name                    varchar(256)    NOT NULL CHECK(name != ''),
     path                    varchar(5140)   NOT NULL,
     treepath                ltree           NOT NULL,
