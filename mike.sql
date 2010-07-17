@@ -55,8 +55,8 @@ COMMENT ON TABLE mike.group IS 'group informations';
 DROP TABLE IF EXISTS mike.as_user_group CASCADE;
 
 CREATE TABLE mike.as_user_group (
-    id_group                bigint  NOT NULL REFERENCES mike.group(id_group),
-    id_user                 bigint  NOT NULL REFERENCES mike.user(id_user)
+    id_user                 bigint  NOT NULL REFERENCES mike.user(id_user),
+    id_group                bigint  NOT NULL REFERENCES mike.group(id_group)
 );
 
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
