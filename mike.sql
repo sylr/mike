@@ -49,7 +49,7 @@ CREATE TABLE mike.group (
     id_group                bigserial       NOT NULL PRIMARY KEY,
     id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
     name                    varchar(64)     NOT NULL CHECK(name != ''),
-    descrition              varchar(512)    DEFAULT NULL
+    description             varchar(512)    DEFAULT NULL
 );
 
 COMMENT ON TABLE mike.group IS 'group informations';
