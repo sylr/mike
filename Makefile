@@ -1,7 +1,7 @@
 # Mike's Makefile
 # author: Sylvain Rabot <sylvain@abstraction.fr>
-# date : 03/07/2010
-# copyright : All rights reserved
+# date: 03/07/2010
+# copyright: All rights reserved
 
 #          __  _________ ______
 #         /  |/  /  _/ //_/ __/
