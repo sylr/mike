@@ -163,8 +163,8 @@ CREATE TABLE mike.xfile (
     id_xfile                bigserial       NOT NULL PRIMARY KEY,
     id_volume               bigint          NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
     size                    bigint,
-    sha1                    varchar(40),
-    md5                     varchar(32)
+    sha1                    character(40),
+    md5                     character(32)
 );
 
 COMMENT ON TABLE mike.volume IS 'xfile represents files on the file system';
