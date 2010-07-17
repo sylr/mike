@@ -167,7 +167,7 @@ CREATE TABLE mike.xfile (
     md5                     character(32)
 );
 
-COMMENT ON TABLE mike.volume IS 'xfile represents files on the file system';
+COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
 
 CREATE INDEX xfile_sha1_btree_idx   ON mike.xfile   USING btree (sha1);
 CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5);
