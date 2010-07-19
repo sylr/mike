@@ -5,11 +5,11 @@
 # copyright: All rights reserved
 
 TAG_REALPATH=$(realpath $0)
-TAG_DIRNAME=$(dirname $TAG_REALPATH)
-MIKE_DIRNAME=$(dirname $TAG_DIRNAME)
+CONTRIB_PATH=$(dirname $TAG_REALPATH)
+MIKE_PATH=$(dirname $CONTRIB_PATH)
 
 # loading lib.sh
-. $TAG_DIRNAME/lib.sh
+. $CONTRIB_PATH/lib.sh
 
 # =====================================================
 
