@@ -26,6 +26,8 @@ CREATE TABLE mike.info (
 );
 
 COMMENT ON TABLE mike.info IS 'informations about database deployement';
+COMMENT ON COLUMN mike.info.key IS 'information identifier';
+COMMENT ON COLUMN mike.info.value IS 'information value';
 
 -- mike.user -------------------------------------------------------------------
 
@@ -40,6 +42,11 @@ CREATE TABLE mike.user (
 );
 
 COMMENT ON TABLE mike.user IS 'user informations';
+COMMENT ON COLUMN mike.user.id_user IS 'user unique identifier';
+COMMENT ON COLUMN mike.user.id_user_sso IS 'user unique external identifier';
+COMMENT ON COLUMN mike.user.nickname IS 'user nickname';
+COMMENT ON COLUMN mike.user.state IS 'user state';
+COMMENT ON COLUMN mike.user.datec IS 'user creation date';
 
 -- mike.group ------------------------------------------------------------------
 
@@ -53,6 +60,10 @@ CREATE TABLE mike.group (
 );
 
 COMMENT ON TABLE mike.group IS 'group informations';
+COMMENT ON COLUMN mike.group.id_group IS 'group unique identifier';
+COMMENT ON COLUMN mike.group.id_user IS 'group owner';
+COMMENT ON COLUMN mike.group.name IS 'group name';
+COMMENT ON COLUMN mike.group.description IS 'group description';
 
 -- mike.as_user_group ----------------------------------------------------------
 
@@ -64,6 +75,11 @@ CREATE TABLE mike.as_user_group (
 );
 
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
+COMMENT ON COLUMN mike.as_user_group.id_user IS 'user identifier';
+COMMENT ON COLUMN mike.as_user_group.id_group IS 'group identifier';
+
+CREATE INDEX as_user_group_id_user_btree_idx    ON mike.as_user_group   USING btree (id_user);
+CREATE INDEX as_user_group_id_group_btree_idx   ON mike.as_user_group   USING btree (id_group);
 
 -- mike.inode_state ------------------------------------------------------------
 
@@ -104,7 +120,22 @@ CREATE TABLE mike.inode (
     group_writable          bigint[]
 );
 
-COMMENT ON TABLE mike.inode IS 'inodes are extended by each vfs items';
+COMMENT ON TABLE mike.inode IS 'inodes are entities \n extended by all vfs items';
+COMMENT ON COLUMN mike.inode.id_inode IS 'inode unique identifier';
+COMMENT ON COLUMN mike.inode.id_inode_parent IS 'identifier of parent inode';
+COMMENT ON COLUMN mike.inode.id_user IS 'owner of the inode';
+COMMENT ON COLUMN mike.inode.state IS 'state of the inode, references mike.inode_state';
+COMMENT ON COLUMN mike.inode.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.inode.path IS 'path of the inode';
+COMMENT ON COLUMN mike.inode.treepath IS 'treepath of the inode';
+COMMENT ON COLUMN mike.inode.datec IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.datem IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.mimetype IS 'mimetype of the inode';
+COMMENT ON COLUMN mike.inode.size IS 'size in bytes of the inode';
+COMMENT ON COLUMN mike.inode.versioning_size IS 'size in bytes of the inode';
+COMMENT ON COLUMN mike.inode.group_readable IS 'list of group having readable rights on the inode';
+COMMENT ON COLUMN mike.inode.group_writable IS 'list of group having writable rights on the inode';
 
 CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
