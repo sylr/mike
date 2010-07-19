@@ -106,7 +106,7 @@ CREATE TABLE mike.inode (
     id_inode                bigserial       NOT NULL PRIMARY KEY,
     id_inode_parent         bigint          REFERENCES mike.inode(id_inode) ON DELETE CASCADE,
     id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
-    state                   bigint          NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
+    state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
     name                    varchar(256)    NOT NULL CHECK(name != ''),
     path                    varchar(5140)   NOT NULL,
     treepath                ltree           NOT NULL,
