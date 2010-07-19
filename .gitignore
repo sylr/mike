@@ -3,3 +3,8 @@
 MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE
 MIKE_COMMIT_DIFF_FILE
+configure
+**Makefile
+config.log
+config.status
+autom4te.cache

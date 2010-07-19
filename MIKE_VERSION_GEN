@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-MIKE_VERSION=v0.1.0
 MIKE_VERSION_FILE=MIKE_VERSION_FILE
 MIKE_COMMIT_DIFF_FILE=MIKE_COMMIT_DIFF_FILE
 MIKE_TAG_DIFF_FILE=MIKE_TAG_DIFF_FILE
@@ -20,34 +19,30 @@ if [ ! -z $3 ]; then
     MIKE_TAG_DIFF_FILE=$3
 fi
 
-if $(which git > /dev/null 2>&1); then
+MIKE_COMMIT=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f1)
+MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
 
-    MIKE_COMMIT=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f1)
+if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
+    MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)
+    MIKE_TAG_COMMIT=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=40 2>/dev/null | \
+                sed "s#\(v[0-9]*\.[0-9]*\.[0-9]\)*.*#\1#")
 
-    if [ ! -z "$(git describe --match "v[0-9]*" --dirty 2>/dev/null)" ]; then
-        MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)
-        MIKE_TAG_COMMIT=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=40 2>/dev/null | \
-                    sed "s#\(v[0-9]*\.[0-9]*\.[0-9]\)*.*#\1#")
-
-        if [ ! -z "$(git diff --no-color $MIKE_TAG_COMMIT HEAD --)" ]; then
-            echo "$(git diff --no-color $MIKE_TAG_COMMIT HEAD --)" > $MIKE_TAG_DIFF_FILE
-        else
-            rm -f $MIKE_TAG_DIFF_FILE
-        fi
-    fi
-
-    if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
-	    MIKE_COMMIT="$MIKE_COMMIT-dirty";
-	    echo "$(git diff --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
+    if [ ! -z "$(git diff --no-color $MIKE_TAG_COMMIT HEAD --)" ]; then
+        echo "$(git diff --no-color $MIKE_TAG_COMMIT HEAD --)" > $MIKE_TAG_DIFF_FILE
     else
-        rm -f $MIKE_COMMIT_DIFF_FILE
+        rm -f $MIKE_TAG_DIFF_FILE
     fi
+fi
 
+if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
+    MIKE_COMMIT="$MIKE_COMMIT-dirty";
+    echo "$(git diff --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
 else
-	MIKE_COMMIT=d43db33fd43db33fd43db33fd43db33fd43db33f
+    rm -f $MIKE_COMMIT_DIFF_FILE
 fi
 
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
+echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
 
 exit 0

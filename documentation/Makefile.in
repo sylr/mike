@@ -1,0 +1,62 @@
+# Mike's documentation Makefile
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 19/07/2010
+# copyright: All rights reserved
+
+#          __  _________ ______
+#         /  |/  /  _/ //_/ __/
+#        / /|_/ // // ,< / _/  
+#       /_/  /_/___/_/|_/___/  
+#
+
+# The default target of this Makefile is...
+doc::
+
+ASCIIDOC            = @ASCIIDOC@
+ASCIIDOC_EXTRA      = -a data-uri -a icons -a toc -a iconsdir=/usr/share/asciidoc/icons --unsafe
+DOCBOOK2ODF         = @DOCBOOK2ODF@
+DOCBOOK2ODF_EXTRA   = --force --quiet
+DOCBOOK2PDF         = @DOCBOOK2PDF@
+DOCBOOK2PDF_EXTRA   =
+A2X                 = @A2X@
+A2X_EXTRA           =
+DOC_TXT             = $(wildcard /doc/*.txt)
+DOC_HTML            = $(patsubst %.txt, %.html,$(DOC_TXT))
+DOC_XML             = $(patsubst %.txt, %.xml, $(DOC_TXT))
+DOC_ODT             = $(patsubst %.txt, %.odt, $(DOC_TXT))
+DOC_PDF             = $(patsubst %.txt, %.pdf, $(DOC_TXT))
+
+$(MIKE_VERSION_FILE):
+	@$(RM) $(MIKE_VERSION_FILE)
+	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE)
+-include $(MIKE_VERSION_FILE)
+
+doc:: $(DOC_HTML)
+
+doc-html: $(DOC_HTML)
+
+doc-xml: $(DOC_XML)
+
+doc-odt: $(DOC_XML) $(DOC_ODT)
+
+doc-pdf: $(DOC_XML) $(DOC_PDF)
+
+%.html : %.txt
+	$(ASCIIDOC) $(ASCIIDOC_EXTRA) -b xhtml11 -o $@ $<
+
+%.xml : %.txt
+	$(ASCIIDOC) $(ASCIIDOC_EXTRA) -b docbook -o $@ $<
+
+%.pdf : %.xml
+	$(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
+
+%.odt : %.xml
+	$(DOCBOOK2ODF) $(DOCBOOK2ODF_EXTRA) --output-file $@ $<
+
+clean:
+	$(RM) $(DOC_HTML)
+	$(RM) $(DOC_XML)
+	$(RM) $(DOC_ODT)
+	$(RM) $(DOC_PDF)
+	$(RM) *~
+
