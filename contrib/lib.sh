@@ -23,12 +23,12 @@ die()
 
 abort()
 {
-    echo -n "press \"q\" to quit, \"c\" to continue : "
+    echo -n "Do you want to continue [Y/n]? "
     read q
 
-    if [ "$q" = 'q' ]; then
+    if [ "$q" = 'n' ]; then
         die "aborting ..."
-    elif [ "$q" = 'c' ]; then
+    elif [ "$q" = 'Y' ]; then
         return 0
     else
         abort
