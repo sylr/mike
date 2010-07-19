@@ -120,7 +120,7 @@ CREATE TABLE mike.inode (
     group_writable          bigint[]
 );
 
-COMMENT ON TABLE mike.inode IS 'inodes are entities \n extended by all vfs items';
+COMMENT ON TABLE mike.inode IS 'inodes are entities extended by all vfs items';
 COMMENT ON COLUMN mike.inode.id_inode IS 'inode unique identifier';
 COMMENT ON COLUMN mike.inode.id_inode_parent IS 'identifier of parent inode';
 COMMENT ON COLUMN mike.inode.id_user IS 'owner of the inode';
