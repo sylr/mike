@@ -31,6 +31,7 @@ DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_F
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
+MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_COMMIT_DIFF_FILE   = MIKE_COMMIT_DIFF_FILE
 
 $(MIKE_VERSION_FILE):
@@ -50,6 +51,11 @@ clean-target:
 info:
 	@echo '    ' LINK MIKE_VERSION $(MIKE_VERSION);     echo "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@echo '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);       echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@echo -n; \if test -f $(MIKE_TAG_DIFF_FILE); then \
+	echo '    ' LINK MIKE_TAG_DIFF_FILE;                (echo "INSERT INTO mike.info VALUES ('MIKE_TAG_DIFF', E'"; \
+	                                                        cat $(MIKE_TAG_DIFF_FILE) | sed "s/\(['\\]\)/\1\1/g"; \
+	                                                        echo "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
+	fi
 	@echo -n; \
 	if test -f $(MIKE_COMMIT_DIFF_FILE); then \
 	echo '    ' LINK MIKE_COMMIT_DIFF_FILE;             (echo "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
