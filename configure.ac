@@ -96,6 +96,12 @@ MIKE_PARSE_WITH(psql)
 AC_PATH_PROG([PSQL], [psql], , [$PSQL_DIR])
 MIKE_ERROR_IF_EMPTY([$PSQL], [psql not found])
 
+# checking for createdb
+MIKE_ARG_SET_PATH(createdb)
+MIKE_PARSE_WITH(createdb)
+AC_PATH_PROG([CREATEDB], [createdb], , [$CREATEDB_DIR])
+MIKE_ERROR_IF_EMPTY([$CREATEDB], [createdb not found])
+
 # checking for git
 MIKE_ARG_SET_PATH(git)
 MIKE_PARSE_WITH(git)
@@ -130,11 +136,22 @@ MIKE_IF_EMPTY_DEFAULT([DATABASE_USER], [mike])
 AC_ARG_VAR(DATABASE_NAME, [database name (default: mike)])
 MIKE_IF_EMPTY_DEFAULT([DATABASE_NAME], [mike])
 
-AC_ARG_VAR(DATABASE_HOST, [database host (default: localhost)])
-MIKE_IF_EMPTY_DEFAULT([DATABASE_HOST], [localhost])
+AC_ARG_VAR(DATABASE_HOST, [database host])
 
-AC_ARG_VAR(DATABASE_PORT, [database port (default: 5432)])
-MIKE_IF_EMPTY_DEFAULT([DATABASE_PORT], [5432])
+AC_ARG_VAR(DATABASE_PORT, [database port])
+
+AC_ARG_ENABLE(create-schema, AS_HELP_STRING([--enable-create-schema create mike schema in DATABASE_NAME]), [CREATE_SCHEMA=Yes], [CREATE_SCHEMA=No])
+AC_ARG_ENABLE(create-database, AS_HELP_STRING([--enable-create-database create DATABASE_NAME, implied create-schema]), CREATE_DATABASE=Yes; CREATE_SCHEMA=Yes, [CREATE_DATABASE=No])
+
+AC_SUBST(CREATE_DATABASE)
+AC_SUBST(CREATE_SCHEMA)
+
+AS_IF([test $CREATE_DATABASE = "Yes"],
+    MIKE_ERROR_IF_EMPTY(
+        [$DATABASE_HOST], 
+        [You must specify DATABASE_HOST when --enable-create-database]
+    )
+)
 
 # -- output --------------------------------------------------------------------
 

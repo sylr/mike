@@ -20,12 +20,15 @@ SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
 DATE                    = `@DATE@`
 PSQL                    ?= @PSQL@
-PSQL                    += -v 'ON_ERROR_STOP=on'
+PSQL_EXTRA              = -v 'ON_ERROR_STOP=on'
+CREATEDB                = @CREATEDB@
 SED                     = @SED@
 DATABASE_USER           = @DATABASE_USER@
 DATABASE_NAME           = @DATABASE_NAME@
 DATABASE_HOST           = @DATABASE_HOST@
 DATABASE_PORT           = @DATABASE_PORT@
+CREATE_DATABASE         = @CREATE_DATABASE@
+CREATE_SCHEMA           = @CREATE_SCHEMA@
 DATABASE_TRIGGERS       = $(wildcard triggers/*.pl)
 DATABASE_TRIGGERS       += $(wildcard triggers/*.sql)
 DATABASE_FILES          = mike.sql
@@ -42,12 +45,26 @@ $(MIKE_VERSION_FILE):
 	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE)
 -include $(MIKE_VERSION_FILE)
 
+ifeq ($(CREATE_DATABASE),Yes)
+	CREATE_DATABASE = "DROP DATABASE IF EXISTS $(DATABASE_NAME) CASCADE; CREATE SCHEMA $(DATABASE_NAME);"
+else
+	CREATE_DATABASE = ""
+endif
+
 ifeq ($(CREATE_SCHEMA),Yes)
-	CREATE_SCHEMA = "DROP SCHEMA IF EXISTS mike CASCADE; CREATE SCHEMA mike;"
+	CREATE_SCHEMA = "DROP SCHEMA IF EXISTS mike CASCADE; CREATE SCHEMA mike; ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;"
 else
 	CREATE_SCHEMA = ""
 endif
-	
+
+ifneq ($(DATABASE_HOST),)
+	PSQL_HOST = -h $(DATABASE_HOST)
+endif
+
+ifneq ($(DATABASE_PORT),)
+	PSQL_PORT = -p $(DATABASE_PORT)
+endif
+
 clean-target:
 	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
@@ -79,16 +96,23 @@ dumps: clean-target $(DATABASE_DUMPS) info
 	@$(ECHO) '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 dry-run:: dumps
+ifneq ($(CREATE_DATABASE),)
+	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
+endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO);   
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
+	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
 
-install: dumps
+install: dumps	
+ifneq ($(CREATE_DATABASE),)
+	@$(ECHO) '    'CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
+endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "COMMIT;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) --host $(DATABASE_HOST) --port $(DATABASE_PORT)
+	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 
 clean:
 	@$(GIT) clean -fdx
