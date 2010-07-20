@@ -5,15 +5,15 @@
 # copyright: All rights reserved
 
 TAG_REALPATH=$(realpath $0)
-TAG_DIRNAME=$(dirname $TAG_REALPATH)
-MIKE_DIRNAME=$(dirname $TAG_DIRNAME)
+CONTRIB_PATH=$(dirname $TAG_REALPATH)
+MIKE_PATH=$(dirname $CONTRIB_PATH)
 
 # loading lib.sh
-. $TAG_DIRNAME/lib.sh
+. $CONTRIB_PATH/lib.sh
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
-TEMP=`getopt --long major,minor,maint -n "$0" -- $0 $@`
+TEMP=`getopt --long major,minor,maint,rc -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -21,7 +21,7 @@ fi
 
 eval set -- "$TEMP"
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
 while true ;
 do
@@ -29,17 +29,18 @@ do
         --major)    TAG_TYPE="MAJOR";   shift;;
         --minor)    TAG_TYPE="MINOR";   shift;;
         --maint)    TAG_TYPE="MAINT";   shift;;
+        --rc)       TAG_RC="RC";        shift;;
         --)         shift;              break;;
         *)          usage;              exit 1;;
     esac
 done
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
-LAST_TAG="$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=0 2>/dev/null)"
+LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=0 2>/dev/null)
 
 # testing if a tag already exists
-if test -z "$LAST_TAG"; then
+if [ -z "$LAST_TAG" ]; then
     die "No parent tag found"
 fi
 
@@ -48,29 +49,45 @@ LAST_TAG_DIGITS=$(parse_tag $LAST_TAG)
 LAST_TAG_MAJOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f1)
 LAST_TAG_MINOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f2)
 LAST_TAG_MAINT=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f3)
+LAST_TAG_RC=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f4)
 
-# genrating new version
+# setting RC part of tag if empty
+if [ -z "$LAST_TAG_RC" ]; then
+    LAST_TAG_RC=0
+fi
+
+# generating new version
 if [ "$TAG_TYPE" == "MAJOR" ]; then
     NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1));
     NEXT_TAG_MINOR=0;
     NEXT_TAG_MAINT=0;
+    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1" 
 elif [ "$TAG_TYPE" == "MINOR" ]; then
     NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
     NEXT_TAG_MINOR=$(($LAST_TAG_MINOR + 1));
     NEXT_TAG_MAINT=0;
+    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1" 
 elif [ "$TAG_TYPE" == "MAINT" ]; then
     NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
     NEXT_TAG_MINOR=$LAST_TAG_MINOR;
     NEXT_TAG_MAINT=$(($LAST_TAG_MAINT + 1));
+    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1" 
 else
-    die "You must specify either --major --minor or --maint option"
+    if [ "$TAG_RC" == "RC" ]; then
+        NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
+        NEXT_TAG_MINOR=$LAST_TAG_MINOR;
+        NEXT_TAG_MAINT=$LAST_TAG_MAINT;
+        NEXT_TAG_RC="-rc$(($LAST_TAG_RC + 1))"
+    else
+        die "You must specify either --major --minor --maint or --rc option"
+    fi
 fi
 
 # abort ?
-echo "About to tag v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
+echo "About to tag Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
 abort
 
 # tag
-git tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT" \
-        -m "Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
+git tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC" \
+        -m "Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
 
