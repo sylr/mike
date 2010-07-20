@@ -4,8 +4,7 @@
 # date: 03/07/2010
 # copyright: All rights reserved
 
-# =====================================================
-# die function
+# -- die function --------------------------------------------------------------
 
 die()
 {
@@ -18,25 +17,23 @@ die()
     fi
 }
 
-# =====================================================
-# abort function
+# -- abort function ------------------------------------------------------------
 
 abort()
 {
-    echo -n "press \"q\" to quit, \"c\" to continue : "
-    read q
+    echo -n "Do you want to continue [Y/n]? "
+    read input
 
-    if [ "$q" = 'q' ]; then
+    if [ "$input" = "n" ]; then
         die "aborting ..."
-    elif [ "$q" = 'c' ]; then
+    elif [ "$input" = "Y" ]; then
         return 0
     else
         abort
     fi
 }
 
-# =====================================================
-# parse tag function
+# -- parse tag function --------------------------------------------------------
 
 parse_tag()
 {

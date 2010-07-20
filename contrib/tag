@@ -11,7 +11,7 @@ MIKE_PATH=$(dirname $CONTRIB_PATH)
 # loading lib.sh
 . $CONTRIB_PATH/lib.sh
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
 TEMP=`getopt --long major,minor,maint -n "$0" -- $0 $@`
 
@@ -21,7 +21,7 @@ fi
 
 eval set -- "$TEMP"
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
 while true ;
 do
@@ -34,9 +34,9 @@ do
     esac
 done
 
-# =====================================================
+# ------------------------------------------------------------------------------
 
-LAST_TAG="$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=0 2>/dev/null)"
+LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev=0 2>/dev/null)
 
 # testing if a tag already exists
 if test -z "$LAST_TAG"; then
@@ -49,7 +49,7 @@ LAST_TAG_MAJOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f1)
 LAST_TAG_MINOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f2)
 LAST_TAG_MAINT=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f3)
 
-# genrating new version
+# generating new version
 if [ "$TAG_TYPE" == "MAJOR" ]; then
     NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1));
     NEXT_TAG_MINOR=0;
@@ -67,7 +67,7 @@ else
 fi
 
 # abort ?
-echo "About to tag v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
+echo "About to tag Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT"
 abort
 
 # tag
