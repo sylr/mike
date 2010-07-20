@@ -54,6 +54,18 @@ MIKE_PARSE_WITH(cat)
 AC_PATH_PROG([CAT], [cat], , [$CAT_DIR])
 MIKE_ERROR_IF_EMPTY([$CAT], [cat not found])
 
+# looking for which
+MIKE_ARG_SET_PATH(which)
+MIKE_PARSE_WITH(which)
+AC_PATH_PROG([WHICH], [which], , [$WHICH_DIR])
+MIKE_ERROR_IF_EMPTY([$WHICH], [which not found])
+
+# looking for realpath
+MIKE_ARG_SET_PATH(realpath)
+MIKE_PARSE_WITH(realpath)
+AC_PATH_PROG([REALPATH], [realpath], , [$REALPATH_DIR])
+MIKE_ERROR_IF_EMPTY([$REALPATH], [realpath not found])
+
 # looking for rm
 MIKE_ARG_SET_PATH(rm)
 MIKE_PARSE_WITH(rm)
@@ -84,11 +96,29 @@ MIKE_PARSE_WITH(bash)
 AC_PATH_PROG([BASH], [bash], , [$BASH_DIR])
 MIKE_ERROR_IF_EMPTY([$BASH], [bash not found])
 
+# looking for test
+MIKE_ARG_SET_PATH(test)
+MIKE_PARSE_WITH(test)
+AC_PATH_PROG([TEST], [test], , [$TEST_DIR])
+MIKE_ERROR_IF_EMPTY([$TEST], [test not found])
+
 # looking for sed
 MIKE_ARG_SET_PATH(sed)
 MIKE_PARSE_WITH(sed)
 AC_PATH_PROG([SED], [sed], , [$SED_DIR])
 MIKE_ERROR_IF_EMPTY([$SED], [sed not found])
+
+# looking for awk
+MIKE_ARG_SET_PATH(awk)
+MIKE_PARSE_WITH(awk)
+AC_PATH_PROG([AWK], [awk], , [$AWK_DIR])
+MIKE_ERROR_IF_EMPTY([$AWK], [awk not found])
+
+# looking for grep
+MIKE_ARG_SET_PATH(grep)
+MIKE_PARSE_WITH(grep)
+AC_PATH_PROG([GREP], [grep], , [$GREP_DIR])
+MIKE_ERROR_IF_EMPTY([$GREP], [grep not found])
 
 # looking for psql
 MIKE_ARG_SET_PATH(psql)
@@ -101,6 +131,12 @@ MIKE_ARG_SET_PATH(createdb)
 MIKE_PARSE_WITH(createdb)
 AC_PATH_PROG([CREATEDB], [createdb], , [$CREATEDB_DIR])
 MIKE_ERROR_IF_EMPTY([$CREATEDB], [createdb not found])
+
+# looking for pg_config
+MIKE_ARG_SET_PATH(pg_config)
+MIKE_PARSE_WITH(pg_config)
+AC_PATH_PROG([PG_CONFIG], [pg_config], , [$PG_CONFIG_DIR])
+MIKE_ERROR_IF_EMPTY([$PG_CONFIG], [pg_config not found])
 
 # looking for apgdiff
 MIKE_ARG_SET_PATH(apgdiff)
@@ -132,6 +168,15 @@ AC_PATH_PROG([DOCBOOK2PDF], [docbook2pdf], , [$DOCBOOK2PDF_DIR])
 MIKE_ARG_SET_PATH(a2x)
 MIKE_PARSE_WITH(a2x)
 AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
+
+# -- postgresql ----------------------------------------------------------------
+
+PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | sed "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
+
+AX_COMPARE_VERSION(
+    [$PG_VERSION], [lt], [8.4.4],
+    AC_MSG_ERROR([PostgreSQL version too old])
+)
 
 # -- variables -----------------------------------------------------------------
 
