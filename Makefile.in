@@ -22,6 +22,7 @@ DATE                    = `@DATE@`
 PSQL                    ?= @PSQL@
 PSQL_EXTRA              = -v 'ON_ERROR_STOP=on'
 CREATEDB                = @CREATEDB@
+APGDIFF                 = @APGDIFF@
 SED                     = @SED@
 DATABASE_USER           = @DATABASE_USER@
 DATABASE_NAME           = @DATABASE_NAME@
