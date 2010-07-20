@@ -128,5 +128,8 @@ mikeclean:
 drop-schema:
 	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
 
+graph:
+	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
+
 .PHONY: $(MIKE_VERSION_FILE)
 
