@@ -115,9 +115,7 @@ CREATE TABLE mike.inode (
     datea                   timestamptz,
     mimetype                varchar(64),
     size                    bigint          NOT NULL DEFAULT 0,
-    versioning_size         bigint          NOT NULL DEFAULT 0,
-    group_readable          bigint[],
-    group_writable          bigint[]
+    versioning_size         bigint          NOT NULL DEFAULT 0
 );
 
 COMMENT ON TABLE mike.inode IS 'inodes are entities extended by all vfs items';
@@ -134,8 +132,6 @@ COMMENT ON COLUMN mike.inode.datea IS 'last access timestamp with timezone of th
 COMMENT ON COLUMN mike.inode.mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size in bytes of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'size in bytes of the inode';
-COMMENT ON COLUMN mike.inode.group_readable IS 'list of group having readable rights on the inode';
-COMMENT ON COLUMN mike.inode.group_writable IS 'list of group having writable rights on the inode';
 
 CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
