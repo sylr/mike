@@ -201,8 +201,12 @@ DROP TABLE IF EXISTS mike.volume CASCADE;
 CREATE TABLE mike.volume (
     id_volume               serial          NOT NULL PRIMARY KEY,
     status                  integer         NOT NULL DEFAULT 1,
-    path                    varchar(255)    NOT NULL,
-    max_size                bigint          NOT NULL
+    path                    varchar(255)    NOT NULL CHECK(substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
+    current_size            bigint          NOT NULL DEFAULT 0,
+    max_size                bigint          NOT NULL DEFAULT 0,
+    datec                   timestamptz     NOT NULL DEFAULT NOW(),
+    datem                   timestamptz,
+    token                   char(40)
 );
 
 COMMENT ON TABLE mike.volume IS 'volumes informations';
