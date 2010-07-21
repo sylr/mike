@@ -34,7 +34,7 @@ COMMENT ON COLUMN mike.info.value IS 'information value';
 DROP TABLE IF EXISTS mike.user CASCADE;
 
 CREATE TABLE mike.user (
-    id_user                 bigserial       NOT NULL PRIMARY KEY,
+    id_user                 serial          NOT NULL PRIMARY KEY,
     id_user_sso             varchar(512)    DEFAULT NULL,
     nickname                varchar(64)     DEFAULT NULL,
     state                   integer         NOT NULL DEFAULT 1,
@@ -53,7 +53,7 @@ COMMENT ON COLUMN mike.user.datec IS 'user creation date';
 DROP TABLE IF EXISTS mike.group CASCADE;
 
 CREATE TABLE mike.group (
-    id_group                bigserial       NOT NULL PRIMARY KEY,
+    id_group                serial          NOT NULL PRIMARY KEY,
     id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
     name                    varchar(64)     NOT NULL CHECK(name != ''),
     description             varchar(512)    DEFAULT NULL
@@ -70,8 +70,8 @@ COMMENT ON COLUMN mike.group.description IS 'group description';
 DROP TABLE IF EXISTS mike.as_user_group CASCADE;
 
 CREATE TABLE mike.as_user_group (
-    id_user                 bigint  NOT NULL REFERENCES mike.user(id_user),
-    id_group                bigint  NOT NULL REFERENCES mike.group(id_group)
+    id_user                 integer NOT NULL REFERENCES mike.user(id_user),
+    id_group                integer NOT NULL REFERENCES mike.group(id_group)
 );
 
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
@@ -105,7 +105,7 @@ DROP TABLE IF EXISTS mike.inode CASCADE;
 CREATE TABLE mike.inode (
     id_inode                bigserial       NOT NULL PRIMARY KEY,
     id_inode_parent         bigint          REFERENCES mike.inode(id_inode) ON DELETE CASCADE,
-    id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
+    id_user                 integer         NOT NULL REFERENCES mike.user(id_user),
     state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
     name                    varchar(256)    NOT NULL CHECK(name != ''),
     path                    varchar(5140)   NOT NULL,
