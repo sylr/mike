@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # author: Sylvain Rabot <srabot@abstraction.fr>
 # date: 03/07/2010
@@ -10,7 +10,7 @@ die()
 {
     echo >&2 $1;
     
-    if [ -z "$2" ]; then
+    if test -z "$2"; then
         exit 1
     else
         exit $2
@@ -24,9 +24,9 @@ abort()
     echo -n "Do you want to continue [Y/n]? "
     read input
 
-    if [ "$input" = "n" ]; then
+    if test "$input" = "n"; then
         die "aborting ..."
-    elif [ "$input" = "Y" ]; then
+    elif test "$input" = "Y"; then
         return 0
     else
         abort
