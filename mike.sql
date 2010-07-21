@@ -226,6 +226,14 @@ CREATE TABLE mike.volume (
 );
 
 COMMENT ON TABLE mike.volume IS 'volumes informations';
+COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
+COMMENT ON COLUMN mike.volume.state IS 'state of the volumes, references mike.volume_state';
+COMMENT ON COLUMN mike.volume.path IS 'path of the volumes';
+COMMENT ON COLUMN mike.volume.used_size IS 'used size used on the volumes';
+COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
+COMMENT ON COLUMN mike.volume.datec IS 'creation date off the volumes';
+COMMENT ON COLUMN mike.volume.datem IS 'last modification date off the volumes';
+COMMENT ON COLUMN mike.volume.token IS 'security token for volume record removal';
 
 -- mike.xfile ------------------------------------------------------------------
 
