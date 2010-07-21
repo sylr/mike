@@ -4,7 +4,7 @@
 # -- init ----------------------------------------------------------------------
 
 AC_PREREQ([2.61])
-AC_INIT([Mike], [v0.1.0], [sylvain@abstraction.fr], , [https://git.abstraction.fr/~sylvain/])
+AC_INIT([Mike], [@@MIKE_VERSION@@], [sylvain@abstraction.fr], , [https://git.abstraction.fr/~sylvain/])
 AC_COPYRIGHT([All rights reserved to Sylvain Rabot])
 
 # -- macros --------------------------------------------------------------------
