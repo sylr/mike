@@ -23,6 +23,8 @@ PSQL                    = @PSQL@
 PSQL_EXTRA              += -v 'ON_ERROR_STOP=on'
 CREATEDB                = @CREATEDB@
 APGDIFF                 = @APGDIFF@
+PG_CONFIG               = @PG_CONFIG@
+PG_DUMP                 = @PG_DUMP@
 SED                     = @SED@
 DATABASE_USER           = @DATABASE_USER@
 DATABASE_NAME           = @DATABASE_NAME@

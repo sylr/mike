@@ -138,6 +138,11 @@ MIKE_PARSE_WITH(pg_config)
 AC_PATH_PROG([PG_CONFIG], [pg_config], , [$PG_CONFIG_DIR])
 MIKE_ERROR_IF_EMPTY([$PG_CONFIG], [pg_config not found])
 
+# looking for pg_dump
+MIKE_ARG_SET_PATH(pg_dump)
+MIKE_PARSE_WITH(pg_dump)
+AC_PATH_PROG([PG_DUMP], [pg_dump], , [$PG_DUMP_DIR])
+
 # looking for apgdiff
 MIKE_ARG_SET_PATH(apgdiff)
 MIKE_PARSE_WITH(apgdiff)
