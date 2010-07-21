@@ -194,13 +194,29 @@ CREATE INDEX file_datem_btree_idx               ON mike.file    USING btree (dat
 CREATE INDEX file_path_btree_idx                ON mike.file    USING btree (path);
 CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath);
 
+-- mike.volume_state -----------------------------------------------------------
+
+DROP TABLE IF EXISTS mike.volume_state CASCADE;
+
+CREATE TABLE mike.volume_state (
+    state                   integer         NOT NULL PRIMARY KEY,
+    description             varchar(160)    NOT NULL CHECK(description != '')
+);
+
+COMMENT ON TABLE mike.volume_state IS 'list of volume states';
+COMMENT ON COLUMN mike.volume_state.state IS 'state identifier';
+COMMENT ON COLUMN mike.volume_state.description IS 'state description';
+
+INSERT INTO mike.volume_state (state, description) VALUES (0, 'up');
+INSERT INTO mike.volume_state (state, description) VALUES (1, 'down');
+
 -- mike.volume -----------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.volume CASCADE;
 
 CREATE TABLE mike.volume (
     id_volume               serial          NOT NULL PRIMARY KEY,
-    status                  integer         NOT NULL DEFAULT 1,
+    state                   integer         NOT NULL REFERENCES mike.volume_state(state) DEFAULT 1,
     path                    varchar(255)    NOT NULL CHECK(substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
     current_size            bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
