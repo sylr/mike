@@ -78,6 +78,12 @@ MIKE_PARSE_WITH(cut)
 AC_PATH_PROG([CUT], [cut], , [$CUT_DIR])
 MIKE_ERROR_IF_EMPTY([$CUT], [cut not found])
 
+# looking for env
+MIKE_ARG_SET_PATH(env)
+MIKE_PARSE_WITH(env)
+AC_PATH_PROG([ENV], [env], , [$ENV_DIR])
+MIKE_ERROR_IF_EMPTY([$ENV], [ENV not found])
+
 # looking for sleep
 MIKE_ARG_SET_PATH(sleep)
 MIKE_PARSE_WITH(sleep)
