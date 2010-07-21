@@ -11,7 +11,7 @@ fi
 
 # MIKE_COMMIT_DIFF_FILE
 if [ ! -z $2 ]; then
-    MIKE_COMMIT_DIFF_FILE=$2
+    MIKE_HEAD_DIFF_FILE=$2
 fi
 
 # MIKE_TAG_DIFF_FILE
