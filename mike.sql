@@ -242,7 +242,7 @@ DROP TABLE IF EXISTS mike.xfile CASCADE;
 CREATE TABLE mike.xfile (
     id_xfile                bigserial       NOT NULL PRIMARY KEY,
     id_volume               bigint          NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
-    size                    bigint,
+    size                    bigint          NOT NULL,
     sha1                    character(40),
     md5                     character(32)
 );
