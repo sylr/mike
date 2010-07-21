@@ -83,7 +83,7 @@ info:
 	fi
 	@# MIKE_HEAD_DIFF_FILE
 	@$(ECHO) -n; \
-	if test -f $(MIKE_COMMIT_DIFF_FILE); then \
+	if test -f $(MIKE_HEAD_DIFF_FILE); then \
 	$(ECHO) '    ' LINK MIKE_HEAD_DIFF_FILE;                ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_HEAD_DIFF', E'"; \
 	                                                        cat $(MIKE_HEAD_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
 	                                                        $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \

@@ -37,7 +37,7 @@ if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     MIKE_COMMIT="$MIKE_COMMIT-dirty";
     echo "$(git diff --patience --no-color HEAD --)" > $MIKE_HEAD_DIFF_FILE
 else
-    rm -f $MIKE_COMMIT_DIFF_FILE
+    rm -f $MIKE_HEAD_DIFF_FILE
 fi
 
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
