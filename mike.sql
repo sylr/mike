@@ -179,7 +179,7 @@ DROP TABLE IF EXISTS mike.file CASCADE;
 
 CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE CASCADE,
+    id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE RESTRICT,
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode);
 
@@ -229,7 +229,7 @@ CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5);
 DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
 
 CREATE TABLE mike.as_file_xfile (
-    id_inode                bigint  NOT NULL REFERENCES mike.file(id_inode) ON DELETE CASCADE,
+    id_inode                bigint  NOT NULL REFERENCES mike.file(id_inode) ON DELETE RESTRICT,
     id_xfile                bigint  NOT NULL REFERENCES mike.xfile(id_xfile) ON DELETE CASCADE
 );
 
