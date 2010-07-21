@@ -193,19 +193,19 @@ AC_ARG_VAR(DATABASE_PORT, [database port])
 AC_ARG_ENABLE(
     [create-schema],
     AS_HELP_STRING([--enable-create-schema create mike schema in DATABASE_NAME]),
-    [CREATE_SCHEMA=Yes],
-    [CREATE_SCHEMA=No]
+    [ENABLE_CREATE_SCHEMA=Yes],
+    [ENABLE_CREATE_SCHEMA=No]
 )
 
 AC_ARG_ENABLE(
     [create-database],
     AS_HELP_STRING([--enable-create-database create DATABASE_NAME, imply create-schema]),
-    [CREATE_DATABASE=Yes; CREATE_SCHEMA=Yes],
-    [CREATE_DATABASE=No]
+    [ENABLE_CREATE_DATABASE=Yes; ENABLE_CREATE_SCHEMA=Yes],
+    [ENABLE_CREATE_DATABASE=No]
 )
 
-AC_SUBST(CREATE_DATABASE)
-AC_SUBST(CREATE_SCHEMA)
+AC_SUBST(ENABLE_CREATE_DATABASE)
+AC_SUBST(ENABLE_CREATE_SCHEMA)
 
 AS_IF(
     [test $CREATE_DATABASE = "Yes"],
@@ -219,3 +219,4 @@ AS_IF(
 
 AC_CONFIG_FILES([Makefile documentation/Makefile])
 AC_OUTPUT
+
