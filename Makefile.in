@@ -19,7 +19,7 @@ GIT                     = @GIT@
 SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
 DATE                    = `@DATE@`
-PSQL                    ?= @PSQL@
+PSQL                    = @PSQL@
 PSQL_EXTRA              = -v 'ON_ERROR_STOP=on'
 CREATEDB                = @CREATEDB@
 APGDIFF                 = @APGDIFF@
