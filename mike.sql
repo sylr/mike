@@ -218,7 +218,7 @@ CREATE TABLE mike.volume (
     id_volume               serial          NOT NULL PRIMARY KEY,
     state                   integer         NOT NULL REFERENCES mike.volume_state(state) DEFAULT 1,
     path                    varchar(255)    NOT NULL CHECK(substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
-    current_size            bigint          NOT NULL DEFAULT 0,
+    used_size               bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
     datec                   timestamptz     NOT NULL DEFAULT NOW(),
     datem                   timestamptz,
