@@ -14,7 +14,7 @@ SET search_path TO mike,public;
 
 -- mike ------------------------------------------------------------------------
 
-COMMENT ON SCHEMA mike IS 'mike, a light, robust, efficient vitual file system';
+COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file system';
 
 -- mike.info -------------------------------------------------------------------
 
