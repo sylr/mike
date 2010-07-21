@@ -108,6 +108,12 @@ MIKE_PARSE_WITH(sed)
 AC_PATH_PROG([SED], [sed], , [$SED_DIR])
 MIKE_ERROR_IF_EMPTY([$SED], [sed not found])
 
+# looking for make
+MIKE_ARG_SET_PATH(make)
+MIKE_PARSE_WITH(make)
+AC_PATH_PROG([MAKE], [make], , [$MAKE_DIR])
+MIKE_ERROR_IF_EMPTY([$MAKE], [make not found])
+
 # looking for awk
 MIKE_ARG_SET_PATH(awk)
 MIKE_PARSE_WITH(awk)
