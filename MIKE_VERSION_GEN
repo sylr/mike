@@ -27,7 +27,7 @@ if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" 
     MIKE_LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
 
     if [ ! -z "$(git diff --name-only $MIKE_LAST_TAG HEAD --)" ]; then
-        echo "$(git diff --no-color $MIKE_LAST_TAG HEAD --)" > $MIKE_TAG_DIFF_FILE
+        echo "$(git diff --patience --no-color $MIKE_LAST_TAG HEAD --)" > $MIKE_TAG_DIFF_FILE
     else
         rm -f $MIKE_TAG_DIFF_FILE
     fi
@@ -35,7 +35,7 @@ fi
 
 if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     MIKE_COMMIT="$MIKE_COMMIT-dirty";
-    echo "$(git diff --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
+    echo "$(git diff --patience --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
 else
     rm -f $MIKE_COMMIT_DIFF_FILE
 fi
