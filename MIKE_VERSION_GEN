@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MIKE_VERSION_FILE=MIKE_VERSION_FILE
-MIKE_COMMIT_DIFF_FILE=MIKE_COMMIT_DIFF_FILE
+MIKE_HEAD_DIFF_FILE=MIKE_HEAD_DIFF_FILE
 MIKE_TAG_DIFF_FILE=MIKE_TAG_DIFF_FILE
 
 # MIKE_VERSION_FILE
@@ -35,7 +35,7 @@ fi
 
 if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     MIKE_COMMIT="$MIKE_COMMIT-dirty";
-    echo "$(git diff --patience --no-color HEAD --)" > $MIKE_COMMIT_DIFF_FILE
+    echo "$(git diff --patience --no-color HEAD --)" > $MIKE_HEAD_DIFF_FILE
 else
     rm -f $MIKE_COMMIT_DIFF_FILE
 fi

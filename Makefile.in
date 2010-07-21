@@ -41,7 +41,7 @@ DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_F
 TARGET_FILE             = mike.o
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
-MIKE_COMMIT_DIFF_FILE   = MIKE_COMMIT_DIFF_FILE
+MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
 
 $(MIKE_VERSION_FILE):
 	@$(RM) $(MIKE_VERSION_FILE)
@@ -71,16 +71,18 @@ info:
 	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);      $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);        $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_BRANCH $(MIKE_BRANCH);        $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_BRANCH', '$(MIKE_BRANCH)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@# MIKE_TAG_DIFF_FILE
 	@$(ECHO) -n; \
 	if test -f $(MIKE_TAG_DIFF_FILE); then \
 	$(ECHO) '    ' LINK MIKE_TAG_DIFF_FILE;                 ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_TAG_DIFF', E'"; \
 	                                                        cat $(MIKE_TAG_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
 	                                                        $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
+	@# MIKE_HEAD_DIFF_FILE
 	@$(ECHO) -n; \
 	if test -f $(MIKE_COMMIT_DIFF_FILE); then \
-	$(ECHO) '    ' LINK MIKE_COMMIT_DIFF_FILE;              ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_COMMIT_DIFF', E'"; \
-	                                                        cat $(MIKE_COMMIT_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
+	$(ECHO) '    ' LINK MIKE_HEAD_DIFF_FILE;                ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_HEAD_DIFF', E'"; \
+	                                                        cat $(MIKE_HEAD_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
 	                                                        $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
 	@$(ECHO) '    ' LINK INSTALL_DATE $(DATE);              $(ECHO) "INSERT INTO mike.info VALUES ('INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
