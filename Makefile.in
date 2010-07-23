@@ -9,8 +9,11 @@
 #       /_/  /_/___/_/|_/___/  
 #
 
-# The default target of this Makefile is...
+# -- default target ------------------------------------------------------------
+
 dry-run::
+
+# -- variables -----------------------------------------------------------------
 
 ECHO                    = @ECHO@
 CAT                     = @CAT@
@@ -43,10 +46,7 @@ MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
 
-$(MIKE_VERSION_FILE):
-	@$(RM) $(MIKE_VERSION_FILE)
-	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
--include $(MIKE_VERSION_FILE)
+# -- tests ---------------------------------------------------------------------
 
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	CREATE_DATABASE = "DROP DATABASE IF EXISTS $(DATABASE_NAME) CASCADE; CREATE SCHEMA $(DATABASE_NAME);"
@@ -63,6 +63,15 @@ endif
 ifneq ($(DATABASE_PORT),)
 	PSQL_PORT = -p $(DATABASE_PORT)
 endif
+
+# -- version -------------------------------------------------------------------
+
+$(MIKE_VERSION_FILE):
+	@$(RM) $(MIKE_VERSION_FILE)
+	@$(SHELL) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
+-include $(MIKE_VERSION_FILE)
+
+# -- mike.o --------------------------------------------------------------------
 
 clean-target:
 	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
@@ -97,7 +106,12 @@ dumps: clean-target $(DATABASE_DUMPS) info
 %.dump : %.pl
 	@$(ECHO) '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
-dry-run:: dumps
+# -- dry-run -------------------------------------------------------------------
+
+dry-run::
+	@$(MAKE) --no-print-directory sub-dry-run $(MAKEFLAGS)
+
+sub-dry-run: dumps
 ifneq ($(ENABLE_CREATE_DATABASE),No)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); \
 	$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
@@ -109,7 +123,12 @@ endif
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
 
-install: dumps	
+# -- install -------------------------------------------------------------------
+
+install:
+	@$(MAKE) --no-print-directory sub-install $(MAKEFLAGS)
+
+sub-install: dumps
 ifneq ($(ENABLE_CREATE_DATABASE),No)
 	@$(ECHO) '    'CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_HOST); \
 	$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
@@ -129,6 +148,8 @@ mikeclean:
 drop-schema:
 	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
 
+# -- git -----------------------------------------------------------------------
+
 graph:
 	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
 
@@ -136,5 +157,6 @@ stat:
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
 
-.PHONY: $(MIKE_VERSION_FILE)
+# -- phony ---------------------------------------------------------------------
 
+.PHONY: $(MIKE_VERSION_FILE)
