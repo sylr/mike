@@ -60,6 +60,18 @@ MIKE_PARSE_WITH(which)
 AC_PATH_PROG([WHICH], [which], , [$WHICH_DIR])
 MIKE_ERROR_IF_EMPTY([$WHICH], [which not found])
 
+# looking for basename
+MIKE_ARG_SET_PATH(basename)
+MIKE_PARSE_WITH(basename)
+AC_PATH_PROG([BASENAME], [basename], , [$BASENAME_DIR])
+MIKE_ERROR_IF_EMPTY([$BASENAME], [basename not found])
+
+# looking for dirname
+MIKE_ARG_SET_PATH(dirname)
+MIKE_PARSE_WITH(dirname)
+AC_PATH_PROG([DIRNAME], [dirname], , [$DIRNAME_DIR])
+MIKE_ERROR_IF_EMPTY([$DIRNAME], [dirname not found])
+
 # looking for realpath
 MIKE_ARG_SET_PATH(realpath)
 MIKE_PARSE_WITH(realpath)
