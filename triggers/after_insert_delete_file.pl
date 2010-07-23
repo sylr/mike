@@ -83,8 +83,8 @@ SQL
 SQL
         $directory_update_plan = spi_prepare($directory_update_sql,
             'bigint',   # id_inode
-            'bigint',   # directory file count
-            'bigint',   # directory file inner count
+            'integer',  # directory file count
+            'integer',  # directory file inner count
             'bigint',   # directory size
             'bigint',   # directory inner size
             'bigint',   # directory versioning size
