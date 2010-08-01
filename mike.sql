@@ -9,7 +9,6 @@
 --      /_/  /_/___/_/|_/___/  
 --
 
-
 SET search_path TO mike,public;
 
 -- mike ------------------------------------------------------------------------
@@ -149,16 +148,38 @@ DROP TABLE IF EXISTS mike.directory CASCADE;
 CREATE TABLE mike.directory (
     id_inode                bigint      NOT NULL PRIMARY KEY,
     id_inode_parent         bigint      REFERENCES mike.directory(id_inode) ON DELETE CASCADE,
+    mimetype                varchar(64) NOT NULL DEFAULT 'application/x-folder',
+    inner_datem             timestamptz,
     inner_size              bigint      NOT NULL DEFAULT 0,
-    versioning_inner_size   bigint      NOT NULL DEFAULT 0,
+    inner_versioning_size   bigint      NOT NULL DEFAULT 0,
     dir_count               integer     NOT NULL DEFAULT 0,
-    dir_inner_count         bigint      NOT NULL DEFAULT 0,
+    inner_dir_count         bigint      NOT NULL DEFAULT 0,
     file_count              integer     NOT NULL DEFAULT 0,
-    file_inner_count        bigint      NOT NULL DEFAULT 0,
+    inner_file_count        bigint      NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
 ) INHERITS (mike.inode);
 
 COMMENT ON TABLE mike.directory IS 'table containing all the directory inodes';
+COMMENT ON COLUMN mike.directory.id_inode IS 'inode unique identifier';
+COMMENT ON COLUMN mike.directory.id_inode_parent IS 'identifier of parent inode';
+COMMENT ON COLUMN mike.directory.id_user IS 'owner of the inode';
+COMMENT ON COLUMN mike.directory.state IS 'state of the inode, references mike.inode_state';
+COMMENT ON COLUMN mike.directory.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.directory.path IS 'path of the inode';
+COMMENT ON COLUMN mike.directory.treepath IS 'treepath of the inode';
+COMMENT ON COLUMN mike.directory.datec IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.datem IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.inner_datem IS 'modification date of last updated child directory';
+COMMENT ON COLUMN mike.directory.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.mimetype IS 'mimetype of the inode';
+COMMENT ON COLUMN mike.directory.size IS 'size in bytes of the inode';
+COMMENT ON COLUMN mike.directory.inner_size IS 'size sum of child directories';
+COMMENT ON COLUMN mike.directory.versioning_size IS 'size in bytes of the inode';
+COMMENT ON COLUMN mike.directory.inner_versioning_size IS 'versioning size sum of child directories';
+COMMENT ON COLUMN mike.directory.dir_count IS 'number of direct child directories';
+COMMENT ON COLUMN mike.directory.inner_dir_count IS 'number of child directories';
+COMMENT ON COLUMN mike.directory.file_count IS 'number of direct child files';
+COMMENT ON COLUMN mike.directory.inner_file_count IS 'number of child files';
 
 CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode);
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent);
