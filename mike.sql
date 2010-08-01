@@ -130,8 +130,8 @@ COMMENT ON COLUMN mike.inode.datec IS 'creation timestamp with timezone of the i
 COMMENT ON COLUMN mike.inode.datem IS 'last modification timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.datea IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.mimetype IS 'mimetype of the inode';
-COMMENT ON COLUMN mike.inode.size IS 'size in bytes of the inode';
-COMMENT ON COLUMN mike.inode.versioning_size IS 'size in bytes of the inode';
+COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
+COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
 
 CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
@@ -180,6 +180,19 @@ CREATE TABLE mike.file (
 ) INHERITS (mike.inode);
 
 COMMENT ON TABLE mike.file IS 'table containing all the file inodes';
+COMMENT ON COLUMN mike.file.id_inode IS 'inode unique identifier';
+COMMENT ON COLUMN mike.file.id_inode_parent IS 'identifier of parent inode';
+COMMENT ON COLUMN mike.file.id_user IS 'owner of the inode';
+COMMENT ON COLUMN mike.file.state IS 'state of the inode, references mike.inode_state';
+COMMENT ON COLUMN mike.file.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.file.path IS 'path of the inode';
+COMMENT ON COLUMN mike.file.treepath IS 'treepath of the inode';
+COMMENT ON COLUMN mike.file.datec IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.datem IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.mimetype IS 'mimetype of the inode';
+COMMENT ON COLUMN mike.file.size IS 'size of the inode';
+COMMENT ON COLUMN mike.file.versioning_size IS 'size of the inode';
 
 CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode);
 CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent);
@@ -228,7 +241,7 @@ COMMENT ON COLUMN mike.volume.path IS 'path of the volumes';
 COMMENT ON COLUMN mike.volume.used_size IS 'used size used on the volumes';
 COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
 COMMENT ON COLUMN mike.volume.datec IS 'creation date off the volumes';
-COMMENT ON COLUMN mike.volume.datem IS 'last modification date off the volumes';
+COMMENT ON COLUMN mike.volume.datem IS 'last modification date of the volumes';
 COMMENT ON COLUMN mike.volume.token IS 'security token for volume record removal';
 
 -- mike.xfile ------------------------------------------------------------------
