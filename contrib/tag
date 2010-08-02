@@ -8,7 +8,7 @@ TAG_REALPATH=$(realpath $0)
 CONTRIB_PATH=$(dirname $TAG_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
 
-# loading lib.sh
+# loading lib/mike.sh
 . $MIKE_PATH/lib/mike.sh
 
 # ------------------------------------------------------------------------------
