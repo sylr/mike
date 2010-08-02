@@ -94,8 +94,9 @@ COMMENT ON COLUMN mike.inode_state.state IS 'state identifier';
 COMMENT ON COLUMN mike.inode_state.description IS 'state description';
 
 INSERT INTO mike.inode_state (state, description) VALUES (0, 'alive');
-INSERT INTO mike.inode_state (state, description) VALUES (1, 'waiting for physical removal');
-INSERT INTO mike.inode_state (state, description) VALUES (2, 'waiting for logical removal');
+INSERT INTO mike.inode_state (state, description) VALUES (1, 'trashed');
+INSERT INTO mike.inode_state (state, description) VALUES (2, 'waiting for physical removal');
+INSERT INTO mike.inode_state (state, description) VALUES (3, 'waiting for logical removal');
 
 -- mike.inode ------------------------------------------------------------------
 
@@ -134,6 +135,7 @@ COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
 
 CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
+CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user);
 CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name);
 CREATE INDEX inode_mimetype_btree_idx           ON mike.inode   USING btree (mimetype);
 CREATE INDEX inode_datec_btree_idx              ON mike.inode   USING btree (datec);
@@ -183,6 +185,7 @@ COMMENT ON COLUMN mike.directory.inner_file_count IS 'number of child files';
 
 CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode);
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent);
+CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user);
 CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name);
 CREATE INDEX directory_mimetype_btree_idx           ON mike.directory   USING btree (mimetype);
 CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec);
@@ -217,6 +220,7 @@ COMMENT ON COLUMN mike.file.versioning_size IS 'size of the inode';
 
 CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode);
 CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent);
+CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user);
 CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name);
 CREATE INDEX file_mimetype_btree_idx            ON mike.file    USING btree (mimetype);
 CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (datec);

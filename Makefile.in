@@ -23,7 +23,7 @@ SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
 DATE                    = `@DATE@`
 PSQL                    = @PSQL@
-PSQL_EXTRA              += -v 'ON_ERROR_STOP=on'
+PSQL_EXTRA              += -v ON_ERROR_STOP=on
 CREATEDB                = @CREATEDB@
 APGDIFF                 = @APGDIFF@
 PG_CONFIG               = @PG_CONFIG@
@@ -37,8 +37,10 @@ ENABLE_CREATE_DATABASE  = @ENABLE_CREATE_DATABASE@
 ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 DATABASE_TRIGGERS       = $(wildcard triggers/*.pl)
 DATABASE_TRIGGERS       += $(wildcard triggers/*.sql)
+DATABASE_FUNCTIONS      = $(wildcard functions/*.pl)
+DATABASE_FUNCTIONS      += $(wildcard functions/*.sql)
 DATABASE_FILES          = mike.sql
-DATABASE_FILES          += $(DATABASE_TRIGGERS)
+DATABASE_FILES          += $(DATABASE_TRIGGERS) $(DATABASE_FUNCTIONS)
 DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
