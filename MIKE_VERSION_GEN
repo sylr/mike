@@ -21,6 +21,7 @@ fi
 
 MIKE_COMMIT=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f1)
 MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
+MIKE_WHO=$(whoami)@$(hostname)
 
 if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
     MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty --abbrev 2>/dev/null)
@@ -43,5 +44,6 @@ fi
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
 echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
+echo "MIKE_WHO=$MIKE_WHO" >> $MIKE_VERSION_FILE
 
 exit 0
