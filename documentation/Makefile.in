@@ -9,9 +9,13 @@
 #       /_/  /_/___/_/|_/___/  
 #
 
-# The default target of this Makefile is...
-doc::
+# -- default target ------------------------------------------------------------
 
+all::
+
+# -- variables -----------------------------------------------------------------
+
+ECHO                = @ECHO@
 ASCIIDOC            = @ASCIIDOC@
 ASCIIDOC_EXTRA      = -a data-uri -a icons -a toc -a iconsdir=/usr/share/asciidoc/icons --unsafe
 DOCBOOK2ODF         = @DOCBOOK2ODF@
@@ -20,43 +24,71 @@ DOCBOOK2PDF         = @DOCBOOK2PDF@
 DOCBOOK2PDF_EXTRA   =
 A2X                 = @A2X@
 A2X_EXTRA           =
-DOC_TXT             = $(wildcard /doc/*.txt)
-DOC_HTML            = $(patsubst %.txt, %.html,$(DOC_TXT))
-DOC_XML             = $(patsubst %.txt, %.xml, $(DOC_TXT))
-DOC_ODT             = $(patsubst %.txt, %.odt, $(DOC_TXT))
-DOC_PDF             = $(patsubst %.txt, %.pdf, $(DOC_TXT))
+XMLTO               = @XMLTO@
+XMLTO_EXTRA         =
+DOC_TXT             = $(wildcard *.txt)
+DOC_HTML            = $(patsubst %.txt, %.html, $(DOC_TXT))
+DOC_XML             = $(patsubst %.txt, %.xml,  $(DOC_TXT))
+DOC_ODT             = $(patsubst %.txt, %.odt,  $(DOC_TXT))
+DOC_PDF             = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
+DOC_MAN1            = $(patsubst %.txt, %.1,    $(DOC_TXT))
 
-$(MIKE_VERSION_FILE):
-	@$(RM) $(MIKE_VERSION_FILE)
-	@$(SHELL_PATH) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_COMMIT_DIFF_FILE)
--include $(MIKE_VERSION_FILE)
+prefix              = @prefix@
+htmldir             ?= $(prefix)/share/doc/mike
+pdfdir              ?= $(prefix)/share/doc/mike
+mandir              ?= $(prefix)/share/man
+man1dir             =  $(mandir)/man1
 
-doc:: $(DOC_HTML)
+# -- targets -------------------------------------------------------------------
 
-doc-html: $(DOC_HTML)
+all:: html man
 
-doc-xml: $(DOC_XML)
+html: $(DOC_HTML)
 
-doc-odt: $(DOC_XML) $(DOC_ODT)
+xml: $(DOC_XML)
 
-doc-pdf: $(DOC_XML) $(DOC_PDF)
+man: $(DOC_XML) $(DOC_MAN1)
+
+odt: $(DOC_XML) $(DOC_ODT)
+
+pdf: $(DOC_XML) $(DOC_PDF)
+
+# -- files ---------------------------------------------------------------------
 
 %.html : %.txt
-	$(ASCIIDOC) $(ASCIIDOC_EXTRA) -b xhtml11 -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -b xhtml11 -o $@ $<
 
 %.xml : %.txt
-	$(ASCIIDOC) $(ASCIIDOC_EXTRA) -b docbook -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -b docbook -d manpage -o $@ $<
+
+%.1 : %.xml
+	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) man $<
 
 %.pdf : %.xml
-	$(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
+	@$(ECHO) '    ' DOCBOOK2PDF $@; $(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
 
 %.odt : %.xml
-	$(DOCBOOK2ODF) $(DOCBOOK2ODF_EXTRA) --output-file $@ $<
+	@$(ECHO) '    ' DOCBOOK2ODF $@; $(DOCBOOK2ODF) $(DOCBOOK2ODF_EXTRA) --output-file $@ $<
+
+# -- install -------------------------------------------------------------------
+
+install: install-html install-man
+
+install-html: html
+	$(INSTALL) -d -m 755 $(htmldir)
+	$(INSTALL) -m 644 $(DOC_HTML) $(htmldir)
+
+install-man: man
+	$(INSTALL) -d -m 755 $(man1dir)
+	$(INSTALL) -m 644 $(DOC_MAN1) $(man1dir)
+
+# -- clean ---------------------------------------------------------------------
 
 clean:
-	$(RM) $(DOC_HTML)
-	$(RM) $(DOC_XML)
-	$(RM) $(DOC_ODT)
-	$(RM) $(DOC_PDF)
-	$(RM) *~
+	@$(RM) $(DOC_HTML)
+	@$(RM) $(DOC_XML)
+	@$(RM) $(DOC_ODT)
+	@$(RM) $(DOC_PDF)
+	@$(RM) $(DOC_MAN1)
+	@$(RM) *~
 
