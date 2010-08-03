@@ -170,6 +170,9 @@ stat:
 doc:
 	@$(MAKE) --no-print-directory -C documentation all
 
+clean-doc:
+	@$(MAKE) --no-print-directory -C documentation clean
+
 install-doc:
 	@$(MAKE) --no-print-directory -C documentation install
 
