@@ -148,7 +148,7 @@ endif
 clean:
 	@$(GIT) clean -fdx
 
-mikeclean:
+clean-mike:
 	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME);
 	@$(ECHO) '    ' REMOVING MIKE_FILE_VERSION; $(RM) $(MIKE_VERSION_FILE); $(SLEEP) $(SLEEP_TIME);
 	@$(ECHO) '    ' REMOVING MIKE_COMMIT_DIFF; $(RM) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME);
