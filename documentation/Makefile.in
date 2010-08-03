@@ -63,7 +63,7 @@ pdf: $(DOC_XML) $(DOC_PDF)
 	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -b docbook -d manpage -o $@ $<
 
 %.1 : %.xml
-	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) man $<
+	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null
 
 %.pdf : %.xml
 	@$(ECHO) '    ' DOCBOOK2PDF $@; $(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
