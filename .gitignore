@@ -8,3 +8,8 @@ configure
 config.log
 config.status
 autom4te.cache
+documentation/**.html
+documentation/**.xml
+documentation/**.1
+documentation/**.odf
+documentation/**.pdf

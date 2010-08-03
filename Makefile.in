@@ -15,13 +15,14 @@ dry-run::
 
 # -- variables -----------------------------------------------------------------
 
+prefix                  = @prefix@
 ECHO                    = @ECHO@
 CAT                     = @CAT@
 RM                      = @RM@ -f
 GIT                     = @GIT@
 SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
-DATE                    = `@DATE@`
+DATE                    = @DATE@
 PSQL                    = @PSQL@
 PSQL_EXTRA              += -v ON_ERROR_STOP=on
 CREATEDB                = @CREATEDB@
@@ -82,7 +83,7 @@ info:
 	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);      $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);        $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_BRANCH $(MIKE_BRANCH);        $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_BRANCH', '$(MIKE_BRANCH)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK INSTALL_DATE $(DATE);              $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;            $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', NOW()::varchar);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_USER;                         $(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	
 	@# MIKE_TAG_DIFF_FILE
@@ -158,6 +159,21 @@ graph:
 stat:
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
+
+# -- documentation -------------------------------------------------------------
+
+doc:
+	@$(MAKE) --no-print-directory -C documentation all
+
+install-doc:
+	@$(MAKE) --no-print-directory -C documentation install
+
+man:
+	@$(ECHO) '    ' PREFIX $(prefix)
+	@$(MAKE) --no-print-directory -C documentation man
+
+install-man:
+	@$(MAKE) --no-print-directory -C documentation install-man
 
 # -- phony ---------------------------------------------------------------------
 

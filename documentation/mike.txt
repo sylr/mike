@@ -1,0 +1,32 @@
+Mike(1)
+=======
+
+NAME
+----
+mike - a lightweight, robust, efficient virtual file system
+
+SYNOPSIS
+--------
+[verse]
+'autoconf'
+'configure' [--with-git=] [--with-psql=] [--with-pg_config=] 
+    [--with-pg_dump=] [--with-createdb=] [--with-apgdiff=]
+    [--enable-create-database] [--enable-create-schema]
+    [DATABASE_USERNAME=] [DATABASE_NAME=] [DATABASE_HOST=] [DATABASE_PORT=] 
+'make' [install|graph|stat|clean]
+
+DESCRIPTION
+-----------
+Mike is a `Virtual File System` which primary goals are to be lightweight, robust
+and efficient. In a few words Mike is a `PostgreSQL database` which comes with a
+`sql API`. The API provides a set of functions needed to manipulate the data into
+the database.
+
+The main idea when Mike has been designed was that a file system is accessed, browsed
+most of the time, but rarely modified. Knowing that, Mike stores for each inodes
+metadata which are recalculated only when the file system is modified in order to
+make browsing the fastest possible because all the data fetched are stored, not calculated.
+
+Author
+------
+* Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>

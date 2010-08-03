@@ -6,6 +6,7 @@
 AC_PREREQ([2.61])
 AC_INIT([Mike], [@@MIKE_VERSION@@], [sylvain@abstraction.fr], , [https://git.abstraction.fr/~sylvain/])
 AC_COPYRIGHT([All rights reserved to Sylvain Rabot])
+AC_PREFIX_DEFAULT([$HOME])
 
 # -- macros --------------------------------------------------------------------
 
@@ -182,6 +183,11 @@ MIKE_ERROR_IF_EMPTY([$GIT], [git not found])
 MIKE_ARG_SET_PATH(asciidoc)
 MIKE_PARSE_WITH(asciidoc)
 AC_PATH_PROG([ASCIIDOC], [asciidoc], , [$ASCIIDOC_DIR])
+
+# looking for xmlto
+MIKE_ARG_SET_PATH(xmlto)
+MIKE_PARSE_WITH(xmlto)
+AC_PATH_PROG([XMLTO], [xmlto], , [$XMLTO_DIR])
 
 # looking for docbook2odf
 MIKE_ARG_SET_PATH(docbook2odf)
