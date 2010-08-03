@@ -179,6 +179,12 @@ MIKE_PARSE_WITH(git)
 AC_PATH_PROG([GIT], [git], , [$GIT_DIR])
 MIKE_ERROR_IF_EMPTY([$GIT], [git not found])
 
+# looking for install
+MIKE_ARG_SET_PATH(install)
+MIKE_PARSE_WITH(install)
+AC_PATH_PROG([INSTALL], [install], , [$INSTALL_DIR])
+MIKE_ERROR_IF_EMPTY([$INSTALL], [install not found])
+
 # looking for asciidoc
 MIKE_ARG_SET_PATH(asciidoc)
 MIKE_PARSE_WITH(asciidoc)
