@@ -177,7 +177,6 @@ install-doc:
 	@$(MAKE) --no-print-directory -C documentation install
 
 man:
-	@$(ECHO) '    ' PREFIX $(prefix)
 	@$(MAKE) --no-print-directory -C documentation man
 
 install-man:
