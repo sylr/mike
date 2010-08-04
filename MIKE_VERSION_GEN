@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 
-MIKE_VERSION_FILE=MIKE_VERSION_FILE
-MIKE_HEAD_DIFF_FILE=MIKE_HEAD_DIFF_FILE
-MIKE_TAG_DIFF_FILE=MIKE_TAG_DIFF_FILE
+# path
+MIKE_VERSION_GEN_REALPATH=$(realpath $0)
+MIKE_PATH=$(dirname $MIKE_VERSION_GEN_REALPATH)
+
+# exporting git dit
+export GIT_DIR=$MIKE_PATH/.git
+
+# defaunt values
+MIKE_VERSION_FILE=$MIKE_PATH/MIKE_VERSION_FILE
+MIKE_HEAD_DIFF_FILE=$MIKE_PATH/MIKE_HEAD_DIFF_FILE
+MIKE_TAG_DIFF_FILE=$MIKE_PATH/MIKE_TAG_DIFF_FILE
 
 # MIKE_VERSION_FILE
 if [ ! -z $1 ]; then
@@ -19,10 +27,11 @@ if [ ! -z $3 ]; then
     MIKE_TAG_DIFF_FILE=$3
 fi
 
-MIKE_COMMIT=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f1)
+MIKE_COMMIT=$(git show-ref $(cat $MIKE_PATH/.git/HEAD) | cut -d ' ' -f1)
 MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
 MIKE_WHO=$(whoami)@$(hostname)
 
+# generating MIKE_VERSION
 if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
     MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty --abbrev 2>/dev/null)
     MIKE_LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
@@ -34,6 +43,7 @@ if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" 
     fi
 fi
 
+# generating MIKE_HEAD_DIFF_FILE
 if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     MIKE_COMMIT="$MIKE_COMMIT-dirty";
     echo "$(git diff --patience --no-color HEAD --)" > $MIKE_HEAD_DIFF_FILE
@@ -41,6 +51,10 @@ else
     rm -f $MIKE_HEAD_DIFF_FILE
 fi
 
+# removing for safety
+rm -f $MIKE_VERSION_FILE
+
+# writing MIKE_VERSION_FILE
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
 echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
