@@ -154,7 +154,7 @@ clean-mike:
 	@$(ECHO) '    ' REMOVING MIKE_COMMIT_DIFF; $(RM) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME);
 
 drop-schema:
-	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME)
+	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 
 # -- git -----------------------------------------------------------------------
 
