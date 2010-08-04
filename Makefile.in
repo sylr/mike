@@ -116,9 +116,9 @@ dumps: clean-target $(DATABASE_DUMPS) info
 # -- dry-run -------------------------------------------------------------------
 
 dry-run::
-	@$(MAKE) --no-print-directory sub-dry-run $(MAKEFLAGS)
+	@$(MAKE) --no-print-directory dry-run-sub $(MAKEFLAGS)
 
-sub-dry-run: dumps
+dry-run-sub: dumps
 ifneq ($(ENABLE_CREATE_DATABASE),No)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
@@ -134,9 +134,9 @@ endif
 # -- install -------------------------------------------------------------------
 
 install:
-	@$(MAKE) --no-print-directory sub-install $(MAKEFLAGS)
+	@$(MAKE) --no-print-directory install-sub $(MAKEFLAGS)
 
-sub-install: dumps
+install-sub: dumps
 ifneq ($(ENABLE_CREATE_DATABASE),No)
 	@$(ECHO) '    'CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_HOST); \
 	$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
