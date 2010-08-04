@@ -1,0 +1,57 @@
+mike-table-file(1)
+==================
+
+NAME
+----
+mike-table-file - mike's file table
+
+SYNOPSIS
+--------
+[verse]
+                                           Table "mike.file"
+     Column      |           Type           |                        Modifiers                         
+-----------------+--------------------------+----------------------------------------------------------
+ id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass)
+ id_inode_parent | bigint                   | 
+ id_user         | integer                  | not null
+ state           | integer                  | not null default 0
+ name            | character varying(256)   | not null
+ path            | character varying(5140)  | not null
+ treepath        | ltree                    | not null
+ datec           | timestamp with time zone | not null default now()
+ datem           | timestamp with time zone | 
+ datea           | timestamp with time zone | 
+ mimetype        | character varying(64)    | 
+ size            | bigint                   | not null default 0
+ versioning_size | bigint                   | not null default 0
+Indexes:
+    "file_pkey" PRIMARY KEY, btree (id_inode)
+    "file_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
+    "file_datec_btree_idx" btree (datec)
+    "file_datem_btree_idx" btree (datem)
+    "file_id_inode_btree_idx" btree (id_inode)
+    "file_id_inode_parent_btree_idx" btree (id_inode_parent)
+    "file_id_user_btree_idx" btree (id_user)
+    "file_mimetype_btree_idx" btree (mimetype)
+    "file_name_btree_idx" btree (name)
+    "file_path_btree_idx" btree (path)
+    "file_treepath_gist_idx" gist (treepath)
+Check constraints:
+    "inode_name_check" CHECK (name::text <> ''::text)
+Foreign-key constraints:
+    "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
+Referenced by:
+    TABLE "as_file_xfile" CONSTRAINT "as_file_xfile_id_inode_fkey" FOREIGN KEY (id_inode) REFERENCES file(id_inode) ON DELETE RESTRICT
+Inherits: inode
+
+DESCRIPTION
+-----------
+Inherits inode. contains all file inodes of the vfs.
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite

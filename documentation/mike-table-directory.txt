@@ -1,0 +1,67 @@
+mike-table-directory(1)
+=======================
+
+NAME
+----
+mike-table-directory - mike's directory table
+
+SYNOPSIS
+--------
+[verse]
+                                            Table "mike.directory"
+        Column         |           Type           |                         Modifiers                          
+-----------------------+--------------------------+------------------------------------------------------------
+ id_inode              | bigint                   | not null default nextval('inode_id_inode_seq'::regclass)
+ id_inode_parent       | bigint                   | 
+ id_user               | integer                  | not null
+ state                 | integer                  | not null default 0
+ name                  | character varying(256)   | not null
+ path                  | character varying(5140)  | not null
+ treepath              | ltree                    | not null
+ datec                 | timestamp with time zone | not null default now()
+ datem                 | timestamp with time zone | 
+ datea                 | timestamp with time zone | 
+ mimetype              | character varying(64)    | not null default 'application/x-folder'::character varying
+ size                  | bigint                   | not null default 0
+ versioning_size       | bigint                   | not null default 0
+ inner_datem           | timestamp with time zone | 
+ inner_size            | bigint                   | not null default 0
+ inner_versioning_size | bigint                   | not null default 0
+ dir_count             | integer                  | not null default 0
+ inner_dir_count       | bigint                   | not null default 0
+ file_count            | integer                  | not null default 0
+ inner_file_count      | bigint                   | not null default 0
+Indexes:
+    "directory_pkey" PRIMARY KEY, btree (id_inode)
+    "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
+    "directory_datec_btree_idx" btree (datec)
+    "directory_datem_btree_idx" btree (datem)
+    "directory_id_inode_btree_idx" btree (id_inode)
+    "directory_id_inode_parent_btree_idx" btree (id_inode_parent)
+    "directory_id_user_btree_idx" btree (id_user)
+    "directory_mimetype_btree_idx" btree (mimetype)
+    "directory_name_btree_idx" btree (name)
+    "directory_path_btree_idx" btree (path)
+    "directory_treepath_gist_idx" gist (treepath)
+Check constraints:
+    "inode_name_check" CHECK (name::text <> ''::text)
+Foreign-key constraints:
+    "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
+Referenced by:
+    TABLE "directory" CONSTRAINT "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
+    TABLE "file" CONSTRAINT "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
+Inherits: inode
+
+
+DESCRIPTION
+-----------
+Inherits inode. contains all directory inodes of the vfs.
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
+

@@ -16,8 +16,9 @@ all::
 # -- variables -----------------------------------------------------------------
 
 ECHO                = @ECHO@
+RM                  = @RM@ -f
 ASCIIDOC            = @ASCIIDOC@
-ASCIIDOC_EXTRA      = -a data-uri -a icons -a toc -a iconsdir=/usr/share/asciidoc/icons --unsafe
+ASCIIDOC_EXTRA      = -a data-uri -a icons -a iconsdir=/usr/share/asciidoc/icons --unsafe -f asciidoc.conf
 DOCBOOK2ODF         = @DOCBOOK2ODF@
 DOCBOOK2ODF_EXTRA   = --force --quiet
 DOCBOOK2PDF         = @DOCBOOK2PDF@
@@ -33,6 +34,9 @@ DOC_XML             = $(patsubst %.txt, %.xml,  $(DOC_TXT))
 DOC_ODT             = $(patsubst %.txt, %.odt,  $(DOC_TXT))
 DOC_PDF             = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
 DOC_MAN1            = $(patsubst %.txt, %.1,    $(DOC_TXT))
+MIKE_VERSION_FILE   = ../MIKE_VERSION_FILE
+MIKE_TAG_DIFF_FILE  = ../MIKE_TAG_DIFF_FILE
+MIKE_HEAD_DIFF_FILE = ../MIKE_HEAD_DIFF_FILE
 
 prefix              = @prefix@
 htmldir             ?= $(prefix)/share/doc/mike
@@ -40,27 +44,49 @@ pdfdir              ?= $(prefix)/share/doc/mike
 mandir              ?= $(prefix)/share/man
 man1dir             =  $(mandir)/man1
 
+# -- version -------------------------------------------------------------------
+
+$(MIKE_VERSION_FILE):
+	@$(RM) $(MIKE_VERSION_FILE)
+	@$(SHELL) ../MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
+-include $(MIKE_VERSION_FILE)
+
 # -- targets -------------------------------------------------------------------
 
 all:: html man
 
-html: $(DOC_HTML)
+html:
+	@$(MAKE) --no-print-directory html-sub $(MAKEFLAGS)
 
-xml: $(DOC_XML)
+xml:
+	@$(MAKE) --no-print-directory xml-sub $(MAKEFLAGS)
 
-man: $(DOC_XML) $(DOC_MAN1)
+man:
+	@$(MAKE) --no-print-directory man-sub $(MAKEFLAGS)
 
-odt: $(DOC_XML) $(DOC_ODT)
+odt:
+	@$(MAKE) --no-print-directory odt-sub $(MAKEFLAGS)
 
-pdf: $(DOC_XML) $(DOC_PDF)
+pdf:
+	@$(MAKE) --no-print-directory pdf-sub $(MAKEFLAGS)
+
+html-sub: $(DOC_HTML)
+
+xml-sub: $(DOC_XML)
+
+man-sub: $(DOC_XML) $(DOC_MAN1)
+
+odt-sub: $(DOC_XML) $(DOC_ODT)
+
+pdf-sub: $(DOC_XML) $(DOC_PDF)
 
 # -- files ---------------------------------------------------------------------
 
 %.html : %.txt
-	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -b xhtml11 -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -a mike_version="$(MIKE_VERSION)" -b xhtml11 -o $@ $<
 
 %.xml : %.txt
-	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -b docbook -d manpage -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -a mike_version="$(MIKE_VERSION)" -b docbook -d manpage -o $@ $<
 
 %.1 : %.xml
 	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null

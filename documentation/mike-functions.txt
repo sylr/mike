@@ -1,0 +1,47 @@
+mike-functions(1)
+=================
+
+NAME
+----
+mike-functions - mike's functions
+
+SYNOPSIS
+--------
+[verse]
+ Schema |       Name       | Result data type |                                       Argument data types                                        |  Type  
+--------+------------------+------------------+--------------------------------------------------------------------------------------------------+--------
+ mike   | make_directory   | bigint           | in_id_user bigint, in_id_inode_parent bigint, in_name character varying, OUT out_id_inode bigint | normal
+ mike   | make_directory   | bigint           | in_id_user bigint, in_name character varying, OUT out_id_inode bigint                            | normal
+ mike   | move_directory   | void             | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint                             | normal
+ mike   | remove_directory | void             | in_id_user bigint, in_id_inode bigint                                                            | normal
+
+FUNCTIONS
+---------
+make_directory(in_id_user, in_id_inode_parent, in_name)::
+    Create a directory inside another directory.
+    +
+    See linkmike:mike-function-make-directory[1]
+
+make_directory(in_id_user, in_name)::
+    Create a directory at vfs's root.
+    +
+    See linkmike:mike-function-make-directory[1]
+
+move_directory(in_id_user, in_id_inode, in_new_id_inode_parent)::
+    Move a directory inside another directory.
+    +
+    See linkmike:mike-function-move-directory[1]
+
+remove_directory(in_id_user, in_id_inode)::
+    Flag a directory and its children for removal.
+    +
+    See linkmike:mike-function-remove-directory[1]
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
+

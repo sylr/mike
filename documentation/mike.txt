@@ -1,4 +1,4 @@
-Mike(1)
+mike(1)
 =======
 
 NAME
@@ -27,6 +27,40 @@ most of the time, but rarely modified. Knowing that, Mike stores for each inodes
 metadata which are recalculated only when the file system is modified in order to
 make browsing the fastest possible because all the data fetched are stored, not calculated.
 
-Author
-------
-* Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>
+STRUCTURE
+---------
+
+Tables
+~~~~~~ 
+see linkmike:mike-table[1]
+
+  - 'as_file_xfile' : see linkmike:mike-table-as-file-xfile[1]
+  - 'as_user_group' : see linkmike:mike-table-as-user-group[1]
+  - 'directory' : see linkmike:mike-table-directory[1]
+  - 'file' : see linkmike:mike-table-file[1]
+  - 'group' : see linkmike:mike-table-group[1]
+  - 'info' : see linkmike:mike-table-info[1]
+  - 'inode' : see linkmike:mike-table-inode[1]
+  - 'inode_state' : see linkmike:mike-table-inode-state[1]
+  - 'user' : see linkmike:mike-table-user[1]
+  - 'volume' : see linkmike:mike-table-volume[1]
+  - 'volume_state' : see linkmike:mike-table-volume-state[1]
+  - 'xfile' : see linkmike:mike-table-xfile[1]
+
+Functions
+~~~~~~~~~
+see linkmike:mike-function[1]
+
+  - 'make_directory(in_id_user, in_id_inode_parent, in_name)' : see linkmike:mike-function-make-directory[1]
+  - 'make_directory(in_id_user, in_name)' : see linkmike:mike-function-make-directory[1]
+  - 'move_directory(in_id_user, in_id_inode, in_new_id_inode_parent)' : see linkmike:mike-function-move-directory[1]
+  - 'remove_directory(in_id_user, in_id_inode)' : see linkmike:mike-function-remove-directory[1]
+
+Authors
+-------
+Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
+

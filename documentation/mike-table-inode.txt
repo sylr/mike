@@ -1,0 +1,58 @@
+mike-table-inode(1)
+===================
+
+NAME
+----
+mike-table-inode - mike's inode table
+
+SYNOPSIS
+--------
+[verse]
+                                                                            Table "mike.inode"
+     Column      |           Type           |                        Modifiers                         | Storage  |                      Description                       
+-----------------+--------------------------+----------------------------------------------------------+----------+--------------------------------------------------------
+ id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | plain    | inode unique identifier
+ id_inode_parent | bigint                   |                                                          | plain    | identifier of parent inode
+ id_user         | integer                  | not null                                                 | plain    | owner of the inode
+ state           | integer                  | not null default 0                                       | plain    | state of the inode, references mike.inode_state
+ name            | character varying(256)   | not null                                                 | extended | name of the inode, limited to 256 characters
+ path            | character varying(5140)  | not null                                                 | extended | path of the inode
+ treepath        | ltree                    | not null                                                 | extended | treepath of the inode
+ datec           | timestamp with time zone | not null default now()                                   | plain    | creation timestamp with timezone of the inode
+ datem           | timestamp with time zone |                                                          | plain    | last modification timestamp with timezone of the inode
+ datea           | timestamp with time zone |                                                          | plain    | last access timestamp with timezone of the inode
+ mimetype        | character varying(64)    |                                                          | extended | mimetype of the inode
+ size            | bigint                   | not null default 0                                       | plain    | size of the inode
+ versioning_size | bigint                   | not null default 0                                       | plain    | versioning size of the inode
+Indexes:
+    "inode_pkey" PRIMARY KEY, btree (id_inode)
+    "inode_datec_btree_idx" btree (datec)
+    "inode_datem_btree_idx" btree (datem)
+    "inode_id_inode_btree_idx" btree (id_inode)
+    "inode_id_inode_parent_btree_idx" btree (id_inode_parent)
+    "inode_id_user_btree_idx" btree (id_user)
+    "inode_mimetype_btree_idx" btree (mimetype)
+    "inode_name_btree_idx" btree (name)
+    "inode_path_btree_idx" btree (path)
+    "inode_treepath_gist_idx" gist (treepath)
+Check constraints:
+    "inode_name_check" CHECK (name::text <> ''::text)
+Foreign-key constraints:
+    "inode_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES inode(id_inode) ON DELETE CASCADE
+    "inode_id_user_fkey" FOREIGN KEY (id_user) REFERENCES "user"(id_user)
+    "inode_state_fkey" FOREIGN KEY (state) REFERENCES inode_state(state)
+Referenced by:
+    TABLE "inode" CONSTRAINT "inode_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES inode(id_inode) ON DELETE CASCADE
+Has OIDs: no
+
+DESCRIPTION
+-----------
+Extends each vfs item of mike: file and directory.
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
