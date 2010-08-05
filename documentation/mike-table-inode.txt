@@ -24,6 +24,8 @@ SYNOPSIS
  mimetype        | character varying(64)    |                                                          | extended | mimetype of the inode
  size            | bigint                   | not null default 0                                       | plain    | size of the inode
  versioning_size | bigint                   | not null default 0                                       | plain    | versioning size of the inode
+
+[verse]
 Indexes:
     "inode_pkey" PRIMARY KEY, btree (id_inode)
     "inode_datec_btree_idx" btree (datec)
@@ -35,15 +37,20 @@ Indexes:
     "inode_name_btree_idx" btree (name)
     "inode_path_btree_idx" btree (path)
     "inode_treepath_gist_idx" gist (treepath)
+
+[verse]
 Check constraints:
     "inode_name_check" CHECK (name::text <> ''::text)
+
+[verse]
 Foreign-key constraints:
     "inode_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES inode(id_inode) ON DELETE CASCADE
     "inode_id_user_fkey" FOREIGN KEY (id_user) REFERENCES "user"(id_user)
     "inode_state_fkey" FOREIGN KEY (state) REFERENCES inode_state(state)
+
+[verse]
 Referenced by:
     TABLE "inode" CONSTRAINT "inode_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES inode(id_inode) ON DELETE CASCADE
-Has OIDs: no
 
 DESCRIPTION
 -----------

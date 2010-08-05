@@ -31,6 +31,8 @@ SYNOPSIS
  inner_dir_count       | bigint                   | not null default 0
  file_count            | integer                  | not null default 0
  inner_file_count      | bigint                   | not null default 0
+
+[verse]
 Indexes:
     "directory_pkey" PRIMARY KEY, btree (id_inode)
     "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
@@ -43,13 +45,21 @@ Indexes:
     "directory_name_btree_idx" btree (name)
     "directory_path_btree_idx" btree (path)
     "directory_treepath_gist_idx" gist (treepath)
+
+[verse]
 Check constraints:
     "inode_name_check" CHECK (name::text <> ''::text)
+
+[verse]
 Foreign-key constraints:
     "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
+
+[verse]
 Referenced by:
     TABLE "directory" CONSTRAINT "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
     TABLE "file" CONSTRAINT "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
+
+[verse]
 Inherits: inode
 
 

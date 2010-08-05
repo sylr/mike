@@ -24,6 +24,8 @@ SYNOPSIS
  mimetype        | character varying(64)    | 
  size            | bigint                   | not null default 0
  versioning_size | bigint                   | not null default 0
+
+[verse]
 Indexes:
     "file_pkey" PRIMARY KEY, btree (id_inode)
     "file_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
@@ -36,12 +38,20 @@ Indexes:
     "file_name_btree_idx" btree (name)
     "file_path_btree_idx" btree (path)
     "file_treepath_gist_idx" gist (treepath)
+
+[verse]
 Check constraints:
     "inode_name_check" CHECK (name::text <> ''::text)
+
+[verse]
 Foreign-key constraints:
     "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
+
+[verse]
 Referenced by:
     TABLE "as_file_xfile" CONSTRAINT "as_file_xfile_id_inode_fkey" FOREIGN KEY (id_inode) REFERENCES file(id_inode) ON DELETE RESTRICT
+
+[verse]
 Inherits: inode
 
 DESCRIPTION
