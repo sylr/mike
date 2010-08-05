@@ -63,4 +63,3 @@ Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@ab
 MIKE
 ----
 Part of the linkmike:mike[1] suite
-
