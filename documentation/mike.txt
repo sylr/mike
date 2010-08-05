@@ -32,7 +32,7 @@ STRUCTURE
 
 Tables
 ~~~~~~ 
-see linkmike:mike-table[1]
+see linkmike:mike-tables[1]
 
   - 'as_file_xfile' : see linkmike:mike-table-as-file-xfile[1]
   - 'as_user_group' : see linkmike:mike-table-as-user-group[1]
@@ -49,7 +49,7 @@ see linkmike:mike-table[1]
 
 Functions
 ~~~~~~~~~
-see linkmike:mike-function[1]
+see linkmike:mike-functions[1]
 
   - 'make_directory(in_id_user, in_id_inode_parent, in_name)' : see linkmike:mike-function-make-directory[1]
   - 'make_directory(in_id_user, in_name)' : see linkmike:mike-function-make-directory[1]
