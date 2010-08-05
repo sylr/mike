@@ -5,6 +5,7 @@ MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE
 configure
 **Makefile
+**.log
 config.log
 config.status
 autom4te.cache

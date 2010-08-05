@@ -127,17 +127,23 @@ MIKE_PARSE_WITH(sed)
 AC_PATH_PROG([SED], [sed], , [$SED_DIR])
 MIKE_ERROR_IF_EMPTY([$SED], [sed not found])
 
-# looking for make
-MIKE_ARG_SET_PATH(make)
-MIKE_PARSE_WITH(make)
-AC_PATH_PROG([MAKE], [make], , [$MAKE_DIR])
-MIKE_ERROR_IF_EMPTY([$MAKE], [make not found])
-
 # looking for awk
 MIKE_ARG_SET_PATH(awk)
 MIKE_PARSE_WITH(awk)
 AC_PATH_PROG([AWK], [awk], , [$AWK_DIR])
 MIKE_ERROR_IF_EMPTY([$AWK], [awk not found])
+
+# looking for tee
+MIKE_ARG_SET_PATH(tee)
+MIKE_PARSE_WITH(tee)
+AC_PATH_PROG([TEE], [tee], , [$TEE_DIR])
+MIKE_ERROR_IF_EMPTY([$TEE], [tee not found])
+
+# looking for make
+MIKE_ARG_SET_PATH(make)
+MIKE_PARSE_WITH(make)
+AC_PATH_PROG([MAKE], [make], , [$MAKE_DIR])
+MIKE_ERROR_IF_EMPTY([$MAKE], [make not found])
 
 # looking for grep
 MIKE_ARG_SET_PATH(grep)

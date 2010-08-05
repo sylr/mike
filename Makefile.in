@@ -30,6 +30,7 @@ APGDIFF                 = @APGDIFF@
 PG_CONFIG               = @PG_CONFIG@
 PG_DUMP                 = @PG_DUMP@
 SED                     = @SED@
+TEE                     = @TEE@
 DATABASE_USER           = @DATABASE_USER@
 DATABASE_NAME           = @DATABASE_NAME@
 DATABASE_HOST           = @DATABASE_HOST@
@@ -48,6 +49,8 @@ TARGET_FILE             = mike.o
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
+DRY_RUN_LOG             = dry-run.log
+INSTALL_LOG             = install.log
 
 # -- tests ---------------------------------------------------------------------
 
@@ -127,7 +130,8 @@ endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO);   
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
+	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) | \
+	                $(TEE) $(DRY_RUN_LOG)
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
 
@@ -143,7 +147,8 @@ ifneq ($(ENABLE_CREATE_DATABASE),No)
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "COMMIT;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
+	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) | \
+	                $(TEE) $(INSTALL_LOG)
 
 clean:
 	@$(GIT) clean -fdx
