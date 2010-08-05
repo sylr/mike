@@ -1,0 +1,51 @@
+mike-table-volume(1)
+====================
+
+NAME
+----
+mike-table-volume - mike's volume table
+
+SYNOPSIS
+--------
+[verse]
+                                        Table "mike.volume"
+  Column   |           Type           |                         Modifiers                          
+-----------+--------------------------+------------------------------------------------------------
+ id_volume | integer                  | not null default nextval('volume_id_volume_seq'::regclass)
+ state     | integer                  | not null default 1
+ path      | character varying(255)   | not null
+ used_size | bigint                   | not null default 0
+ max_size  | bigint                   | not null default 0
+ datec     | timestamp with time zone | not null default now()
+ datem     | timestamp with time zone | 
+ token     | character(40)            | 
+
+[verse]
+Indexes:
+    "volume_pkey" PRIMARY KEY, btree (id_volume)
+
+[verse]
+Check constraints:
+    "volume_path_check" CHECK (substr(path::text, 1, 1) = '/'::text AND "substring"(path::text, '.$'::text) = '/'::text)
+
+[verse]
+Foreign-key constraints:
+    "volume_state_fkey" FOREIGN KEY (state) REFERENCES volume_state(state)
+
+[verse]
+Referenced by:
+    TABLE "xfile" CONSTRAINT "xfile_id_volume_fkey" FOREIGN KEY (id_volume) REFERENCES volume(id_volume) ON DELETE CASCADE
+
+DESCRIPTION
+-----------
+Volumes represents phisical storage area used to store files managed by mike.
+
+Because dropping a volume The token column is used as security for volume removal. 
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
