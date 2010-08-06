@@ -51,10 +51,10 @@ Functions
 ~~~~~~~~~
 see linkmike:mike-functions[1]
 
-  - 'make_directory(in_id_user, in_id_inode_parent, in_name)' : see linkmike:mike-function-make-directory[1]
-  - 'make_directory(in_id_user, in_name)' : see linkmike:mike-function-make-directory[1]
-  - 'move_directory(in_id_user, in_id_inode, in_new_id_inode_parent)' : see linkmike:mike-function-move-directory[1]
-  - 'remove_directory(in_id_user, in_id_inode)' : see linkmike:mike-function-remove-directory[1]
+  - 'make_directory'(in_id_user, in_id_inode_parent, in_name) : see linkmike:mike-function-make-directory[1]
+  - 'make_directory'(in_id_user, in_name) : see linkmike:mike-function-make-directory[1]
+  - 'move_directory'(in_id_user, in_id_inode, in_new_id_inode_parent) : see linkmike:mike-function-move-directory[1]
+  - 'remove_directory'(in_id_user, in_id_inode) : see linkmike:mike-function-remove-directory[1]
 
 Authors
 -------
