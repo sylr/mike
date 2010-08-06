@@ -17,10 +17,10 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-Mike is a `Virtual File System` which primary goals are to be lightweight, robust
-and efficient. In a few words Mike is a `PostgreSQL database` which comes with a
-`sql API`. The API provides a set of functions needed to manipulate the data into
-the database.
+Mike is a `Virtual File System` which primary goals are to be 'lightweight', 'robust'
+and 'efficient'. In a few words Mike is a `PostgreSQL database` which comes with
+a `sql API` in order to manage directories and files. The API provides a set of
+functions needed to manipulate the data into the database.
 
 The main idea when Mike has been designed was that a file system is accessed, browsed
 most of the time, but rarely modified. Knowing that, Mike stores for each inodes
