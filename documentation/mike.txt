@@ -9,7 +9,7 @@ SYNOPSIS
 --------
 [verse]
 'autoconf'
-'configure' [--with-git=] [--with-psql=] [--with-pg_config=] 
+'./configure' [--with-git=] [--with-psql=] [--with-pg_config=]
     [--with-pg_dump=] [--with-createdb=] [--with-apgdiff=]
     [--enable-create-database] [--enable-create-schema]
     [DATABASE_USERNAME=] [DATABASE_NAME=] [DATABASE_HOST=] [DATABASE_PORT=] 
@@ -67,6 +67,7 @@ Mike's releases' names follow the following pattern :
  - 'Maintenance' realeases contain fixes for Major and Minor releases.
  - 'Release Candidate' releases are milestones before upcoming Major, Minor or Maint releases.
 
+[NOTE]
 Mike 'will not be supported' until 'v1.0.0' release. Until then, Minor and Maint
 releases are only development milestones meant to mark important changes made to
 the source code.
