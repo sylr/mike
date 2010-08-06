@@ -83,10 +83,16 @@ pdf-sub: $(DOC_XML) $(DOC_PDF)
 # -- files ---------------------------------------------------------------------
 
 %.html : %.txt
-	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -a mike_version="$(MIKE_VERSION)" -b xhtml11 -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
+                                        -a mike_version="$(MIKE_VERSION)" \
+                                        -a mike_git_url="$(MIKE_GIT_URL)" \
+                                        -b xhtml11 -o $@ $<
 
 %.xml : %.txt
-	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) -a mike_version="$(MIKE_VERSION)" -b docbook -d manpage -o $@ $<
+	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
+	                                    -a mike_version="$(MIKE_VERSION)" \
+	                                    -a mike_git_url="$(MIKE_GIT_URL)" \
+	                                    -b docbook -d manpage -o $@ $<
 
 %.1 : %.xml
 	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null
