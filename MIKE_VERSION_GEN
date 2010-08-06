@@ -4,10 +4,10 @@
 MIKE_VERSION_GEN_REALPATH=$(realpath $0)
 MIKE_PATH=$(dirname $MIKE_VERSION_GEN_REALPATH)
 
-# exporting git dit
-export GIT_DIR=$MIKE_PATH/.git
+# Mike info
+MIKE_GIT_URL="sylvain@git.abstraction.fr:~/priv/git/mike.git"
 
-# defaunt values
+# default values
 MIKE_VERSION_FILE=$MIKE_PATH/MIKE_VERSION_FILE
 MIKE_HEAD_DIFF_FILE=$MIKE_PATH/MIKE_HEAD_DIFF_FILE
 MIKE_TAG_DIFF_FILE=$MIKE_PATH/MIKE_TAG_DIFF_FILE
@@ -26,6 +26,9 @@ fi
 if [ ! -z $3 ]; then
     MIKE_TAG_DIFF_FILE=$3
 fi
+
+# exporting git dit
+export GIT_DIR=$MIKE_PATH/.git
 
 MIKE_COMMIT=$(git show-ref $(cat $MIKE_PATH/.git/HEAD) | cut -d ' ' -f1)
 MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
@@ -55,6 +58,7 @@ fi
 rm -f $MIKE_VERSION_FILE
 
 # writing MIKE_VERSION_FILE
+echo "MIKE_GIT_URL=$MIKE_GIT_URL" >> $MIKE_VERSION_FILE
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
 echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
