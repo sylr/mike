@@ -15,28 +15,28 @@ all::
 
 # -- variables -----------------------------------------------------------------
 
-ECHO                = @ECHO@
-RM                  = @RM@ -f
-ASCIIDOC            = @ASCIIDOC@
-ASCIIDOC_EXTRA      = -a data-uri -a icons -a iconsdir=/usr/share/asciidoc/icons --unsafe -f asciidoc.conf
-DOCBOOK2ODF         = @DOCBOOK2ODF@
-DOCBOOK2ODF_EXTRA   = --force --quiet
-DOCBOOK2PDF         = @DOCBOOK2PDF@
-DOCBOOK2PDF_EXTRA   =
-A2X                 = @A2X@
-A2X_EXTRA           =
-XMLTO               = @XMLTO@
-XMLTO_EXTRA         =
-INSTALL             = @INSTALL@
-DOC_TXT             = $(wildcard *.txt)
-DOC_HTML            = $(patsubst %.txt, %.html, $(DOC_TXT))
-DOC_XML             = $(patsubst %.txt, %.xml,  $(DOC_TXT))
-DOC_ODT             = $(patsubst %.txt, %.odt,  $(DOC_TXT))
-DOC_PDF             = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
-DOC_MAN1            = $(patsubst %.txt, %.1,    $(DOC_TXT))
-MIKE_VERSION_FILE   = ../MIKE_VERSION_FILE
-MIKE_TAG_DIFF_FILE  = ../MIKE_TAG_DIFF_FILE
-MIKE_HEAD_DIFF_FILE = ../MIKE_HEAD_DIFF_FILE
+ECHO                    = @ECHO@
+RM                      = @RM@ -f
+ASCIIDOC                = @ASCIIDOC@
+ASCIIDOC_EXTRA          = -a data-uri -a icons -a iconsdir=/usr/share/asciidoc/icons --unsafe -f asciidoc.conf
+DOCBOOK2ODF             = @DOCBOOK2ODF@
+DOCBOOK2ODF_EXTRA       = --force --quiet
+DOCBOOK2PDF             = @DOCBOOK2PDF@
+DOCBOOK2PDF_EXTRA       =
+A2X                     = @A2X@
+A2X_EXTRA               =
+XMLTO                   = @XMLTO@
+XMLTO_EXTRA             =
+INSTALL                 = @INSTALL@
+DOC_TXT                 = $(wildcard *.txt)
+DOC_HTML                = $(patsubst %.txt, %.html, $(DOC_TXT))
+DOC_XML                 = $(patsubst %.txt, %.xml,  $(DOC_TXT))
+DOC_ODT                 = $(patsubst %.txt, %.odt,  $(DOC_TXT))
+DOC_PDF                 = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
+DOC_MAN1                = $(patsubst %.txt, %.1,    $(DOC_TXT))
+MIKE_VERSION_FILE       = ../MIKE_VERSION_FILE
+MIKE_TAG_DIFF_FILE      = ../MIKE_TAG_DIFF_FILE
+MIKE_HEAD_DIFF_FILE     = ../MIKE_HEAD_DIFF_FILE
 
 prefix              = @prefix@
 htmldir             ?= $(prefix)/share/doc/mike
