@@ -166,7 +166,7 @@ drop-schema:
 graph:
 	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
 
-stat:
+stats:
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
 
