@@ -9,8 +9,7 @@ SYNOPSIS
 --------
 [verse]
 'autoconf'
-'./configure'
-    [--enable-create-database] [--enable-create-schema]
+'./configure' [--enable-create-database] [--enable-create-schema]
     [DATABASE_USERNAME=] [DATABASE_NAME=]
     [DATABASE_HOST=] [DATABASE_PORT=]
 'make' [install|graph|stats|clean|doc|html|man|install-doc|install-html|install-man]
@@ -60,12 +59,12 @@ configure options
 -----------------
 
 --enable-create-database::
-    creates database with DATABASE_NAME. imply --enable-create-schema. If the database
-    already exists it will be dropped and re-created.
+    enable database creation with DATABASE_NAME. imply --enable-create-schema. If
+    the database already exists it will be dropped and re-created.
 
 --enable-create-schema::
-    creates mike schema into DATABASE_NAME. If the schema already exists it will
-    be dropped and re-created.
+    enable mike schema creation into DATABASE_NAME. If the schema already exists
+    it will be dropped and re-created.
 
 --with-a2x=<path>::
     specify a2x path.
@@ -128,34 +127,41 @@ DATABASE_PORT=<port>::
 make targets
 ------------
 clean::
-    Removes all file not tracked in the repository.
+    Remove all file not tracked in the repository.
 
 doc::
-    Generates the html documentation.
+    Generate both html and man documentation.
 
 dry-run::
-    Perform a test install which will be rollbacked. This is the default target.
-    Note that if --enable-create-database has been specified to the configure script
-    or 'ENABLE_CREATE_DATABASE' set to Yes, the database will be 'dropped' and all
-    its content will be 'lost'.
+    Perform a test install which will be rollbacked. This is the 'default target'.
+
+WARNING: Note that if '--enable-create-database' has been specified to the configure
+script or 'ENABLE_CREATE_DATABASE' set to 'Yes', the database will be 'dropped'
+and all its content will be 'lost'.
 
 graph::
     Display mike's development graph.
+
+html::
+    Generate the html documentation.
 
 install::
     Perform mike install on the database specified to the configure script or on
     DATABASE_NAME if specified.
 
 install-doc::
-    install the html documentation
+    install both html and man documentation.
+
+install-html::
+    install the html documentation.
 
 install-man::
     install the man pages.
 
 man::
-    Generates man pages.
+    Generate man pages.
 
-stat::
+stats::
     Display mike's developers commit statistics.
 
 ENABLE_CREATE_DATABASE=[Yes|No]::
