@@ -175,17 +175,23 @@ stats:
 doc:
 	@$(MAKE) --no-print-directory -C documentation all
 
-clean-doc:
-	@$(MAKE) --no-print-directory -C documentation clean
+man:
+	@$(MAKE) --no-print-directory -C documentation man
+
+html:
+	@$(MAKE) --no-print-directory -C documentation html
 
 install-doc:
 	@$(MAKE) --no-print-directory -C documentation install
 
-man:
-	@$(MAKE) --no-print-directory -C documentation man
+install-html:
+	@$(MAKE) --no-print-directory -C documentation install-html
 
 install-man:
 	@$(MAKE) --no-print-directory -C documentation install-man
+
+clean-doc:
+	@$(MAKE) --no-print-directory -C documentation clean
 
 # -- phony ---------------------------------------------------------------------
 
