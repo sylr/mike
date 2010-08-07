@@ -15,6 +15,10 @@ SYNOPSIS
  move_directory   | void             | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint                             
  remove_directory | void             | in_id_user bigint, in_id_inode bigint                                                            
 
+DESCRIPTION
+-----------
+List of all functions of Mike's SQL API.
+
 FUNCTIONS
 ---------
 'make_directory'(in_id_user, in_id_inode_parent, in_name)::
@@ -44,4 +48,3 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 MIKE
 ----
 Part of the linkmike:mike[1] suite
-
