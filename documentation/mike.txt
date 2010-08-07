@@ -27,7 +27,27 @@ most of the time, but rarely modified. Knowing that, Mike stores for each inodes
 metadata which are recalculated only when the file system is modified in order to
 make browsing the fastest possible because all the data fetched are stored, not calculated.
 
-STRUCTURE
+Versions
+--------
+Mike's releases' names follow the following pattern :
+
+  Mike v<MAJOR>.<MINOR>.<MAINT>[-rc<RC>]
+
+ - 'Major' releases contain new major feature(s) and 'are not' constrained to respect 'backward compatibility'.
+ - 'Minor' releases contain new feature(s) and 'are' constrained to respect 'backward compatibility'.
+ - 'Maintenance' realeases contain fixes for Major and Minor releases.
+ - 'Release Candidate' releases are milestones before upcoming Major, Minor or Maint releases.
+
+[NOTE]
+Mike 'will not be supported' until 'v1.0.0' release. Until then, Minor and Maint
+releases are only development milestones meant to mark important changes made to
+the source code.
+
+Install
+-------
+See linkmike:mike-install[1].
+
+Structure
 ---------
 
 Tables
@@ -56,21 +76,6 @@ see linkmike:mike-functions[1]
   - 'move_directory'(in_id_user, in_id_inode, in_new_id_inode_parent) : see linkmike:mike-function-move-directory[1]
   - 'remove_directory'(in_id_user, in_id_inode) : see linkmike:mike-function-remove-directory[1]
 
-Versions
---------
-Mike's releases' names follow the following pattern :
-
-  Mike v<MAJOR>.<MINOR>.<MAINT>[-rc<RC>]
-
- - 'Major' releases contain new major feature(s) and 'are not' constrained to respect 'backward compatibility'.
- - 'Minor' releases contain new feature(s) and 'are' constrained to respect 'backward compatibility'.
- - 'Maintenance' realeases contain fixes for Major and Minor releases.
- - 'Release Candidate' releases are milestones before upcoming Major, Minor or Maint releases.
-
-[NOTE]
-Mike 'will not be supported' until 'v1.0.0' release. Until then, Minor and Maint
-releases are only development milestones meant to mark important changes made to
-the source code.
 
 Authors
 -------
