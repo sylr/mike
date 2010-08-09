@@ -224,4 +224,4 @@ clean-doc:
 
 # -- phony ---------------------------------------------------------------------
 
-.PHONY: $(MIKE_VERSION_FILE)
+.PHONY: $(MIKE_VERSION_FILE) .FORCE
