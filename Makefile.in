@@ -178,9 +178,17 @@ drop-schema:
 # -- git -----------------------------------------------------------------------
 
 graph:
+ifeq ($(GIT),)
+	@$(ECHO) >&2 "git not installed ...";
+	exit 1
+endif
 	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
 
 stats:
+ifeq ($(GIT),)
+	@$(ECHO) >&2 "git not installed ...";
+	exit 1
+endif
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
 
