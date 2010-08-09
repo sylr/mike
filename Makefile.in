@@ -18,7 +18,7 @@ dry-run::
 prefix                  = @prefix@
 ECHO                    = @ECHO@
 CAT                     = @CAT@
-RM                      = @RM@ -f
+RM                      = @RM@ -rf
 GIT                     = @GIT@
 SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
@@ -151,12 +151,24 @@ endif
 	                $(TEE) $(INSTALL_LOG)
 
 clean:
+ifneq ($(GIT),)
 	@$(GIT) clean -fdx
+else
+	@$(MAKE) --no-print-directory clean-no-git $(MAKEFLAGS)
+endif
 
-clean-mike:
-	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME);
-	@$(ECHO) '    ' REMOVING MIKE_FILE_VERSION; $(RM) $(MIKE_VERSION_FILE); $(SLEEP) $(SLEEP_TIME);
-	@$(ECHO) '    ' REMOVING MIKE_COMMIT_DIFF; $(RM) $(MIKE_COMMIT_DIFF_FILE); $(SLEEP) $(SLEEP_TIME);
+clean-no-git: clean-doc
+	@$(ECHO) Removing $(TARGET_FILE); $(RM) $(TARGET_FILE);
+	@$(ECHO) Removing $(MIKE_VERSION_FILE); $(RM) $(MIKE_VERSION_FILE);
+	@$(ECHO) Removing $(MIKE_TAG_DIFF_FILE); $(RM) $(MIKE_TAG_DIFF_FILE);
+	@$(ECHO) Removing $(MIKE_HEAD_DIFF_FILE); $(RM) $(MIKE_HEAD_DIFF_FILE);
+	@$(ECHO) Removing Makefile; $(RM) Makefile;
+	@$(ECHO) Removing configure; $(RM) configure;
+	@$(ECHO) Removing config.log; $(RM) config.log;
+	@$(ECHO) Removing config.status; $(RM) config.status;
+	@$(ECHO) Removing autom4te.cache; $(RM) autom4te.cache;
+	@$(ECHO) Removing dry-run.log; $(RM) dry-run.log;
+	@$(ECHO) Removing install.log; $(RM) install.log;
 
 drop-schema:
 	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
