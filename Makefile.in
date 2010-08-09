@@ -177,14 +177,14 @@ drop-schema:
 
 # -- git -----------------------------------------------------------------------
 
-graph:
+graph: .FORCE
 ifeq ($(GIT),)
 	@$(ECHO) >&2 "git not installed ...";
 	exit 1
 endif
 	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
 
-stats:
+stats: .FORCE
 ifeq ($(GIT),)
 	@$(ECHO) >&2 "git not installed ...";
 	exit 1
