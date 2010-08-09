@@ -19,7 +19,9 @@ prefix                  = @prefix@
 ECHO                    = @ECHO@
 CAT                     = @CAT@
 RM                      = @RM@ -rf
+REALPATH                = @REALPATH@
 GIT                     = @GIT@
+GITSTATS                = @GITSTATS@
 SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
 DATE                    = @DATE@
@@ -181,6 +183,13 @@ graph:
 stats:
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
+
+gitstats: .FORCE
+ifeq ($(GITSTATS),)
+	@$(ECHO) >&2 "gitstats not installed ...";
+	exit 1
+endif
+	@$(GITSTATS) `$(REALPATH) .` stats
 
 # -- documentation -------------------------------------------------------------
 
