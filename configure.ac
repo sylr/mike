@@ -185,6 +185,11 @@ MIKE_PARSE_WITH(git)
 AC_PATH_PROG([GIT], [git], , [$GIT_DIR])
 MIKE_ERROR_IF_EMPTY([$GIT], [git not found])
 
+# looking for gitstats
+MIKE_ARG_SET_PATH(gitstats)
+MIKE_PARSE_WITH(gitstats)
+AC_PATH_PROG([GITSTATS], [gitstats], , [$GITSTATS_DIR])
+
 # looking for install
 MIKE_ARG_SET_PATH(install)
 MIKE_PARSE_WITH(install)
