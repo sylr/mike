@@ -190,6 +190,11 @@ MIKE_ARG_SET_PATH(gitstats)
 MIKE_PARSE_WITH(gitstats)
 AC_PATH_PROG([GITSTATS], [gitstats], , [$GITSTATS_DIR])
 
+# looking for gitstats
+MIKE_ARG_SET_PATH(gource)
+MIKE_PARSE_WITH(gource)
+AC_PATH_PROG([GOURCE], [gource], , [$GOURCE_DIR])
+
 # looking for install
 MIKE_ARG_SET_PATH(install)
 MIKE_PARSE_WITH(install)

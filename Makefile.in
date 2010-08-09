@@ -22,6 +22,7 @@ RM                      = @RM@ -rf
 REALPATH                = @REALPATH@
 GIT                     = @GIT@
 GITSTATS                = @GITSTATS@
+GOURCE                  = @GOURCE@
 SLEEP                   = @SLEEP@
 SLEEP_TIME              ?= 0.1
 DATE                    = @DATE@
@@ -198,6 +199,13 @@ ifeq ($(GITSTATS),)
 	exit 1
 endif
 	@$(GITSTATS) `$(REALPATH) .` stats
+
+gource: .FORCE
+ifeq ($(GOURCE),)
+	@$(ECHO) >&2 "gource not installed ...";
+	exit 1
+endif
+	@$(GOURCE) --title "Mike's master branch" --highlight-users --highlight-dirs --loop &
 
 # -- documentation -------------------------------------------------------------
 
