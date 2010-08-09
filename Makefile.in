@@ -221,6 +221,7 @@ install-man:
 
 clean-doc:
 	@$(MAKE) --no-print-directory -C documentation clean
+	@$(RM) documention/Makefile
 
 # -- phony ---------------------------------------------------------------------
 
