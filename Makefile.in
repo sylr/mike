@@ -131,7 +131,6 @@ ifneq ($(ENABLE_CREATE_DATABASE),No)
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO);   
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | \
 	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) | \
 	                $(TEE) $(DRY_RUN_LOG)
