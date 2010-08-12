@@ -98,3 +98,9 @@ END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
 
+FUNCTION mike.move_directory(
+    IN  in_id_user              bigint,
+    IN  in_id_inode             bigint,
+    IN  in_new_id_inode_parent  bigint
+) IS 'copy a directory and its content inside another one';
+

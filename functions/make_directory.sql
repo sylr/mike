@@ -48,7 +48,7 @@ COMMENT ON FUNCTION mike.make_directory(
     IN  id_user             bigint,
     IN  name                varchar,
     OUT id_inode            bigint
-) IS 'this function creates a directory which does not have an id_inode_parent';
+) IS 'create a directory which does not have an id_inode_parent';
 
 --------------------------------------------------------------------------------
 
@@ -120,5 +120,5 @@ COMMENT ON FUNCTION mike.make_directory(
     IN  id_user             bigint,
     IN  name                varchar,
     OUT id_inode            bigint
-) IS 'this function creates a directory with an id_inode_parent';
+) IS 'create a directory with an id_inode_parent';
 
