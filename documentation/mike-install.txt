@@ -86,7 +86,7 @@ configure options
 
 --with-docbook2odf=<path>::
     specify docbook2odf path.
-DATABASE
+
 --with-docbook2odf=<path>::
     specify docbook2odf path.
 
