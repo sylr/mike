@@ -102,7 +102,7 @@ BEGIN
         inner_dir_count     = inner_dir_count + 1,
         datem               = greatest(datem, NOW()),
         inner_datem         = greatest(inner_datem, NOW())
-    WHERE 
+    WHERE
         id_inode = in_id_inode_parent;
 
     -- update ancestors metadata

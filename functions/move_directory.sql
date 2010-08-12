@@ -71,7 +71,7 @@ BEGIN
         nlevel(v_old_directory_parent.treepath) > 1
         AND treepath @> subpath(v_old_directory_parent.treepath, 0, nlevel(v_old_directory_parent.treepath) - 1);
 
-     -- update v_new_directory_parent.id_inode metadate
+     -- update v_new_directory_parent.id_inode metadata
      UPDATE mike.directory SET
         dir_count               = dir_count + 1,
         inner_dir_count         = inner_dir_count + v_directory.inner_dir_count + 1,
