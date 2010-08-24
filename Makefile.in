@@ -76,6 +76,14 @@ ifneq ($(DATABASE_PORT),)
 	PSQL_PORT = -p $(DATABASE_PORT)
 endif
 
+ifneq ($(GIT),)
+	GIT_DIR=$(realpath $(shell $(GIT) rev-parse --git-dir 2>/dev/null))
+	ifneq ($(GIT_DIR),)
+		IS_BARE_REPOSITORY=`$(GIT) rev-parse --is-bare-repository 2>/dev/null`
+		IS_INSIDE_WORK_TREE=`$(GIT) rev-parse --is-inside-work-tree 2>/dev/null`
+	endif
+endif
+
 # -- version -------------------------------------------------------------------
 
 $(MIKE_VERSION_FILE):
@@ -181,6 +189,9 @@ graph: .FORCE
 ifeq ($(GIT),)
 	@$(ECHO) >&2 "git not installed ...";
 	exit 1
+else ifeq ($(GITDIR),)
+	@$(ECHO) >&2 "not in a git repository ...";
+	exit 1
 endif
 	@$(GIT) log --graph --all --format="format:%C(yellow)%h %Creset%an: %s"
 
@@ -188,20 +199,35 @@ stats: .FORCE
 ifeq ($(GIT),)
 	@$(ECHO) >&2 "git not installed ...";
 	exit 1
+else ifeq ($(GIT_DIR),)
+	@$(ECHO) >&2 "not in a git repository ...";
+	exit 1
 endif
 	@$(ECHO) Number of commits by author :
 	@$(GIT) shortlog --summary  --all --tags --numbered --email
 
 gitstats: .FORCE
-ifeq ($(GITSTATS),)
+ifeq ($(GIT),)
+	@$(ECHO) >&2 "git not installed ...";
+	exit 1
+else ifeq ($(GITSTATS),)
 	@$(ECHO) >&2 "gitstats not installed ...";
+	exit 1
+else ifeq ($(GIT_DIR),)
+	@$(ECHO) >&2 "not in a git repository ...";
 	exit 1
 endif
 	@$(GITSTATS) `$(REALPATH) .` stats
 
 gource: .FORCE
-ifeq ($(GOURCE),)
+ifeq ($(GIT),)
+	@$(ECHO) >&2 "git not installed ...";
+	exit 1
+else ifeq ($(GOURCE),)
 	@$(ECHO) >&2 "gource not installed ...";
+	exit 1
+else ifeq ($(GIT_DIR),)
+	@$(ECHO) >&2 "not in a git repository ...";
 	exit 1
 endif
 	@$(GOURCE) --title "Mike's master branch" --highlight-users --highlight-dirs --loop &
