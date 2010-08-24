@@ -189,7 +189,7 @@ graph: .FORCE
 ifeq ($(GIT),)
 	@$(ECHO) >&2 "git not installed ...";
 	exit 1
-else ifeq ($(GITDIR),)
+else ifeq ($(GIT_DIR),)
 	@$(ECHO) >&2 "not in a git repository ...";
 	exit 1
 endif
