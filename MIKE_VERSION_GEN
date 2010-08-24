@@ -6,6 +6,7 @@ MIKE_PATH=$(dirname $MIKE_VERSION_GEN_REALPATH)
 
 # Mike info
 MIKE_GIT_URL="sylvain@git.abstraction.fr:~/priv/git/mike.git"
+MIKE_WHO=$(whoami)@$(hostname)
 
 # default values
 MIKE_VERSION_FILE=$MIKE_PATH/MIKE_VERSION_FILE
@@ -27,41 +28,50 @@ if [ ! -z $3 ]; then
     MIKE_TAG_DIFF_FILE=$3
 fi
 
-# exporting git dit
-export GIT_DIR=$MIKE_PATH/.git
+# if git repository
+if [ -d $MIKE_PATH/.git ]; then
+    # exporting git dit
+    GIT_DIR=$MIKE_PATH/.git
 
-MIKE_COMMIT=$(git show-ref $(cat $MIKE_PATH/.git/HEAD) | cut -d ' ' -f1)
-MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
-MIKE_WHO=$(whoami)@$(hostname)
+    MIKE_COMMIT=$(git show-ref $(cat $MIKE_PATH/.git/HEAD) | cut -d ' ' -f1)
+    MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
 
-# generating MIKE_VERSION
-if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
-    MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty --abbrev 2>/dev/null)
-    MIKE_LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
+    # generating MIKE_VERSION
+    if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
+        MIKE_VERSION=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty --abbrev 2>/dev/null)
+        MIKE_LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
 
-    if [ ! -z "$(git diff --name-only $MIKE_LAST_TAG HEAD --)" ]; then
-        echo "$(git diff --patience --no-color $MIKE_LAST_TAG HEAD --)" > $MIKE_TAG_DIFF_FILE
-    else
-        rm -f $MIKE_TAG_DIFF_FILE
+        if [ ! -z "$(git diff --name-only $MIKE_LAST_TAG HEAD --)" ]; then
+            echo "$(git diff --patience --no-color $MIKE_LAST_TAG HEAD --)" > $MIKE_TAG_DIFF_FILE
+        else
+            rm -f $MIKE_TAG_DIFF_FILE
+        fi
     fi
-fi
 
-# generating MIKE_HEAD_DIFF_FILE
-if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
-    MIKE_COMMIT="$MIKE_COMMIT-dirty";
-    echo "$(git diff --patience --no-color HEAD --)" > $MIKE_HEAD_DIFF_FILE
+    # generating MIKE_HEAD_DIFF_FILE
+    if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
+        MIKE_COMMIT="$MIKE_COMMIT-dirty";
+        echo "$(git diff --patience --no-color HEAD --)" > $MIKE_HEAD_DIFF_FILE
+    else
+        rm -f $MIKE_HEAD_DIFF_FILE
+    fi
+
+    # removing for safety
+    rm -f $MIKE_VERSION_FILE
 else
-    rm -f $MIKE_HEAD_DIFF_FILE
-fi
+    if [ ! -f $MIKE_VERSION_FILE ]; then
+        die "not in a git repository and $MIKE_VERSION_FILE not here.\n" \
+            "You messed up something"
+    fi
 
-# removing for safety
-rm -f $MIKE_VERSION_FILE
+    exit 0
+fi
 
 # writing MIKE_VERSION_FILE
 echo "MIKE_GIT_URL=$MIKE_GIT_URL" >> $MIKE_VERSION_FILE
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
 echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
-echo "MIKE_WHO=$MIKE_WHO" >> $MIKE_VERSION_FILE
+echo 'MIKE_WHO_INSTALLED=$(shell whoami)@$(shell hostname)' >> $MIKE_VERSION_FILE
 
 exit 0
