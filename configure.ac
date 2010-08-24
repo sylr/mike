@@ -228,7 +228,7 @@ AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
 
 # -- postgresql ----------------------------------------------------------------
 
-PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | sed "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
+PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | $SED "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [lt], [8.4.4],
