@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 03/07/2010
+# copyright: All rights reserved
+
+ARCHIVE_REALPATH=$(realpath $0)
+CONTRIB_PATH=$(dirname $ARCHIVE_REALPATH)
+MIKE_PATH=$(dirname $CONTRIB_PATH)
+
+# loading lib.sh
+. $MIKE_PATH/lib/mike.sh
+
+# ------------------------------------------------------------------------------
+
+TEMP=`getopt --long ref: -n "$0" -- $0 $@`
+
+if [ $? != 0 ] ; then
+    die "Terminating ...";
+fi
+
+eval set -- "$TEMP"
+
+# ------------------------------------------------------------------------------
+
+while true ;
+do
+    case "$1" in
+        --ref)      REF_NAME=$2;        shift 2;;
+        --)         shift;              break;;
+        *)          usage;              exit 1;;
+    esac
+done
+
+# ------------------------------------------------------------------------------
+
+# check if working tree is dirty
+if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
+    die "working tree can not be dirty to archive"
+else
+    CURRENT_HEAD=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f2 | cut -d "/" -f 3-)
+fi
+
+# check refname value
+if [ -z "$REF_NAME" ]; then
+    die "you need to specify --ref option"
+fi
+
+LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev $REF_NAME 2>/dev/null)
+
+# check refname validity
+if [ -z "$LAST_TAG" ]; then
+    die "unknown refname $REF_NAME"
+fi
+
+# checking out $REF_NAME
+git checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
+echo "checking out ref $REF_NAME"
+
+# generating version files
+$MIKE_PATH/MIKE_VERSION_GEN || die "generating MIKE_VERSION_FILE failed"
+echo "generating MIKE_VERSION_FILE ..."
+
+# generating archive
+git archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NAME
+echo "generating mike-$LAST_TAG.tar archive ..."
+
+# uncompressing archive
+tar xf mike-$LAST_TAG.tar
+echo "uncompressing mike-$LAST_TAG.tar ..."
+
+# adding unversionned file 
+[ -f MIKE_VERSION_FILE ] && cp MIKE_VERSION_FILE mike-$LAST_TAG/
+[ -f MIKE_TAG_DIFF_FILE ] && cp MIKE_TAG_DIFF_FILE mike-$LAST_TAG/
+[ -f MIKE_HEAD_DIFF_FILE ] && cp MIKE_HEAD_DIFF_FILE mike-$LAST_TAG/
+echo "adding untracked files ..."
+
+# compressing
+tar czf mike-$LAST_TAG.tar.gz mike-$LAST_TAG || die "generating mike-$LAST_TAG.tar.gz archive failed"
+echo "generating mike-$LAST_TAG.tar.gz archive ..."
+
+# cleaning
+rm -rf mike-$LAST_TAG.tar
+rm -rf mike-$LAST_TAG
+
+# going back to CURRENT_HEAD
+if [ "$REF_NAME" != "$CURRENT_HEAD" ]; then
+    git checkout $CURRENT_HEAD >/dev/null 2>&1 || die "checking out ref $CURRENT_HEAD failed"
+    echo "checking out ref $CURRENT_HEAD ..."
+fi
+
