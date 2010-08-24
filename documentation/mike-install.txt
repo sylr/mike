@@ -19,7 +19,7 @@ DESCRIPTION
 
 Getting the source
 ~~~~~~~~~~~~~~~~~~
-Mike use 'Git' as Source Code Management. You must have it to get the source.
+Mike uses 'Git' as Source Code Management. You must have it to get the source.
 Once installed proceed that way :
 
 [source,shell]
@@ -32,19 +32,19 @@ Install
 -------
 Mike relies on 'autotools' and 'make' for automatic install.
 
-[source,shell]
--------------------------
-sylvain@kheops:~/mike.git/$ autoconf
-sylvain@kheops:~/mike.git/$ ./configure DATABASE_USERNAME=sylvain
-sylvain@kheops:~/mike.git/$ make
--------------------------
-
 First, you have to generate the 'configure' script by running the 'autoconf' tool
 at the 'root' of Mike. Then, launch the './configure' script with the desired options,
 it will check for external programs needed for Mike's install and prepare the 'Makefile'
 with 'configuration' values passed as arguments. Proceed by lauching 'make' with
 the desired target, the default one being dry-run, which performs a test install
 on a pre-exisiting database.
+
+[source,shell]
+-------------------------
+sylvain@kheops:~/mike.git/$ autoconf
+sylvain@kheops:~/mike.git/$ ./configure DATABASE_USERNAME=sylvain
+sylvain@kheops:~/mike.git/$ make
+-------------------------
 
 Note that you can 'override' configuration values given to 'configure' without having
 to regenerate the Makefile each time. to do so proceed like in the following example :
