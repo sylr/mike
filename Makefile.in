@@ -256,6 +256,7 @@ clean-doc:
 	@$(MAKE) --no-print-directory -C documentation clean
 	@$(RM) documention/Makefile
 
-# -- phony ---------------------------------------------------------------------
+# -- special targets -----------------------------------------------------------
 
+.NOTPARALLEL : %.dump
 .PHONY: $(MIKE_VERSION_FILE) .FORCE
