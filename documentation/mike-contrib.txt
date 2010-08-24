@@ -1,0 +1,34 @@
+mike-contrib(1)
+===============
+
+NAME
+----
+mike-contrib - mike's contribution scripts
+
+SYNOPSIS
+--------
+[verse]
+contrib/tag --[major|minor|maint|rc]
+contrib/archive --ref <refname>
+
+DESCRIPTION
+-----------
+contribs are scripts aiming to make mike's development and deployment easier.
+
+SCRIPTS
+-------
+'contrib/tag'::
+ +
+Make a tag.
+
+'contrib/archive'::
+ +
+Make an archive.
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
