@@ -121,6 +121,12 @@ MIKE_PARSE_WITH(test)
 AC_PATH_PROG([TEST], [test], , [$TEST_DIR])
 MIKE_ERROR_IF_EMPTY([$TEST], [test not found])
 
+# looking for getopt
+MIKE_ARG_SET_PATH(getopt)
+MIKE_PARSE_WITH(getopt)
+AC_PATH_PROG([GETOPT], [getopt], , [$GETOPT_DIR])
+MIKE_ERROR_IF_EMPTY([$GETOPT], [getopt not found])
+
 # looking for sed
 MIKE_ARG_SET_PATH(sed)
 MIKE_PARSE_WITH(sed)
@@ -150,6 +156,12 @@ MIKE_ARG_SET_PATH(grep)
 MIKE_PARSE_WITH(grep)
 AC_PATH_PROG([GREP], [grep], , [$GREP_DIR])
 MIKE_ERROR_IF_EMPTY([$GREP], [grep not found])
+
+# looking for tar
+MIKE_ARG_SET_PATH(tar)
+MIKE_PARSE_WITH(tar)
+AC_PATH_PROG([TAR], [tar], , [$TAR_DIR])
+MIKE_ERROR_IF_EMPTY([$TAR], [tar not found])
 
 # looking for psql
 MIKE_ARG_SET_PATH(psql)
