@@ -24,13 +24,13 @@ fi
 
 # ------------------------------------------------------------------------------
 
-TEMP=`getopt --long major,minor,maint,rc -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long major,minor,maint,rc -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
 fi
 
-eval set -- "$TEMP"
+eval set -- "$ARGV"
 
 # ------------------------------------------------------------------------------
 
