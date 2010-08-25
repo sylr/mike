@@ -195,7 +195,6 @@ AC_PATH_PROG([APGDIFF], [apgdiff], , [$APGDIFF_DIR])
 MIKE_ARG_SET_PATH(git)
 MIKE_PARSE_WITH(git)
 AC_PATH_PROG([GIT], [git], , [$GIT_DIR])
-MIKE_ERROR_IF_EMPTY([$GIT], [git not found])
 
 # looking for gitstats
 MIKE_ARG_SET_PATH(gitstats)
