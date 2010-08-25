@@ -16,3 +16,4 @@ documentation/**.odf
 documentation/**.pdf
 stats
 mike-v*.tar.gz
+mike.conf

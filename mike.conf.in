@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 25/08/2010
+# copyright: All rights reserved
+
+# -- prefix --------------------------------------------------------------------
+
+prefix=@prefix@
+
+# -- binaries ------------------------------------------------------------------
+
+WHICH=@WHICH@
+ECHO=@ECHO@
+CAT=@CAT@
+BASENAME=@BASENAME@
+DIRNAME=@DIRNAME@
+REALPATH=@REALPATH@
+RM=@RM@
+CUT=@CUT@
+BASH=@BASH@
+GETOPT=@GETOPT@
+AWK=@AWK@
+SED=@SED@
+TEE=@TEE@
+TEST=@TEST@
+MAKE=@MAKE@
+GREP=@GREP@
+GIT=@GIT@
+GITSTATS=@GITSTATS@
+GOURCE=@GOURCE@
+SLEEP=@SLEEP@
+DATE=@DATE@
+PSQL=@PSQL@
+CREATEDB=@CREATEDB@
+PG_CONFIG=@PG_CONFIG@
+PG_DUMP=@PG_DUMP@
+APGDIFF=@APGDIFF@
+
+# -- database ------------------------------------------------------------------
+
+DATABASE_USER=@DATABASE_USER@
+DATABASE_NAME=@DATABASE_NAME@
+DATABASE_HOST=@DATABASE_HOST@
+DATABASE_PORT=@DATABASE_PORT@
+ENABLE_CREATE_DATABASE=@ENABLE_CREATE_DATABASE@
+ENABLE_CREATE_SCHEMA=@ENABLE_CREATE_SCHEMA@

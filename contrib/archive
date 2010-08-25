@@ -8,7 +8,18 @@ ARCHIVE_REALPATH=$(realpath $0)
 CONTRIB_PATH=$(dirname $ARCHIVE_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
 
-# loading lib.sh
+# -- mike.conf -----------------------------------------------------------------
+
+if [ ! -f $MIKE_PATH/mike.conf ]; then
+    echo >&2 "$MIKE_PATH/mike.conf not found"
+    echo >&2 "You need to execute autoconf && ./configure"
+    exit 1
+fi
+
+. $MIKE_PATH/mike.conf
+
+# -- mike.sh -------------------------------------------------------------------
+
 . $MIKE_PATH/lib/mike.sh
 
 # ------------------------------------------------------------------------------
@@ -38,7 +49,7 @@ done
 if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     die "working tree can not be dirty to archive"
 else
-    CURRENT_HEAD=$(git show-ref $(cat .git/HEAD) | cut -d ' ' -f2 | cut -d "/" -f 3-)
+    CURRENT_HEAD=$($GIT show-ref $(cat .git/HEAD) | cut -d ' ' -f2 | cut -d "/" -f 3-)
 fi
 
 # check refname value
@@ -54,7 +65,7 @@ if [ -z "$LAST_TAG" ]; then
 fi
 
 # checking out $REF_NAME
-git checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
+$GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
 echo "checking out ref $REF_NAME"
 
 # generating version files
@@ -62,7 +73,7 @@ $MIKE_PATH/MIKE_VERSION_GEN || die "generating MIKE_VERSION_FILE failed"
 echo "generating MIKE_VERSION_FILE ..."
 
 # generating archive
-git archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NAME
+$GIT archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NAME
 echo "generating mike-$LAST_TAG.tar archive ..."
 
 # uncompressing archive
@@ -85,7 +96,7 @@ rm -rf mike-$LAST_TAG
 
 # going back to CURRENT_HEAD
 if [ "$REF_NAME" != "$CURRENT_HEAD" ]; then
-    git checkout $CURRENT_HEAD >/dev/null 2>&1 || die "checking out ref $CURRENT_HEAD failed"
+    $GIT checkout $CURRENT_HEAD >/dev/null 2>&1 || die "checking out ref $CURRENT_HEAD failed"
     echo "checking out ref $CURRENT_HEAD ..."
 fi
 

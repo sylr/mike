@@ -274,6 +274,6 @@ AS_IF(
 
 # -- output --------------------------------------------------------------------
 
-AC_CONFIG_FILES([Makefile documentation/Makefile])
+AC_CONFIG_FILES([mike.conf Makefile documentation/Makefile])
 AC_OUTPUT
 

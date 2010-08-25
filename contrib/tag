@@ -8,7 +8,18 @@ TAG_REALPATH=$(realpath $0)
 CONTRIB_PATH=$(dirname $TAG_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
 
-# loading lib.sh
+# -- mike.conf -----------------------------------------------------------------
+
+if [ ! -f $MIKE_PATH/mike.conf ]; then
+    echo >&2 "$MIKE_PATH/mike.conf not found"
+    echo >&2 "You need to execute autoconf && ./configure"
+    exit 1
+fi
+
+. $MIKE_PATH/mike.conf
+
+# -- mike.sh -------------------------------------------------------------------
+
 . $MIKE_PATH/lib/mike.sh
 
 # ------------------------------------------------------------------------------
@@ -37,7 +48,7 @@ done
 
 # ------------------------------------------------------------------------------
 
-LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
+LAST_TAG=$($GIT describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
 
 # testing if a tag already exists
 if [ -z "$LAST_TAG" ]; then
@@ -95,6 +106,6 @@ echo "About to tag Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TA
 abort
 
 # tag
-git tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC" \
+$GIT tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC" \
         -m "Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
 
