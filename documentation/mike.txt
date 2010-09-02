@@ -16,8 +16,8 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-Mike is a `Virtual File System` which primary goals are to be 'lightweight', 'robust'
-and 'efficient'. In a few words Mike is a `PostgreSQL database` which comes with
+Mike is a 'Virtual File System' which primary goals are to be 'lightweight', 'robust'
+and 'efficient'. In a few words mike is a 'PostgreSQL database' which comes with
 a `SQL API` in order to manage directories and files. The API provides a set of
 functions needed to manipulate the data into the database.
 
@@ -75,10 +75,17 @@ see linkmike:mike-functions[1]
   - 'move_directory'(in_id_user, in_id_inode, in_new_id_inode_parent) : see linkmike:mike-function-move-directory[1]
   - 'remove_directory'(in_id_user, in_id_inode) : see linkmike:mike-function-remove-directory[1]
 
+Contrib
+-------
+See linkmike:mike-contrib[1].
+
+Developers
+----------
+Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>
 
 Authors
 -------
-Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>
+Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----

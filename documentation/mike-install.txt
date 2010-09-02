@@ -47,7 +47,8 @@ sylvain@kheops:~/mike.git/$ make
 -------------------------
 
 Note that you can 'override' configuration values given to 'configure' without having
-to regenerate the Makefile each time. to do so proceed like in the following example :
+to regenerate the Makefile each time. +
+To do so proceed like in the following example:
 
 [source,shell]
 -------------------------
