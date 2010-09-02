@@ -57,10 +57,10 @@ fi
 
 # parsing last tag
 LAST_TAG_DIGITS=$(parse_tag $LAST_TAG)
-LAST_TAG_MAJOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f1)
-LAST_TAG_MINOR=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f2)
-LAST_TAG_MAINT=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f3)
-LAST_TAG_RC=$(echo $LAST_TAG_DIGITS | cut -d ' ' -f4)
+LAST_TAG_MAJOR=$($ECHO $LAST_TAG_DIGITS | $CUT -d ' ' -f1)
+LAST_TAG_MINOR=$($ECHO $LAST_TAG_DIGITS | $CUT -d ' ' -f2)
+LAST_TAG_MAINT=$($ECHO $LAST_TAG_DIGITS | $CUT -d ' ' -f3)
+LAST_TAG_RC=$($ECHO $LAST_TAG_DIGITS | $CUT -d ' ' -f4)
 
 # setting RC part of tag if empty
 if [ -z "$LAST_TAG_RC" ]; then
