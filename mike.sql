@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS mike.group CASCADE;
 CREATE TABLE mike.group (
     id_group                serial          NOT NULL PRIMARY KEY,
     id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
-    name                    varchar(64)     NOT NULL CHECK(name != ''),
+    name                    varchar(64)     NOT NULL CHECK (name != ''),
     description             varchar(512)    DEFAULT NULL
 );
 
@@ -107,7 +107,7 @@ CREATE TABLE mike.inode (
     id_inode_parent         bigint          REFERENCES mike.inode(id_inode) ON DELETE CASCADE,
     id_user                 integer         NOT NULL REFERENCES mike.user(id_user),
     state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
-    name                    varchar(256)    NOT NULL CHECK(name != ''),
+    name                    varchar(256)    NOT NULL CHECK (name != ''),
     path                    varchar(5140)   NOT NULL,
     treepath                ltree           NOT NULL,
     datec                   timestamptz     NOT NULL DEFAULT NOW(),
@@ -216,7 +216,7 @@ COMMENT ON COLUMN mike.file.datem IS 'last modification timestamp with timezone 
 COMMENT ON COLUMN mike.file.datea IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.file.mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
-COMMENT ON COLUMN mike.file.versioning_size IS 'size of the inode';
+COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
 
 CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode);
 CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent);
@@ -234,7 +234,7 @@ DROP TABLE IF EXISTS mike.volume_state CASCADE;
 
 CREATE TABLE mike.volume_state (
     state                   integer         NOT NULL PRIMARY KEY,
-    description             varchar(160)    NOT NULL CHECK(description != '')
+    description             varchar(160)    NOT NULL CHECK (description != '')
 );
 
 COMMENT ON TABLE mike.volume_state IS 'list of volume states';
