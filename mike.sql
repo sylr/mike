@@ -116,7 +116,7 @@ CREATE TABLE mike.inode (
     mimetype                varchar(64),
     size                    bigint          NOT NULL DEFAULT 0,
     versioning_size         bigint          NOT NULL DEFAULT 0
-);
+) WITH (fillfactor = 80);
 
 COMMENT ON TABLE mike.inode IS 'inodes are entities extended by all vfs items';
 COMMENT ON COLUMN mike.inode.id_inode IS 'inode unique identifier';
@@ -133,15 +133,15 @@ COMMENT ON COLUMN mike.inode.mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
 
-CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode);
-CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent);
-CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user);
-CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name);
-CREATE INDEX inode_mimetype_btree_idx           ON mike.inode   USING btree (mimetype);
-CREATE INDEX inode_datec_btree_idx              ON mike.inode   USING btree (datec);
-CREATE INDEX inode_datem_btree_idx              ON mike.inode   USING btree (datem);
-CREATE INDEX inode_path_btree_idx               ON mike.inode   USING btree (path);
-CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (treepath);
+CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode)          WITH (fillfactor = 95);
+CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent)   WITH (fillfactor = 95);
+CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user)           WITH (fillfactor = 95);
+CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name)              WITH (fillfactor = 95);
+CREATE INDEX inode_mimetype_btree_idx           ON mike.inode   USING btree (mimetype)          WITH (fillfactor = 95);
+CREATE INDEX inode_datec_btree_idx              ON mike.inode   USING btree (datec)             WITH (fillfactor = 95);
+CREATE INDEX inode_datem_btree_idx              ON mike.inode   USING btree (datem)             WITH (fillfactor = 95);
+CREATE INDEX inode_path_btree_idx               ON mike.inode   USING btree (path)              WITH (fillfactor = 95);
+CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (treepath)           WITH (fillfactor = 95);
 
 -- mike.directory --------------------------------------------------------------
 
@@ -159,7 +159,7 @@ CREATE TABLE mike.directory (
     file_count              integer     NOT NULL DEFAULT 0,
     inner_file_count        bigint      NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
-) INHERITS (mike.inode);
+) INHERITS (mike.inode) WITH (fillfactor = 80);
 
 COMMENT ON TABLE mike.directory IS 'table containing all the directory inodes';
 COMMENT ON COLUMN mike.directory.id_inode IS 'inode unique identifier';
@@ -183,15 +183,15 @@ COMMENT ON COLUMN mike.directory.inner_dir_count IS 'number of child directories
 COMMENT ON COLUMN mike.directory.file_count IS 'number of direct child files';
 COMMENT ON COLUMN mike.directory.inner_file_count IS 'number of child files';
 
-CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode);
-CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent);
-CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user);
-CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name);
-CREATE INDEX directory_mimetype_btree_idx           ON mike.directory   USING btree (mimetype);
-CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec);
-CREATE INDEX directory_datem_btree_idx              ON mike.directory   USING btree (datem);
-CREATE INDEX directory_path_btree_idx               ON mike.directory   USING btree (path);
-CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath);
+CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode)          WITH (fillfactor = 95);
+CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95);
+CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95);
+CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name)              WITH (fillfactor = 95);
+CREATE INDEX directory_mimetype_btree_idx           ON mike.directory   USING btree (mimetype)          WITH (fillfactor = 95);
+CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec)             WITH (fillfactor = 95);
+CREATE INDEX directory_datem_btree_idx              ON mike.directory   USING btree (datem)             WITH (fillfactor = 95);
+CREATE INDEX directory_path_btree_idx               ON mike.directory   USING btree (path)              WITH (fillfactor = 95);
+CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath)           WITH (fillfactor = 95);
 
 -- mike.file -------------------------------------------------------------------
 
@@ -201,7 +201,7 @@ CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
     id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE RESTRICT,
     UNIQUE(id_inode_parent, name)
-) INHERITS (mike.inode);
+) INHERITS (mike.inode) WITH (fillfactor = 80);
 
 COMMENT ON TABLE mike.file IS 'table containing all the file inodes';
 COMMENT ON COLUMN mike.file.id_inode IS 'inode unique identifier';
@@ -218,15 +218,15 @@ COMMENT ON COLUMN mike.file.mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'size of the inode';
 
-CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode);
-CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent);
-CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user);
-CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name);
-CREATE INDEX file_mimetype_btree_idx            ON mike.file    USING btree (mimetype);
-CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (datec);
-CREATE INDEX file_datem_btree_idx               ON mike.file    USING btree (datem);
-CREATE INDEX file_path_btree_idx                ON mike.file    USING btree (path);
-CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath);
+CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode)          WITH (fillfactor = 95);
+CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent)   WITH (fillfactor = 95);
+CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user)           WITH (fillfactor = 95);
+CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name)              WITH (fillfactor = 95);
+CREATE INDEX file_mimetype_btree_idx            ON mike.file    USING btree (mimetype)          WITH (fillfactor = 95);
+CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (datec)             WITH (fillfactor = 95);
+CREATE INDEX file_datem_btree_idx               ON mike.file    USING btree (datem)             WITH (fillfactor = 95);
+CREATE INDEX file_path_btree_idx                ON mike.file    USING btree (path)              WITH (fillfactor = 95);
+CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath)           WITH (fillfactor = 95);
 
 -- mike.volume_state -----------------------------------------------------------
 
@@ -257,7 +257,7 @@ CREATE TABLE mike.volume (
     datec                   timestamptz     NOT NULL DEFAULT now(),
     datem                   timestamptz,
     token                   char(40)
-);
+) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.volume IS 'volumes informations';
 COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
@@ -279,12 +279,12 @@ CREATE TABLE mike.xfile (
     size                    bigint          NOT NULL,
     sha1                    character(40),
     md5                     character(32)
-);
+) WITH (fillfactor = 95);
 
 COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
 
-CREATE INDEX xfile_sha1_btree_idx   ON mike.xfile   USING btree (sha1);
-CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5);
+CREATE INDEX xfile_sha1_btree_idx   ON mike.xfile   USING btree (sha1)  WITH (fillfactor = 95);
+CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5)   WITH (fillfactor = 95);
 
 -- mike.as_file_xfile ----------------------------------------------------------
 
@@ -297,5 +297,5 @@ CREATE TABLE mike.as_file_xfile (
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
 
-CREATE INDEX as_file_xfile_id_inode_btree_idx   ON mike.as_file_xfile   USING btree (id_inode);
+CREATE INDEX as_file_xfile_id_inode_btree_idx   ON mike.as_file_xfile   USING btree (id_inode)  WITH (fillfactor = 95);
 
