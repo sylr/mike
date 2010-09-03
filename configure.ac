@@ -239,12 +239,26 @@ AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
 
 # -- postgresql ----------------------------------------------------------------
 
+# postgresql version
 PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | $SED "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
+AC_SUBST(PG_VERSION)
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [lt], [8.4.4],
     AC_MSG_ERROR([PostgreSQL version too old])
 )
+
+# postgresql sharedir
+PG_SHAREDIR=$($PG_CONFIG | $GREP "SHAREDIR" | $SED "s#SHAREDIR = \(\.*\)#\1#i")
+AC_SUBST(PG_SHAREDIR)
+
+AC_CHECK_FILE(
+    [$PG_SHAREDIR/contrib/ltree.sql],
+    [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree.sql],
+    AC_MSG_ERROR([ltree contrib not found in $PG_SHAREDIR/contrib])
+)
+
+AC_SUBST(PG_CONTRIB_LTREE)
 
 # -- variables -----------------------------------------------------------------
 
