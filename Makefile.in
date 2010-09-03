@@ -59,17 +59,6 @@ INSTALL_LOG             = install.log
 
 # -- tests ---------------------------------------------------------------------
 
-ifeq ($(ENABLE_CREATE_DATABASE),Yes)
-	CREATE_DATABASE = "DROP DATABASE IF EXISTS $(DATABASE_NAME) CASCADE;"
-	CREATE_DATABASE += "CREATE DATABASE $(DATABASE_NAME);"
-endif
-
-ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
-	CREATE_SCHEMA = "DROP SCHEMA IF EXISTS mike CASCADE;"
-	CREATE_SCHEMA += "CREATE SCHEMA mike;"
-	CREATE_SCHEMA += "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;"
-endif
-
 ifneq ($(DATABASE_HOST),)
 	PSQL_HOST = -h $(DATABASE_HOST)
 endif
@@ -85,6 +74,8 @@ ifneq ($(GIT),)
 		IS_INSIDE_WORK_TREE=`$(GIT) rev-parse --is-inside-work-tree 2>/dev/null`
 	endif
 endif
+
+PSQL_FULL_CMD = $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 
 # -- version -------------------------------------------------------------------
 
@@ -139,15 +130,22 @@ dry-run::
 	@$(MAKE) --no-print-directory dry-run-sub $(MAKEFLAGS)
 
 dry-run-sub: dumps
-ifneq ($(ENABLE_CREATE_DATABASE),No)
+# create database
+ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;    $(PSQL_FULL_CMD) --file $(PG_CONTRIB_LTREE) --quiet
+endif
+# create schema
+ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) | \
+	                $(PSQL_FULL_CMD) | \
 	                $(TEE) $(DRY_RUN_LOG)
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
@@ -158,13 +156,22 @@ install:
 	@$(MAKE) --no-print-directory install-sub $(MAKEFLAGS)
 
 install-sub: dumps
-ifneq ($(ENABLE_CREATE_DATABASE),No)
-	@$(ECHO) '    'CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_HOST); \
-	$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
+# create database
+ifeq ($(ENABLE_CREATE_DATABASE),Yes)
+	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME)
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB ltree;    $(PSQL_FULL_CMD) --file $(PG_CONTRIB_LTREE) --quiet
+endif
+# create schema
+ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "COMMIT;") | \
-	                $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) | \
+	                $(PSQL_FULL_CMD) | \
 	                $(TEE) $(INSTALL_LOG)
 
 clean:
@@ -187,8 +194,11 @@ clean-no-git: clean-doc
 	@$(ECHO) Removing dry-run.log; $(RM) dry-run.log;
 	@$(ECHO) Removing install.log; $(RM) install.log;
 
+drop-database:
+	@$(ECHO) '    ' DROPPING mike DATABASE; $(ECHO) "DROP DATABASE mike;" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
+
 drop-schema:
-	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
+	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL_FULL_CMD)
 
 # -- git -----------------------------------------------------------------------
 
