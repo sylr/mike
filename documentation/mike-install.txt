@@ -12,7 +12,10 @@ SYNOPSIS
 './configure' [--enable-create-database] [--enable-create-schema]
     [DATABASE_USERNAME=] [DATABASE_NAME=]
     [DATABASE_HOST=] [DATABASE_PORT=]
-'make' [install|graph|stats|clean|doc|html|man|install-doc|install-html|install-man]
+'make'
+'make' [install|clean]
+'make' [graph|gource|stats]
+'make' [doc|html|man|install-doc|install-html|install-man]
 
 DESCRIPTION
 -----------
@@ -27,6 +30,20 @@ Once installed proceed that way :
 sylvain@kheops:~/$ git clone {mike_git_url} mike.git
 sylvain@kheops:~/$ cd mike.git
 --------------------------
+
+Debian requirements
+-------------------
+  - build-essential
+  - postgresql-8.4
+  - postgresql-client-8.4
+  - postgresql-contrib-8.4
+  - postgresql-plperl-8.4
+  - libpq-dev
+  - asciidoc 
+  - apgdiff (optional)
+  - git-core (optional, for development)
+  - gource (optional, for development)
+  - gitstats (optional, for development)
 
 Install
 -------
@@ -133,12 +150,21 @@ clean::
 doc::
     Generate both html and man documentation.
 
+drop-database::
+    Drop DATABASE_NAME database.
+
+drop-schema::
+    Drop mike schema.
+
 dry-run::
     Perform a test install which will be rollbacked. This is the 'default target'.
 
 WARNING: Note that if '--enable-create-database' has been specified to the configure
 script or 'ENABLE_CREATE_DATABASE' set to 'Yes', the database will be 'dropped'
 and all its content will be 'lost'.
+
+gource::
+    Launch gource if installed.
 
 graph::
     Display mike's development graph.

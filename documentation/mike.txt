@@ -12,7 +12,10 @@ SYNOPSIS
 './configure' [--enable-create-database] [--enable-create-schema]
     [DATABASE_USERNAME=] [DATABASE_NAME=]
     [DATABASE_HOST=] [DATABASE_PORT=]
-'make' [install|graph|stats|clean|doc|html|man|install-doc|install-html|install-man]
+'make'
+'make' [install|clean]
+'make' [graph|gource|stats]
+'make' [doc|html|man|install-doc|install-html|install-man]
 
 DESCRIPTION
 -----------
