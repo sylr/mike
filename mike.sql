@@ -116,7 +116,7 @@ CREATE TABLE mike.inode (
     mimetype                varchar(64),
     size                    bigint          NOT NULL DEFAULT 0,
     versioning_size         bigint          NOT NULL DEFAULT 0
-) WITH (fillfactor = 80);
+) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.inode IS 'inodes are entities extended by all vfs items';
 COMMENT ON COLUMN mike.inode.id_inode IS 'inode unique identifier';
@@ -159,7 +159,7 @@ CREATE TABLE mike.directory (
     file_count              integer     NOT NULL DEFAULT 0,
     inner_file_count        bigint      NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
-) INHERITS (mike.inode) WITH (fillfactor = 80);
+) INHERITS (mike.inode) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.directory IS 'table containing all the directory inodes';
 COMMENT ON COLUMN mike.directory.id_inode IS 'inode unique identifier';
@@ -201,7 +201,7 @@ CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
     id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE RESTRICT,
     UNIQUE(id_inode_parent, name)
-) INHERITS (mike.inode) WITH (fillfactor = 80);
+) INHERITS (mike.inode) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.file IS 'table containing all the file inodes';
 COMMENT ON COLUMN mike.file.id_inode IS 'inode unique identifier';
