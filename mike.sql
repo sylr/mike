@@ -155,9 +155,9 @@ CREATE TABLE mike.directory (
     inner_size              bigint      NOT NULL DEFAULT 0,
     inner_versioning_size   bigint      NOT NULL DEFAULT 0,
     dir_count               integer     NOT NULL DEFAULT 0,
-    inner_dir_count         bigint      NOT NULL DEFAULT 0,
+    inner_dir_count         integer     NOT NULL DEFAULT 0,
     file_count              integer     NOT NULL DEFAULT 0,
-    inner_file_count        bigint      NOT NULL DEFAULT 0,
+    inner_file_count        integer     NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
