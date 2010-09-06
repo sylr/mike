@@ -187,7 +187,6 @@ CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING bt
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95);
 CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX directory_mimetype_btree_idx           ON mike.directory   USING btree (mimetype)          WITH (fillfactor = 95);
 CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec)             WITH (fillfactor = 95);
 CREATE INDEX directory_datem_btree_idx              ON mike.directory   USING btree (datem)             WITH (fillfactor = 95);
 CREATE INDEX directory_path_btree_idx               ON mike.directory   USING btree (path)              WITH (fillfactor = 95);
