@@ -150,7 +150,7 @@ DROP TABLE IF EXISTS mike.directory CASCADE;
 CREATE TABLE mike.directory (
     id_inode                bigint      NOT NULL PRIMARY KEY,
     id_inode_parent         bigint      REFERENCES mike.directory(id_inode) ON DELETE CASCADE,
-    mimetype                varchar(64) NOT NULL DEFAULT 'application/x-folder',
+    mimetype                varchar(64) NOT NULL DEFAULT 'mike/x-folder',
     inner_datem             timestamptz,
     inner_size              bigint      NOT NULL DEFAULT 0,
     inner_versioning_size   bigint      NOT NULL DEFAULT 0,
