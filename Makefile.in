@@ -17,32 +17,46 @@ dry-run::
 # -- variables -----------------------------------------------------------------
 
 prefix                  = @prefix@
-ECHO                    = @ECHO@
+
+APGDIFF                 = @APGDIFF@
+AWK                     = @AWK@
+BASENAME                = @BASENAME@
+BASH                    = @BASH@
 CAT                     = @CAT@
-RM                      = @RM@ -rf
-REALPATH                = @REALPATH@
+CREATEDB                = @CREATEDB@
+CUT                     = @CUT@
+DATE                    = @DATE@
+DIRNAME                 = @DIRNAME@
+ECHO                    = @ECHO@
+GETOPT                  = @GETOPT@
 GIT                     = @GIT@
 GITSTATS                = @GITSTATS@
 GOURCE                  = @GOURCE@
-SLEEP                   = @SLEEP@
-SLEEP_TIME              ?= 0.1
-DATE                    = @DATE@
-PSQL                    = @PSQL@
-PSQL_EXTRA              += --no-psqlrc -v ON_ERROR_STOP=on
-CREATEDB                = @CREATEDB@
-APGDIFF                 = @APGDIFF@
+GREP                    = @GREP@
+MAKE                    = @MAKE@
 PG_CONFIG               = @PG_CONFIG@
 PG_DUMP                 = @PG_DUMP@
+PSQL                    = @PSQL@
+REALPATH                = @REALPATH@
+RM                      = @RM@
 SED                     = @SED@
+SLEEP                   = @SLEEP@
 TEE                     = @TEE@
-PG_SHAREDIR             = @PG_SHAREDIR@
-PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
-DATABASE_USER           = @DATABASE_USER@
-DATABASE_NAME           = @DATABASE_NAME@
-DATABASE_HOST           = @DATABASE_HOST@
-DATABASE_PORT           = @DATABASE_PORT@
-ENABLE_CREATE_DATABASE  = @ENABLE_CREATE_DATABASE@
-ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
+TEST                    = @TEST@
+WHICH                   = @WHICH@
+
+PSQL_EXTRA              = --no-psqlrc -v ON_ERROR_STOP=on
+RM_EXTRA                = -rf
+
+DATABASE_HOST			= @DATABASE_HOST@
+DATABASE_NAME			= @DATABASE_NAME@
+DATABASE_PORT			= @DATABASE_PORT@
+DATABASE_USER			= @DATABASE_USER@
+ENABLE_CREATE_DATABASE	= @ENABLE_CREATE_DATABASE@
+ENABLE_CREATE_SCHEMA	= @ENABLE_CREATE_SCHEMA@
+PG_CONTRIB_LTREE		= @PG_CONTRIB_LTREE@
+PG_SHAREDIR				= @PG_SHAREDIR@
+
 DATABASE_TRIGGERS       = $(wildcard triggers/*.pl)
 DATABASE_TRIGGERS       += $(wildcard triggers/*.sql)
 DATABASE_FUNCTIONS      = $(wildcard functions/*.pl)
@@ -52,6 +66,7 @@ DATABASE_FILES          += $(DATABASE_TRIGGERS) $(DATABASE_FUNCTIONS)
 DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
+
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
@@ -82,7 +97,7 @@ PSQL_FULL_CMD = $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(
 
 $(MIKE_VERSION_FILE):
 ifneq ($(GIT_DIR),)
-	@$(RM) $(MIKE_VERSION_FILE)
+	@$(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE)
 	@$(SHELL) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
 endif
 
@@ -91,7 +106,7 @@ endif
 # -- mike.o --------------------------------------------------------------------
 
 clean-target:
-	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 info:
 	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);  $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
@@ -183,17 +198,17 @@ else
 endif
 
 clean-no-git: clean-doc
-	@$(ECHO) Removing $(TARGET_FILE); $(RM) $(TARGET_FILE);
-	@$(ECHO) Removing $(MIKE_VERSION_FILE); $(RM) $(MIKE_VERSION_FILE);
-	@$(ECHO) Removing $(MIKE_TAG_DIFF_FILE); $(RM) $(MIKE_TAG_DIFF_FILE);
-	@$(ECHO) Removing $(MIKE_HEAD_DIFF_FILE); $(RM) $(MIKE_HEAD_DIFF_FILE);
-	@$(ECHO) Removing Makefile; $(RM) Makefile;
-	@$(ECHO) Removing configure; $(RM) configure;
-	@$(ECHO) Removing config.log; $(RM) config.log;
-	@$(ECHO) Removing config.status; $(RM) config.status;
-	@$(ECHO) Removing autom4te.cache; $(RM) autom4te.cache;
-	@$(ECHO) Removing dry-run.log; $(RM) dry-run.log;
-	@$(ECHO) Removing install.log; $(RM) install.log;
+	@$(ECHO) Removing $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE);
+	@$(ECHO) Removing $(MIKE_VERSION_FILE); $(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE);
+	@$(ECHO) Removing $(MIKE_TAG_DIFF_FILE); $(RM) $(RM_EXTRA) $(MIKE_TAG_DIFF_FILE);
+	@$(ECHO) Removing $(MIKE_HEAD_DIFF_FILE); $(RM) $(RM_EXTRA) $(MIKE_HEAD_DIFF_FILE);
+	@$(ECHO) Removing Makefile; $(RM) $(RM_EXTRA) Makefile;
+	@$(ECHO) Removing configure; $(RM) $(RM_EXTRA) configure;
+	@$(ECHO) Removing config.log; $(RM) $(RM_EXTRA) config.log;
+	@$(ECHO) Removing config.status; $(RM) $(RM_EXTRA) config.status;
+	@$(ECHO) Removing autom4te.cache; $(RM) $(RM_EXTRA) autom4te.cache;
+	@$(ECHO) Removing dry-run.log; $(RM) $(RM_EXTRA) dry-run.log;
+	@$(ECHO) Removing install.log; $(RM) $(RM_EXTRA) install.log;
 
 drop-database:
 	@$(ECHO) '    ' DROPPING mike DATABASE; $(ECHO) "DROP DATABASE mike;" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
@@ -272,7 +287,7 @@ install-man:
 
 clean-doc:
 	@$(MAKE) --no-print-directory -C documentation clean
-	@$(RM) documention/Makefile
+	@$(RM) $(RM_EXTRA) documention/Makefile
 
 # -- special targets -----------------------------------------------------------
 
