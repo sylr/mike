@@ -26,12 +26,12 @@ fi
 AC_DEFUN([MIKE_PARSE_WITH],
 [PACKAGE=m4_toupper($1); \
     if ! test -z "$withval"; then
-	    m4_toupper($1)_DIR=$(realpath $withval); \
-	    AC_MSG_NOTICE([setting m4_toupper($1)_DIR to $(realpath $withval)]); \
-	    unset withval; \
-	else \
-	    m4_toupper($1)_DIR=$PATH
-	fi
+        m4_toupper($1)_DIR=$(realpath $withval); \
+        AC_MSG_NOTICE([setting m4_toupper($1)_DIR to $(realpath $withval)]); \
+        unset withval; \
+    else \
+        m4_toupper($1)_DIR=$PATH
+    fi
 ]) # MIKE_PARSE_WITH
 
 AC_DEFUN([MIKE_ARG_SET_PATH],
