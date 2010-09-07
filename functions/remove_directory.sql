@@ -1,7 +1,8 @@
--- # Mike's Function
--- # author: Sylvain Rabot <sylvain@abstraction.fr>
--- # date: 26/07/2010
--- # copyright: All rights reserved
+-- Mike's Function
+-- vim: set tabstop=4 expandtab autoindent smartindent:
+-- author: Sylvain Rabot <sylvain@abstraction.fr>
+-- date: 26/07/2010
+-- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.remove_directory(
     IN  in_id_user          bigint,

@@ -1,4 +1,5 @@
 -- Mike's Schema
+-- vim: set tabstop=4 expandtab autoindent smartindent:
 -- author: Sylvain Rabot <sylvain@abstraction.fr>
 -- date: 03/07/2010
 -- copyright: All rights reserved

@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-
+# vim: set tabstop=4 expandtab autoindent smartindent:
 # author: Sylvain Rabot <srabot@abstraction.fr>
 # date: 03/07/2010
 # copyright: All rights reserved

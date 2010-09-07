@@ -1,5 +1,6 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
+# vim: set tabstop=4 expandtab autoindent smartindent:
 
 # -- init ----------------------------------------------------------------------
 
