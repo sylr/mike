@@ -65,13 +65,15 @@ COMMENT ON COLUMN mike.group.id_user IS 'group owner';
 COMMENT ON COLUMN mike.group.name IS 'group name';
 COMMENT ON COLUMN mike.group.description IS 'group description';
 
+CREATE INDEX group_id_user_btree_idx    ON mike.group   USING btree (id_user)   WITH (fillfactor = 95);
+
 -- mike.as_user_group ----------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.as_user_group CASCADE;
 
 CREATE TABLE mike.as_user_group (
-    id_user                 integer NOT NULL REFERENCES mike.user(id_user),
-    id_group                integer NOT NULL REFERENCES mike.group(id_group)
+    id_user                 integer NOT NULL REFERENCES mike.user (id_user),
+    id_group                integer NOT NULL REFERENCES mike.group (id_group)
 );
 
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
@@ -105,9 +107,9 @@ DROP TABLE IF EXISTS mike.inode CASCADE;
 
 CREATE TABLE mike.inode (
     id_inode                bigserial       NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint          REFERENCES mike.inode(id_inode) ON DELETE CASCADE,
-    id_user                 integer         NOT NULL REFERENCES mike.user(id_user),
-    state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state(state),
+    id_inode_parent         bigint          REFERENCES mike.inode (id_inode) ON DELETE CASCADE,
+    id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
+    state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state (state),
     name                    varchar(256)    NOT NULL CHECK (name != ''),
     path                    varchar(5140)   NOT NULL,
     treepath                ltree           NOT NULL,
@@ -150,7 +152,7 @@ DROP TABLE IF EXISTS mike.directory CASCADE;
 
 CREATE TABLE mike.directory (
     id_inode                bigint      NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint      REFERENCES mike.directory(id_inode) ON DELETE CASCADE,
+    id_inode_parent         bigint      REFERENCES mike.directory (id_inode) ON DELETE CASCADE,
     mimetype                varchar(64) NOT NULL DEFAULT 'mike/x-folder',
     inner_datem             timestamptz,
     inner_size              bigint      NOT NULL DEFAULT 0,
@@ -199,7 +201,7 @@ DROP TABLE IF EXISTS mike.file CASCADE;
 
 CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint  REFERENCES mike.directory(id_inode) ON DELETE RESTRICT,
+    id_inode_parent         bigint  REFERENCES mike.directory (id_inode) ON DELETE RESTRICT,
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
@@ -250,7 +252,7 @@ DROP TABLE IF EXISTS mike.volume CASCADE;
 
 CREATE TABLE mike.volume (
     id_volume               serial          NOT NULL PRIMARY KEY,
-    state                   integer         NOT NULL REFERENCES mike.volume_state(state) DEFAULT 1,
+    state                   integer         NOT NULL REFERENCES mike.volume_state (state) DEFAULT 1,
     path                    varchar(255)    NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
     used_size               bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
@@ -291,8 +293,8 @@ CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5)   WITH (fi
 DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
 
 CREATE TABLE mike.as_file_xfile (
-    id_inode                bigint  NOT NULL REFERENCES mike.file(id_inode) ON DELETE RESTRICT,
-    id_xfile                bigint  NOT NULL REFERENCES mike.xfile(id_xfile) ON DELETE CASCADE
+    id_inode                bigint  NOT NULL REFERENCES mike.file (id_inode) ON DELETE RESTRICT,
+    id_xfile                bigint  NOT NULL REFERENCES mike.xfile (id_xfile) ON DELETE CASCADE
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
