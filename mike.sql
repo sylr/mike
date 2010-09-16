@@ -54,7 +54,7 @@ DROP TABLE IF EXISTS mike.group CASCADE;
 
 CREATE TABLE mike.group (
     id_group                serial          NOT NULL PRIMARY KEY,
-    id_user                 bigint          NOT NULL REFERENCES mike.user(id_user),
+    id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
     name                    varchar(64)     NOT NULL CHECK (name != ''),
     description             varchar(512)    DEFAULT NULL
 );
@@ -275,7 +275,7 @@ DROP TABLE IF EXISTS mike.xfile CASCADE;
 
 CREATE TABLE mike.xfile (
     id_xfile                bigserial       NOT NULL PRIMARY KEY,
-    id_volume               bigint          NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
+    id_volume               integer         NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
     size                    bigint          NOT NULL,
     sha1                    character(40),
     md5                     character(32)
