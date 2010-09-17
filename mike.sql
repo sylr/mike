@@ -346,7 +346,7 @@ INSERT INTO mike.volume_state (state, description) VALUES (1, 'down');
 DROP TABLE IF EXISTS mike.volume CASCADE;
 
 CREATE TABLE mike.volume (
-    id_volume               serial          NOT NULL PRIMARY KEY,
+    id_volume               smallint        NOT NULL PRIMARY KEY,
     state                   integer         NOT NULL REFERENCES mike.volume_state (state) DEFAULT 1,
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
     used_size               bigint          NOT NULL DEFAULT 0,
@@ -355,6 +355,9 @@ CREATE TABLE mike.volume (
     datem                   timestamptz,
     token                   text
 ) WITH (fillfactor = 95);
+
+CREATE SEQUENCE volume_id_volume_seq START 1 OWNED BY mike.volume.id_volume;
+ALTER TABLE mike.volume ALTER COLUMN id_volume SET DEFAULT nextval('volume_id_volume_seq'::regclass)::smallint;
 
 COMMENT ON TABLE mike.volume IS 'volumes informations';
 COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
@@ -372,7 +375,7 @@ DROP TABLE IF EXISTS mike.xfile CASCADE;
 
 CREATE TABLE mike.xfile (
     id_xfile                bigserial       NOT NULL PRIMARY KEY,
-    id_volume               integer         NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
+    id_volume               smallint        NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
     id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype) ON DELETE RESTRICT,
     size                    bigint          NOT NULL,
     sha1                    text            CHECK (length(sha1) = 40),
