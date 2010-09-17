@@ -53,8 +53,8 @@ COMMENT ON COLUMN mike.user.datec IS 'user creation date';
 DROP TABLE IF EXISTS mike.group CASCADE;
 
 CREATE TABLE mike.group (
-    id_group                serial          NOT NULL PRIMARY KEY,
-    id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
+    id_group                serial      NOT NULL PRIMARY KEY,
+    id_user                 integer     NOT NULL REFERENCES mike.user (id_user),
     name                    text        NOT NULL CHECK (name != ''),
     description             text        DEFAULT NULL
 );
@@ -246,16 +246,16 @@ CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (tree
 DROP TABLE IF EXISTS mike.directory CASCADE;
 
 CREATE TABLE mike.directory (
-    id_inode                bigint      NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint      REFERENCES mike.directory (id_inode) ON DELETE CASCADE,
+    id_inode                bigint          NOT NULL PRIMARY KEY,
+    id_inode_parent         bigint          REFERENCES mike.directory (id_inode) ON DELETE CASCADE,
     id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype) DEFAULT 0::smallint,
     inner_datem             timestamptz,
-    inner_size              bigint      NOT NULL DEFAULT 0,
-    inner_versioning_size   bigint      NOT NULL DEFAULT 0,
-    dir_count               integer     NOT NULL DEFAULT 0,
-    inner_dir_count         integer     NOT NULL DEFAULT 0,
-    file_count              integer     NOT NULL DEFAULT 0,
-    inner_file_count        integer     NOT NULL DEFAULT 0,
+    inner_size              bigint          NOT NULL DEFAULT 0,
+    inner_versioning_size   bigint          NOT NULL DEFAULT 0,
+    dir_count               integer         NOT NULL DEFAULT 0,
+    inner_dir_count         integer         NOT NULL DEFAULT 0,
+    file_count              integer         NOT NULL DEFAULT 0,
+    inner_file_count        integer         NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
@@ -265,7 +265,7 @@ COMMENT ON COLUMN mike.directory.id_inode_parent IS 'identifier of parent inode'
 COMMENT ON COLUMN mike.directory.id_user IS 'owner of the inode';
 COMMENT ON COLUMN mike.directory.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.directory.state IS 'state of the inode, references mike.inode_state';
-COMMENT ON COLUMN mike.directory.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.directory.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.directory.path IS 'path of the inode';
 COMMENT ON COLUMN mike.directory.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.directory.datec IS 'creation timestamp with timezone of the inode';
@@ -296,7 +296,7 @@ DROP TABLE IF EXISTS mike.file CASCADE;
 
 CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
-    id_inode_parent         bigint  REFERENCES mike.directory (id_inode) ON DELETE RESTRICT,
+    id_inode_parent         bigint  NOT NULL REFERENCES mike.directory (id_inode) ON DELETE RESTRICT,
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
@@ -306,7 +306,7 @@ COMMENT ON COLUMN mike.file.id_inode_parent IS 'identifier of parent inode';
 COMMENT ON COLUMN mike.file.id_user IS 'owner of the inode';
 COMMENT ON COLUMN mike.file.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.file.state IS 'state of the inode, references mike.inode_state';
-COMMENT ON COLUMN mike.file.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.file.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.file.path IS 'path of the inode';
 COMMENT ON COLUMN mike.file.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.file.datec IS 'creation timestamp with timezone of the inode';
@@ -367,7 +367,7 @@ COMMENT ON COLUMN mike.volume.used_size IS 'used size used on the volumes';
 COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
 COMMENT ON COLUMN mike.volume.datec IS 'creation date off the volumes';
 COMMENT ON COLUMN mike.volume.datem IS 'last modification date of the volumes';
-COMMENT ON COLUMN mike.volume.token IS 'security token for volume record removal';
+COMMENT ON COLUMN mike.volume.token IS 'security token for volume removal';
 
 -- mike.xfile ------------------------------------------------------------------
 
