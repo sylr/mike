@@ -88,7 +88,7 @@ CREATE INDEX as_user_group_id_group_btree_idx   ON mike.as_user_group   USING bt
 DROP TABLE IF EXISTS mike.inode_state CASCADE;
 
 CREATE TABLE mike.inode_state (
-    state                   integer         NOT NULL PRIMARY KEY,
+    state                   smallint    NOT NULL PRIMARY KEY,
     description             text        NOT NULL CHECK (description != '')
 );
 
@@ -204,7 +204,7 @@ CREATE TABLE mike.inode (
     id_inode                bigserial       NOT NULL PRIMARY KEY,
     id_inode_parent         bigint          REFERENCES mike.inode (id_inode) ON DELETE CASCADE,
     id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
-    state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state (state),
+    state                   smallint        NOT NULL DEFAULT 0::smallint REFERENCES mike.inode_state (state),
     id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype),
     name                    text            NOT NULL CHECK (name != '' AND length(name) <= 255),
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
