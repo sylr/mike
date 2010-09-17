@@ -21,7 +21,7 @@ COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file sy
 DROP TABLE IF EXISTS mike.info CASCADE;
 
 CREATE TABLE mike.info (
-    key                     varchar(64)     NOT NULL CHECK (key != '') UNIQUE,
+    key                     text    NOT NULL CHECK (key != '') UNIQUE,
     value                   text
 );
 
@@ -35,8 +35,8 @@ DROP TABLE IF EXISTS mike.user CASCADE;
 
 CREATE TABLE mike.user (
     id_user                 serial          NOT NULL PRIMARY KEY,
-    id_user_sso             varchar(512)    DEFAULT NULL,
-    nickname                varchar(64)     DEFAULT NULL,
+    id_user_sso             text            DEFAULT NULL,
+    nickname                text            DEFAULT NULL,
     state                   integer         NOT NULL DEFAULT 1,
     datec                   timestamptz     NOT NULL DEFAULT now()
 );
@@ -55,8 +55,8 @@ DROP TABLE IF EXISTS mike.group CASCADE;
 CREATE TABLE mike.group (
     id_group                serial          NOT NULL PRIMARY KEY,
     id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
-    name                    varchar(64)     NOT NULL CHECK (name != ''),
-    description             varchar(512)    DEFAULT NULL
+    name                    text        NOT NULL CHECK (name != ''),
+    description             text        DEFAULT NULL
 );
 
 COMMENT ON TABLE mike.group IS 'group informations';
@@ -89,7 +89,7 @@ DROP TABLE IF EXISTS mike.inode_state CASCADE;
 
 CREATE TABLE mike.inode_state (
     state                   integer         NOT NULL PRIMARY KEY,
-    description             varchar(160)    NOT NULL CHECK (description != '')
+    description             text        NOT NULL CHECK (description != '')
 );
 
 COMMENT ON TABLE mike.inode_state IS 'list of inode states';
@@ -110,9 +110,9 @@ CREATE TABLE mike.inode (
     id_inode_parent         bigint          REFERENCES mike.inode (id_inode) ON DELETE CASCADE,
     id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
     state                   integer         NOT NULL DEFAULT 0 REFERENCES mike.inode_state (state),
-    name                    varchar(256)    NOT NULL CHECK (name != ''),
-    path                    varchar(5140)   NOT NULL,
-    treepath                ltree           NOT NULL,
+    name                    text            NOT NULL CHECK (name != '' AND length(name) <= 255),
+    path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
+    treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= 24),
     datec                   timestamptz     NOT NULL DEFAULT now(),
     datem                   timestamptz,
     datea                   timestamptz,
@@ -126,7 +126,7 @@ COMMENT ON COLUMN mike.inode.id_inode IS 'inode unique identifier';
 COMMENT ON COLUMN mike.inode.id_inode_parent IS 'identifier of parent inode';
 COMMENT ON COLUMN mike.inode.id_user IS 'owner of the inode';
 COMMENT ON COLUMN mike.inode.state IS 'state of the inode, references mike.inode_state';
-COMMENT ON COLUMN mike.inode.name IS 'name of the inode, limited to 256 characters';
+COMMENT ON COLUMN mike.inode.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.inode.path IS 'path of the inode';
 COMMENT ON COLUMN mike.inode.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.inode.datec IS 'creation timestamp with timezone of the inode';
@@ -236,7 +236,7 @@ DROP TABLE IF EXISTS mike.volume_state CASCADE;
 
 CREATE TABLE mike.volume_state (
     state                   integer         NOT NULL PRIMARY KEY,
-    description             varchar(160)    NOT NULL CHECK (description != '')
+    description             text            NOT NULL CHECK (description != '')
 );
 
 COMMENT ON TABLE mike.volume_state IS 'list of volume states';
@@ -253,13 +253,13 @@ DROP TABLE IF EXISTS mike.volume CASCADE;
 CREATE TABLE mike.volume (
     id_volume               serial          NOT NULL PRIMARY KEY,
     state                   integer         NOT NULL REFERENCES mike.volume_state (state) DEFAULT 1,
-    path                    varchar(255)    NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
+    path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
     used_size               bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
     datec                   timestamptz     NOT NULL DEFAULT now(),
     datem                   timestamptz,
-    token                   char(40)
-) WITH (fillfactor = 90);
+    token                   text
+) WITH (fillfactor = 95);
 
 COMMENT ON TABLE mike.volume IS 'volumes informations';
 COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
@@ -279,8 +279,8 @@ CREATE TABLE mike.xfile (
     id_xfile                bigserial       NOT NULL PRIMARY KEY,
     id_volume               integer         NOT NULL REFERENCES mike.volume (id_volume) ON DELETE CASCADE,
     size                    bigint          NOT NULL,
-    sha1                    character(40),
-    md5                     character(32)
+    sha1                    text            CHECK (length(sha1) = 40),
+    md5                     text            CHECK (length(md5) = 40)
 ) WITH (fillfactor = 95);
 
 COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
