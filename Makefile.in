@@ -45,6 +45,7 @@ TEE                     = @TEE@
 TEST                    = @TEST@
 WHICH                   = @WHICH@
 
+SLEEP_TIME              = @SLEEP_TIME@
 SLEEP_TIME              ?= 0.1
 PSQL_EXTRA              = --no-psqlrc -v ON_ERROR_STOP=on
 RM_EXTRA                = -rf

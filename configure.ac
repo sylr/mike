@@ -263,6 +263,9 @@ AC_SUBST(PG_CONTRIB_LTREE)
 
 # -- variables -----------------------------------------------------------------
 
+AC_ARG_VAR(SLEEP_TIME, [sleep between each make action (default: 0.1)])
+MIKE_IF_EMPTY_DEFAULT([SLEEP_TIME], [0.1])
+
 AC_ARG_VAR(DATABASE_USER, [database user (default: mike)])
 MIKE_IF_EMPTY_DEFAULT([DATABASE_USER], [mike])
 
