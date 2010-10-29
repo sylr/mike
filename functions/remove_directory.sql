@@ -40,7 +40,7 @@ BEGIN
 
     -- update ancestors metadata
     UPDATE mike.directory SET
-        inner_dir_count         = inner_dir_count - 1,
+        inner_dir_count         = inner_dir_count - v_directory.inner_dir_count - 1,
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,

@@ -6,13 +6,13 @@
 
 DROP FUNCTION IF EXISTS mike.make_directory(
     IN  id_user             bigint,
-    IN  name                varchar,
+    IN  name                text,
     OUT id_inode            bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.make_directory(
     IN  in_id_user              bigint,
-    IN  in_name                 varchar,
+    IN  in_name                 text,
     OUT out_id_inode            bigint
 ) RETURNS bigint AS $__$
 
@@ -38,7 +38,7 @@ BEGIN
         out_id_inode,
         in_name,
         '/' || in_name,
-        out_id_inode::varchar::ltree
+        out_id_inode::text::ltree
      );
 
 END;
@@ -47,7 +47,7 @@ $__$ LANGUAGE plpgsql VOLATILE;
 
 COMMENT ON FUNCTION mike.make_directory(
     IN  id_user             bigint,
-    IN  name                varchar,
+    IN  name                text,
     OUT id_inode            bigint
 ) IS 'create a directory which does not have an id_inode_parent';
 
@@ -56,14 +56,14 @@ COMMENT ON FUNCTION mike.make_directory(
 DROP FUNCTION IF EXISTS mike.make_directory(
     IN  id_user             bigint,
     IN  id_inode_parent     bigint,
-    IN  name                varchar,
+    IN  name                text,
     OUT id_inode            bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.make_directory(
     IN  in_id_user              bigint,
     IN  in_id_inode_parent      bigint,
-    IN  in_name                 varchar,
+    IN  in_name                 text,
     OUT out_id_inode            bigint
 ) RETURNS bigint AS $__$
 
@@ -77,7 +77,7 @@ BEGIN
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
 
-    v_treepath :=  v_directory.treepath || out_id_inode::varchar::ltree;
+    v_treepath :=  v_directory.treepath || out_id_inode::text::ltree;
 
     -- insert into mike.directory
     INSERT INTO mike.directory (
@@ -119,7 +119,7 @@ $__$ LANGUAGE plpgsql VOLATILE;
 
 COMMENT ON FUNCTION mike.make_directory(
     IN  id_user             bigint,
-    IN  name                varchar,
+    IN  name                text,
     OUT id_inode            bigint
 ) IS 'create a directory with an id_inode_parent';
 
