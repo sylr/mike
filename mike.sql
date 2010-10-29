@@ -305,7 +305,7 @@ CREATE TABLE mike.xfile (
     id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype) ON DELETE RESTRICT,
     size                    bigint          NOT NULL,
     sha1                    text            CHECK (length(sha1) = 40),
-    md5                     text            CHECK (length(md5) = 40)
+    md5                     text            CHECK (length(md5) = 32)
 ) WITH (fillfactor = 95);
 
 COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
