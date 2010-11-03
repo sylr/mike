@@ -5,15 +5,15 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.make_directory(
-    IN  id_user             bigint,
-    IN  name                text,
-    OUT id_inode            bigint
+    IN  in_id_user          bigint,
+    IN  in_name             text,
+    OUT out_id_inode        bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.make_directory(
-    IN  in_id_user              bigint,
-    IN  in_name                 text,
-    OUT out_id_inode            bigint
+    IN  in_id_user          bigint,
+    IN  in_name             text,
+    OUT out_id_inode        bigint
 ) RETURNS bigint AS $__$
 
 DECLARE
@@ -40,7 +40,6 @@ BEGIN
         '/' || in_name,
         out_id_inode::text::ltree
      );
-
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
@@ -49,15 +48,15 @@ COMMENT ON FUNCTION mike.make_directory(
     IN  id_user             bigint,
     IN  name                text,
     OUT id_inode            bigint
-) IS 'create a directory which does not have an id_inode_parent';
+) IS 'create a directory which does not have an id_inode_parent, root folder';
 
 --------------------------------------------------------------------------------
 
 DROP FUNCTION IF EXISTS mike.make_directory(
-    IN  id_user             bigint,
-    IN  id_inode_parent     bigint,
-    IN  name                text,
-    OUT id_inode            bigint
+    IN  in_id_user              bigint,
+    IN  in_id_inode_parent      bigint,
+    IN  in_name                 text,
+    OUT out_id_inode            bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.make_directory(

@@ -19,11 +19,12 @@ DECLARE
 BEGIN
     -- select id_inode
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode AND id_user = in_id_user;
+    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode #% owned by #% not found', in_id_inode, in_id_user; END IF;
 
     -- update id_inode
     UPDATE mike.directory SET id_inode_parent = id_inode WHERE id_inode = in_id_inode;
 
-    -- update children status
+    -- update children state to 'waiting for physical removal'
     UPDATE mike.inode SET state = 2 WHERE treepath <@ v_directory.treepath;
 
     -- update id_inode_parent
