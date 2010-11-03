@@ -101,15 +101,15 @@ BEGIN
     UPDATE mike.directory SET
         dir_count           = dir_count + 1,
         inner_dir_count     = inner_dir_count + 1,
-        datem               = greatest(datem, NOW()),
-        inner_datem         = greatest(inner_datem, NOW())
+        datem               = greatest(datem, now()),
+        inner_datem         = greatest(inner_datem, now())
     WHERE
         id_inode = in_id_inode_parent;
 
     -- update ancestors metadata
     UPDATE mike.directory SET
         inner_dir_count     = inner_dir_count + 1,
-        inner_datem         = greatest(inner_datem, NOW())
+        inner_datem         = greatest(inner_datem, now())
     WHERE
         nlevel(v_treepath) > 2
         AND treepath @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);

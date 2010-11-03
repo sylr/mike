@@ -33,8 +33,8 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        datem                   = greatest(datem, NOW()),
-        inner_datem             = greatest(inner_datem, NOW())
+        datem                   = greatest(datem, now()),
+        inner_datem             = greatest(inner_datem, now())
     WHERE
         id_inode_parent = v_directory.id_inode_parent;
 
@@ -44,7 +44,7 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        inner_datem             = greatest(inner_datem, NOW())
+        inner_datem             = greatest(inner_datem, now())
     WHERE
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;
