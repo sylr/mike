@@ -176,6 +176,12 @@ MIKE_PARSE_WITH(createdb)
 AC_PATH_PROG([CREATEDB], [createdb], , [$CREATEDB_DIR])
 MIKE_ERROR_IF_EMPTY([$CREATEDB], [createdb not found])
 
+# looking for createdb
+MIKE_ARG_SET_PATH(dropdb)
+MIKE_PARSE_WITH(dropdb)
+AC_PATH_PROG([DROPDB], [dropdb], , [$DROPDB_DIR])
+MIKE_ERROR_IF_EMPTY([$DROPDB], [dropdb not found])
+
 # looking for pg_config
 MIKE_ARG_SET_PATH(pg_config)
 MIKE_PARSE_WITH(pg_config)
