@@ -21,7 +21,7 @@ COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file sy
 DROP TABLE IF EXISTS mike.info CASCADE;
 
 CREATE TABLE mike.info (
-    key                     text    NOT NULL CHECK (key != '') UNIQUE,
+    key                     text    NOT NULL CHECK (key ~ '^[A-Z0-9_]{2,}$') UNIQUE,
     value                   text
 );
 
@@ -109,7 +109,7 @@ DROP TABLE IF EXISTS mike.mimetype CASCADE;
 
 CREATE TABLE mike.mimetype (
     id_mimetype             smallint        NOT NULL PRIMARY KEY,
-    mimetype                text            NOT NULL CHECK (mimetype != ''),
+    mimetype                text            NOT NULL CHECK (mimetype ~ E'^[a-zA-Z0-9_/ .+-]+$'),
     UNIQUE (mimetype)
 ) WITH (fillfactor = 98);
 
