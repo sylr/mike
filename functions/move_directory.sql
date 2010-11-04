@@ -23,19 +23,19 @@ DECLARE
 BEGIN
     -- select in_id_inode
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode % not found', in_id_inode; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode #% not found', in_id_inode; END IF;
 
     -- select v_old_id_inode_parent
     SELECT * INTO v_old_directory_parent FROM mike.directory WHERE id_inode = v_directory.id_inode_parent AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'v_old_id_inode_parent % not found', v_old_id_inode_parent; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'v_old_id_inode_parent #% not found', v_old_id_inode_parent; END IF;
 
     -- select in_new_id_inode_parent
     SELECT * INTO v_new_directory_parent FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'in_new_id_inode_parent % not found', in_new_id_inode_parent; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'in_new_id_inode_parent #% not found', in_new_id_inode_parent; END IF;
 
     -- look if folder name already exists in target
     SELECT id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
-    IF FOUND THEN RAISE EXCEPTION 'directory name ''%''  already exists in %', v_directory.name, in_new_id_inode_parent; END IF;
+    IF FOUND THEN RAISE EXCEPTION 'directory name ''%''  already exists in #%', v_directory.name, in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
     UPDATE mike.directory SET id_inode_parent = in_new_id_inode_parent WHERE id_inode = in_id_inode;

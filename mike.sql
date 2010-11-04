@@ -21,7 +21,7 @@ COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file sy
 DROP TABLE IF EXISTS mike.info CASCADE;
 
 CREATE TABLE mike.info (
-    key                     text    NOT NULL CHECK (key != '') UNIQUE,
+    key                     text    NOT NULL CHECK (key ~ '^[A-Z0-9_]{2,}$') UNIQUE,
     value                   text
 );
 
@@ -89,17 +89,19 @@ DROP TABLE IF EXISTS mike.inode_state CASCADE;
 
 CREATE TABLE mike.inode_state (
     state                   smallint    NOT NULL PRIMARY KEY,
+    label                   text        NOT NULL CHECK (label ~ '^[A-Z0-9_]{2,}$'),
     description             text        NOT NULL CHECK (description != '')
 );
 
 COMMENT ON TABLE mike.inode_state IS 'list of inode states';
 COMMENT ON COLUMN mike.inode_state.state IS 'state identifier';
+COMMENT ON COLUMN mike.inode_state.label IS 'state label';
 COMMENT ON COLUMN mike.inode_state.description IS 'state description';
 
-INSERT INTO mike.inode_state (state, description) VALUES (0, 'alive');
-INSERT INTO mike.inode_state (state, description) VALUES (1, 'trashed');
-INSERT INTO mike.inode_state (state, description) VALUES (2, 'waiting for physical removal');
-INSERT INTO mike.inode_state (state, description) VALUES (3, 'waiting for logical removal');
+INSERT INTO mike.inode_state (state, label, description) VALUES (0, 'ALIVE', 'alive');
+INSERT INTO mike.inode_state (state, label, description) VALUES (1, 'TRASHED', 'trashed');
+INSERT INTO mike.inode_state (state, label, description) VALUES (2, 'WAITING_FOR_PHYSICAL_REMOVAL', 'waiting for physical removal');
+INSERT INTO mike.inode_state (state, label, description) VALUES (3, 'WAITING_FOR_LOGICAL_REMOVAL', 'waiting for data removal');
 
 -- mike.mimetype ---------------------------------------------------------------
 
@@ -107,7 +109,7 @@ DROP TABLE IF EXISTS mike.mimetype CASCADE;
 
 CREATE TABLE mike.mimetype (
     id_mimetype             smallint        NOT NULL PRIMARY KEY,
-    mimetype                text            NOT NULL CHECK (mimetype != ''),
+    mimetype                text            NOT NULL CHECK (mimetype ~ E'^[a-zA-Z0-9_/ .+-]+$'),
     UNIQUE (mimetype)
 ) WITH (fillfactor = 98);
 
@@ -257,15 +259,17 @@ DROP TABLE IF EXISTS mike.volume_state CASCADE;
 
 CREATE TABLE mike.volume_state (
     state                   integer         NOT NULL PRIMARY KEY,
+    label                   text            NOT NULL CHECK (label ~ '^[A-Z0-9_]{2,}$'),
     description             text            NOT NULL CHECK (description != '')
 );
 
 COMMENT ON TABLE mike.volume_state IS 'list of volume states';
 COMMENT ON COLUMN mike.volume_state.state IS 'state identifier';
+COMMENT ON COLUMN mike.volume_state.label IS 'state label';
 COMMENT ON COLUMN mike.volume_state.description IS 'state description';
 
-INSERT INTO mike.volume_state (state, description) VALUES (0, 'up');
-INSERT INTO mike.volume_state (state, description) VALUES (1, 'down');
+INSERT INTO mike.volume_state (state, label, description) VALUES (0, 'UP', 'volume up');
+INSERT INTO mike.volume_state (state, label, description) VALUES (1, 'DOWN', 'volume down');
 
 -- mike.volume -----------------------------------------------------------------
 
