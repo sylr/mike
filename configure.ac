@@ -176,7 +176,7 @@ MIKE_PARSE_WITH(createdb)
 AC_PATH_PROG([CREATEDB], [createdb], , [$CREATEDB_DIR])
 MIKE_ERROR_IF_EMPTY([$CREATEDB], [createdb not found])
 
-# looking for createdb
+# looking for dropdb
 MIKE_ARG_SET_PATH(dropdb)
 MIKE_PARSE_WITH(dropdb)
 AC_PATH_PROG([DROPDB], [dropdb], , [$DROPDB_DIR])
@@ -208,7 +208,7 @@ MIKE_ARG_SET_PATH(gitstats)
 MIKE_PARSE_WITH(gitstats)
 AC_PATH_PROG([GITSTATS], [gitstats], , [$GITSTATS_DIR])
 
-# looking for gitstats
+# looking for gource
 MIKE_ARG_SET_PATH(gource)
 MIKE_PARSE_WITH(gource)
 AC_PATH_PROG([GOURCE], [gource], , [$GOURCE_DIR])
@@ -234,12 +234,12 @@ MIKE_ARG_SET_PATH(docbook2odf)
 MIKE_PARSE_WITH(docbook2odf)
 AC_PATH_PROG([DOCBOOK2ODF], [docbook2odf], , [$DOCBOOK2ODF_DIR])
 
-# looking for docbook2odf
+# looking for docbook2pdf
 MIKE_ARG_SET_PATH(docbook2pdf)
 MIKE_PARSE_WITH(docbook2pdf)
 AC_PATH_PROG([DOCBOOK2PDF], [docbook2pdf], , [$DOCBOOK2PDF_DIR])
 
-# looking for docbook2odf
+# looking for a2x
 MIKE_ARG_SET_PATH(a2x)
 MIKE_PARSE_WITH(a2x)
 AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
