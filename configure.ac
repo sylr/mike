@@ -5,7 +5,7 @@
 # -- init ----------------------------------------------------------------------
 
 AC_PREREQ([2.61])
-AC_INIT([Mike], [@@MIKE_VERSION@@], [sylvain@abstraction.fr], , [https://git.abstraction.fr/~sylvain/])
+AC_INIT([Mike], [v0.2.10], [sylvain@abstraction.fr], , [https://git.abstraction.fr/~sylvain/])
 AC_COPYRIGHT([All rights reserved to Sylvain Rabot])
 AC_PREFIX_DEFAULT([$HOME])
 
