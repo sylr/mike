@@ -9,6 +9,9 @@ CONTRIB_PATH=$(dirname $TAG_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
 ACMATCH="\[\(.*\)\]"
 
+# loading lib/mike.sh
+. $MIKE_PATH/lib/mike.sh
+
 # -- mike.conf -----------------------------------------------------------------
 
 if [ ! -f $MIKE_PATH/mike.conf ]; then
