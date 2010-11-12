@@ -240,7 +240,7 @@ else ifeq ($(GIT_DIR),)
 	exit 1
 endif
 	@$(ECHO) Number of commits by author :
-	@$(GIT) shortlog --summary  --all --tags --numbered --email
+	@$(GIT) shortlog --summary --no-merges --numbered --email
 
 gitstats: .FORCE
 ifeq ($(GIT),)
