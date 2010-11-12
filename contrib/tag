@@ -7,6 +7,7 @@
 TAG_REALPATH=$(realpath $0)
 CONTRIB_PATH=$(dirname $TAG_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
+ACMATCH="\[\(.*\)\]"
 
 # -- mike.conf -----------------------------------------------------------------
 
@@ -101,11 +102,34 @@ else
     fi
 fi
 
+NEXT_TAG_FULL="v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
+
 # abort ?
-echo "About to tag Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
+echo "About to tag Mike $NEXT_TAG_FULL"
 abort
 
+# checking configure.ac
+VERSION_IN_AC=$(grep "AC_INIT" $MIKE_PATH/configure.ac | \
+    sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\2#")
+
+if [ "$VERSION_IN_AC" != "$NEXT_TAG_FULL" ]; then
+    echo "configure.ac version $VERSION_IN_AC out of date"
+    echo "About to write configure.ac"
+    abort
+
+    if [ ! -z "$(git diff configure.ac)" ]; then
+        die "configure.ac is in dirty state ..."
+    fi
+
+    cat $MIKE_PATH/configure.ac | \
+    sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\AC_INIT([\1], [$NEXT_TAG_FULL], [\3], , [\4])#" > \
+        $MIKE_PATH/configure.ac.tmp
+
+    mv $MIKE_PATH/configure.ac.tmp $MIKE_PATH/configure.ac
+    $GIT add $MIKE_PATH/configure.ac &&
+    $GIT commit -as -m "Mike $NEXT_TAG_FULL"
+fi
+
 # tag
-$GIT tag -s "v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC" \
-        -m "Mike v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
+$GIT tag -s "$NEXT_TAG_FULL" -m "Mike $NEXT_TAG_FULL"
 
