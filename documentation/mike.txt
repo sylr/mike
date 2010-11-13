@@ -29,6 +29,8 @@ most of the time, but rarely modified. Knowing that, Mike stores for each inodes
 metadata which are recalculated only when the file system is modified in order to
 make browsing the fastest possible because all the data fetched are stored, not calculated.
 
+See linkmike:mike-design[1].
+
 Versions
 --------
 Mike's releases' names follow the following pattern :

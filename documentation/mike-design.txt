@@ -1,0 +1,102 @@
+mike-design(1)
+==============
+
+NAME
+----
+mike-design - mike's design
+
+DESCRIPTION
+-----------
+Describe all the technical thnigs there is to know about mike
+
+DESIGN
+------
+Mike has been designed to be the fastest possible in read mode. The counter part
+of this way of doing things is that write operations will be slower because all
+data that could be retrieved by read operations are calculated during those write
+operations.
+
+In order to be scalable Mike relies on the 'replication' capabilities of PostgreSQL '9.x'.
+
+.Architecture
+--------------
+                                   +----------------+
+          +----------------------->|  Mike's Slave  |
+          |                        +----------------+
+          |                                 *
+          |                                 |
+          |                                 |
+    +-----------+                  +-----------------+
+    |  BACKEND  |-----------------x|  Mike's Master  |
+    +-----------+                  +-----------------+
+          |                                 |
+          |                                 |
+          |                                 *
+          |                        +----------------+
+          +----------------------->|  Mike's Slave  |
+                                   +----------------+
+
+
+  <source> -----> <target>   read operations
+  <source> -----x <target>   write operations
+  <source> -----* <target>   replication operations
+--------------
+
+All the write operations are made by calling the 'Master server'. All the other read
+operations are made by calling one of the 'Slave servers' using a consistent hash
+algorithm to select the same server for each user in order to optimize the cache
+of each slave (chosing servers randomly would cause to have the same data in several
+servers' cache).
+
+.Consistent Hash Algorithm example
+[source,php]
+---------------
+$slaves[0] = '10.11.35.1';
+$slaves[1] = '10.11.35.2';
+$slaves[2] = '10.11.35.3';
+
+$hash = substr(sha1('<id_user>'), 0, 6);
+$dec  = hexdec($hash);
+
+$read_server = $slaves[$dec % count($slaves)];
+---------------
+
+DESIGN BENEFITS
+---------------
+  - Mike is always available for every one in read only mode.
+  - A Master server failure does not impact read operations.
+  - The Master performances are not impacted by read operations.
+  - In case of Master server failure a slave server can easily be made Master.
+
+DESIGN LIMITS
+-------------
+  - All the data are stored on each server and not distributed on the server pool
+    causing performances to degrade if the amount of data becomes to important.
+
+MIKE'S LIMITS
+-------------
+  - The number of 'users' is limited to '2147483647'.
+  - The number of 'groups' is limited to '2147483647'.
+  - The number of 'inodes' created is limited to '9223372036854775807'.
+    'All the inodes', directories and files, 'share the same sequence' making their identifiers unique.
+  - Each 'directory' can contain up to '32767 directories'.
+  - Each 'directory' can contain up to '32767 files'.
+  - Each 'root directory' can contain up to '2147483647' directories in its whole tree.
+  - Each 'root directory' can contain up to '2147483647' files in its whole tree.
+  - A directory can 'not' contain inodes with the 'same name'.
+
+---------------
+ +---------------------+----------------------------------------+
+ |               32767 | smallint 2 bytes signed integer limit. |
+ |          2147483647 | integer 4 bytes signed integer limit.  |
+ | 9223372036854775807 | bigint 8 bytes signed integer limit.   |
+ +---------------------+----------------------------------------+
+---------------
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[1] suite
