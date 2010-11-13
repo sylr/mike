@@ -4,18 +4,18 @@
 -- date: 26/07/2010
 -- copyright: All rights reserved
 
-DROP FUNCTION IF EXISTS mike.remove_directory(
+DROP FUNCTION IF EXISTS mike.rmdir(
     IN  in_id_user          bigint,
     IN  in_id_inode         bigint
 ) CASCADE;
 
-CREATE OR REPLACE FUNCTION mike.remove_directory(
+CREATE OR REPLACE FUNCTION mike.rmdir(
     IN  in_id_user          bigint,
     IN  in_id_inode         bigint
 ) RETURNS void AS $__$
 
 DECLARE
-    v_directory         mike.directory%rowtype;
+    v_directory             mike.directory%rowtype;
 BEGIN
     -- select id_inode
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode AND id_user = in_id_user;
@@ -28,7 +28,7 @@ BEGIN
     UPDATE mike.inode SET state = 2 WHERE treepath <@ v_directory.treepath;
 
     -- update id_inode_parent
-    UPDATE mike.directory SET 
+    UPDATE mike.directory SET
         dir_count               = dir_count - 1,
         inner_dir_count         = inner_dir_count - v_directory.inner_dir_count - 1,
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
@@ -52,8 +52,7 @@ END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
 
-COMMENT ON FUNCTION mike.remove_directory(
+COMMENT ON FUNCTION mike.rmdir(
     IN  in_id_user          bigint,
     IN  in_id_inode         bigint
 ) IS 'this function flags a directory and all its children as removed';
-

@@ -4,21 +4,21 @@
 -- date: 26/07/2010
 -- copyright: All rights reserved
 
-DROP FUNCTION IF EXISTS mike.make_directory(
+DROP FUNCTION IF EXISTS mike.mkdir(
     IN  in_id_user          bigint,
     IN  in_name             text,
     OUT out_id_inode        bigint
 ) CASCADE;
 
-CREATE OR REPLACE FUNCTION mike.make_directory(
+CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_id_user          bigint,
     IN  in_name             text,
     OUT out_id_inode        bigint
 ) RETURNS bigint AS $__$
 
 DECLARE
-    v_directory         mike.directory%rowtype;
-    v_parent_treepath   ltree;
+    v_directory             mike.directory%rowtype;
+    v_parent_treepath       ltree;
 BEGIN
     -- select id_inode
     SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
@@ -44,7 +44,7 @@ END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
 
-COMMENT ON FUNCTION mike.make_directory(
+COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             bigint,
     IN  name                text,
     OUT id_inode            bigint
@@ -52,14 +52,14 @@ COMMENT ON FUNCTION mike.make_directory(
 
 --------------------------------------------------------------------------------
 
-DROP FUNCTION IF EXISTS mike.make_directory(
+DROP FUNCTION IF EXISTS mike.mkdir(
     IN  in_id_user              bigint,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
     OUT out_id_inode            bigint
 ) CASCADE;
 
-CREATE OR REPLACE FUNCTION mike.make_directory(
+CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_id_user              bigint,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
@@ -116,9 +116,8 @@ END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
 
-COMMENT ON FUNCTION mike.make_directory(
+COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             bigint,
     IN  name                text,
     OUT id_inode            bigint
 ) IS 'create a directory with an id_inode_parent';
-

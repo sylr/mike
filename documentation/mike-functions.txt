@@ -8,12 +8,12 @@ mike-functions - mike's functions
 SYNOPSIS
 --------
 [verse]
-       Name       | Result data type |                                       Argument data types                                        
-------------------+------------------+--------------------------------------------------------------------------------------------------
- make_directory   | bigint           | in_id_user bigint, in_id_inode_parent bigint, in_name character varying, OUT out_id_inode bigint 
- make_directory   | bigint           | in_id_user bigint, in_name character varying, OUT out_id_inode bigint                            
- move_directory   | void             | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint                             
- remove_directory | void             | in_id_user bigint, in_id_inode bigint                                                            
+ Name  | Result data type |                                 Argument data types
+-------+------------------+-------------------------------------------------------------------------------------
+ mkdir | bigint           | in_id_user bigint, in_id_inode_parent bigint, in_name text, OUT out_id_inode bigint
+ mkdir | bigint           | in_id_user bigint, in_name text, OUT out_id_inode bigint
+ mvdir | void             | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint
+ rmdir | void             | in_id_user bigint, in_id_inode bigint
 
 DESCRIPTION
 -----------
@@ -21,25 +21,25 @@ List of all functions of Mike's SQL API.
 
 FUNCTIONS
 ---------
-'make_directory'(in_id_user, in_id_inode_parent, in_name)::
+'mkdir'(in_id_user, in_id_inode_parent, in_name)::
  +
 Create a directory inside another directory.
-See linkmike:mike-function-make-directory[1]
+See linkmike:mike-function-mkdir[1]
 
-'make_directory'(in_id_user, in_name)::
+'mkdir'(in_id_user, in_name)::
  +
 Create a directory at vfs's root.
-See linkmike:mike-function-make-directory[1]
+See linkmike:mike-function-mkdir[1]
 
-'move_directory'(in_id_user, in_id_inode, in_new_id_inode_parent)::
+'mvdir'(in_id_user, in_id_inode, in_new_id_inode_parent)::
  +
 Move a directory inside another directory.
-See linkmike:mike-function-move-directory[1]
+See linkmike:mike-function-mvdir[1]
 
-'remove_directory'(in_id_user, in_id_inode)::
+'rmdir'(in_id_user, in_id_inode)::
  +
 Flag a directory and its children for removal.
-See linkmike:mike-function-remove-directory[1]
+See linkmike:mike-function-rmdir[1]
 
 Authors
 -------
