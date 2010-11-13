@@ -37,7 +37,7 @@ CREATE TABLE mike.user (
     id_user                 serial          NOT NULL PRIMARY KEY,
     id_user_sso             text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
-    state                   integer         NOT NULL DEFAULT 1,
+    state                   smallint        NOT NULL DEFAULT 1,
     datec                   timestamptz     NOT NULL DEFAULT now()
 );
 
@@ -180,9 +180,9 @@ CREATE TABLE mike.directory (
     inner_datem             timestamptz,
     inner_size              bigint          NOT NULL DEFAULT 0,
     inner_versioning_size   bigint          NOT NULL DEFAULT 0,
-    dir_count               smallint        NOT NULL DEFAULT 0,
+    dir_count               smallint        NOT NULL DEFAULT 0::smallint,
     inner_dir_count         integer         NOT NULL DEFAULT 0,
-    file_count              smallint        NOT NULL DEFAULT 0,
+    file_count              smallint        NOT NULL DEFAULT 0::smallint,
     inner_file_count        integer         NOT NULL DEFAULT 0,
     UNIQUE (id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
