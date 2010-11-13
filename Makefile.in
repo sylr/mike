@@ -158,7 +158,7 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
@@ -184,7 +184,7 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
