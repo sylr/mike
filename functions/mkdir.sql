@@ -70,6 +70,10 @@ DECLARE
     v_directory     mike.directory%rowtype;
     v_treepath      ltree;
 BEGIN
+    -- check name unicity
+    SELECT id_inode FROM inode WHERE id_inode_parent = in_id_inode_parent AND name = in_name;
+    IF NOT FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in id_inode_parent #%', in_name, in_id_inode_parent; END IF;
+
     -- select id_inode
     SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
 
