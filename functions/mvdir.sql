@@ -35,7 +35,7 @@ BEGIN
 
     -- look if folder name already exists in target
     SELECT id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
-    IF FOUND THEN RAISE EXCEPTION 'directory name ''%''  already exists in #%', v_directory.name, in_new_id_inode_parent; END IF;
+    IF FOUND THEN RAISE EXCEPTION 'directory name ''%'' already exists in #%', v_directory.name, in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
     UPDATE mike.directory SET id_inode_parent = in_new_id_inode_parent WHERE id_inode = in_id_inode;
