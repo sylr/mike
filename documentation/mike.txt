@@ -21,7 +21,7 @@ DESCRIPTION
 -----------
 Mike is a 'Virtual File System' which primary goals are to be 'lightweight', 'robust'
 and 'efficient'. In a few words mike is a 'PostgreSQL database' which comes with
-a `SQL API` in order to manage directories and files. The API provides a set of
+a 'SQL API' in order to manage directories and files. The API provides a set of
 functions needed to manipulate the data into the database.
 
 The main idea when Mike has been designed was that a file system is accessed, browsed
