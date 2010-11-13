@@ -71,7 +71,7 @@ DESIGN BENEFITS
 DESIGN LIMITS
 -------------
   - All the data are stored on each server and not distributed on the server pool
-    causing performances to degrade if the amount of data becomes to important.
+    causing performances to degrade if the amount of data becomes too important.
 
 MIKE'S LIMITS
 -------------
@@ -83,14 +83,16 @@ MIKE'S LIMITS
   - Each 'directory' can contain up to '32767 files'.
   - Each 'root directory' can contain up to '2147483647' directories in its whole tree.
   - Each 'root directory' can contain up to '2147483647' files in its whole tree.
+  - A 'tree' can not exceed '24 levels'.
+  - An 'inode name' can node exceed '255 characters'.
   - A directory can 'not' contain inodes with the 'same name'.
 
 ---------------
- +---------------------+----------------------------------------+
- |               32767 | smallint 2 bytes signed integer limit. |
- |          2147483647 | integer 4 bytes signed integer limit.  |
- | 9223372036854775807 | bigint 8 bytes signed integer limit.   |
- +---------------------+----------------------------------------+
+ +---------------------+----------+-------------------------------+
+ |               32767 | smallint | 2 bytes signed integer limit. |
+ |          2147483647 | integer  | 4 bytes signed integer limit. |
+ | 9223372036854775807 | bigint   | 8 bytes signed integer limit. |
+ +---------------------+----------+-------------------------------+
 ---------------
 
 Authors
