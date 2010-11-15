@@ -60,12 +60,17 @@ ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_SHAREDIR             = @PG_SHAREDIR@
 
-DATABASE_TRIGGERS       = $(wildcard triggers/*.pl)
-DATABASE_TRIGGERS       += $(wildcard triggers/*.sql)
-DATABASE_FUNCTIONS      = $(wildcard functions/*.pl)
-DATABASE_FUNCTIONS      += $(wildcard functions/*.sql)
+# -- database schema -----------------------------------------------------------
+
+# include triggers list
+include triggers/triggers.mak
+
+# include functions list
+include functions/functions.mak
+
 DATABASE_FILES          = mike.sql data/mimetypes.sql
-DATABASE_FILES          += $(DATABASE_TRIGGERS) $(DATABASE_FUNCTIONS)
+DATABASE_FILES          += $(patsubst %, triggers/%, $(DATABASE_TRIGGERS))
+DATABASE_FILES          += $(patsubst %, functions/%, $(DATABASE_FUNCTIONS))
 DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
