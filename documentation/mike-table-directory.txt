@@ -7,33 +7,31 @@ mike-table-directory - mike's directory table
 
 SYNOPSIS
 --------
-[verse]
-                                            Table "mike.directory"
-        Column         |           Type           |                         Modifiers                          
------------------------+--------------------------+------------------------------------------------------------
- id_inode              | bigint                   | not null default nextval('inode_id_inode_seq'::regclass)
- id_inode_parent       | bigint                   | 
- id_user               | integer                  | not null
- state                 | integer                  | not null default 0
- name                  | character varying(256)   | not null
- path                  | character varying(5140)  | not null
- treepath              | ltree                    | not null
- datec                 | timestamp with time zone | not null default now()
- datem                 | timestamp with time zone | 
- datea                 | timestamp with time zone | 
- mimetype              | character varying(64)    | not null default 'application/x-folder'::character varying
- size                  | bigint                   | not null default 0
- versioning_size       | bigint                   | not null default 0
- inner_datem           | timestamp with time zone | 
- inner_size            | bigint                   | not null default 0
- inner_versioning_size | bigint                   | not null default 0
- dir_count             | integer                  | not null default 0
- inner_dir_count       | bigint                   | not null default 0
- file_count            | integer                  | not null default 0
- inner_file_count      | bigint                   | not null default 0
 
-[verse]
-Indexes:
+         Column         |           Type           |                        Modifiers                         |                      Description                       
+ -----------------------+--------------------------+----------------------------------------------------------+--------------------------------------------------------
+  id_inode              | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | inode unique identifier
+  id_inode_parent       | bigint                   |                                                          | identifier of parent inode
+  id_user               | integer                  | not null                                                 | owner of the inode
+  state                 | smallint                 | not null default (0)::smallint                           | state of the inode, references mike.inode_state
+  id_mimetype           | smallint                 | not null default (0)::smallint                           | mimetype of the inode
+  name                  | text                     | not null                                                 | name of the inode, limited to 255 characters
+  path                  | text                     | not null                                                 | path of the inode
+  treepath              | ltree                    | not null                                                 | treepath of the inode
+  datec                 | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
+  datem                 | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
+  datea                 | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
+  size                  | bigint                   | not null default 0                                       | size in bytes of the inode
+  versioning_size       | bigint                   | not null default 0                                       | size in bytes of the inode
+  inner_datem           | timestamp with time zone |                                                          | modification date of last updated child directory
+  inner_size            | bigint                   | not null default 0                                       | size sum of child directories
+  inner_versioning_size | bigint                   | not null default 0                                       | versioning size sum of child directories
+  dir_count             | smallint                 | not null default (0)::smallint                           | number of direct child directories
+  inner_dir_count       | integer                  | not null default 0                                       | number of child directories
+  file_count            | smallint                 | not null default (0)::smallint                           | number of direct child files
+  inner_file_count      | integer                  | not null default 0                                       | number of child files
+
+ Indexes:
     "directory_pkey" PRIMARY KEY, btree (id_inode)
     "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
     "directory_datec_btree_idx" btree (datec)
@@ -46,22 +44,18 @@ Indexes:
     "directory_path_btree_idx" btree (path)
     "directory_treepath_gist_idx" gist (treepath)
 
-[verse]
-Check constraints:
+ Check constraints:
     "inode_name_check" CHECK (name::text <> ''::text)
 
-[verse]
-Foreign-key constraints:
+ Foreign-key constraints:
     "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
 
-[verse]
-Referenced by:
+ Referenced by:
     TABLE "directory" CONSTRAINT "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
     TABLE "file" CONSTRAINT "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
 
-[verse]
-Inherits: inode
-
+ Inherits:
+    inode
 
 DESCRIPTION
 -----------

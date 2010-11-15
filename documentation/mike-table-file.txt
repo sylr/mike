@@ -8,45 +8,52 @@ mike-table-file - mike's file table
 SYNOPSIS
 --------
 
-      Column      |           Type           |                        Modifiers                         
- -----------------+--------------------------+----------------------------------------------------------
-  id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass)
-  id_inode_parent | bigint                   | 
-  id_user         | integer                  | not null
-  state           | integer                  | not null default 0
-  name            | character varying(256)   | not null
-  path            | character varying(5140)  | not null
-  treepath        | ltree                    | not null
-  datec           | timestamp with time zone | not null default now()
-  datem           | timestamp with time zone | 
-  datea           | timestamp with time zone | 
-  mimetype        | character varying(64)    | 
-  size            | bigint                   | not null default 0
-  versioning_size | bigint                   | not null default 0
- 
-  Indexes:
+      Column      |           Type           |                        Modifiers                         |                      Description                       
+ -----------------+--------------------------+----------------------------------------------------------+--------------------------------------------------------
+  id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | inode unique identifier
+  id_inode_parent | bigint                   | not null                                                 | identifier of parent inode
+  id_user         | integer                  | not null                                                 | owner of the inode
+  state           | smallint                 | not null default (0)::smallint                           | state of the inode, references mike.inode_state
+  id_mimetype     | smallint                 | not null                                                 | mimetype of the inode
+  name            | text                     | not null                                                 | name of the inode, limited to 255 characters
+  path            | text                     | not null                                                 | path of the inode
+  treepath        | ltree                    | not null                                                 | treepath of the inode
+  datec           | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
+  datem           | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
+  datea           | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
+  size            | bigint                   | not null default 0                                       | size of the inode
+  versioning_size | bigint                   | not null default 0                                       | versioning size of the inode
+
+
+ Indexes:
     "file_pkey" PRIMARY KEY, btree (id_inode)
     "file_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
-    "file_datec_btree_idx" btree (datec)
-    "file_datem_btree_idx" btree (datem)
-    "file_id_inode_btree_idx" btree (id_inode)
-    "file_id_inode_parent_btree_idx" btree (id_inode_parent)
-    "file_id_user_btree_idx" btree (id_user)
-    "file_mimetype_btree_idx" btree (mimetype)
-    "file_name_btree_idx" btree (name)
-    "file_path_btree_idx" btree (path)
-    "file_treepath_gist_idx" gist (treepath)
- 
+    "file_datec_btree_idx" btree (datec) WITH (fillfactor=95)
+    "file_datem_btree_idx" btree (datem) WITH (fillfactor=95)
+    "file_id_inode_btree_idx" btree (id_inode) WITH (fillfactor=95)
+    "file_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
+    "file_id_mimetype_btree_idx" btree (id_mimetype) WITH (fillfactor=95)
+    "file_id_user_btree_idx" btree (id_user) WITH (fillfactor=95)
+    "file_name_btree_idx" btree (name) WITH (fillfactor=95)
+    "file_path_btree_idx" btree (path) WITH (fillfactor=95)
+    "file_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
+
  Check constraints:
-    "inode_name_check" CHECK (name::text <> ''::text)
- 
+    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255)
+    "inode_path_check" CHECK (substr(path, 1, 1) = '/'::text)
+    "inode_treepath_check" CHECK (nlevel(treepath) <= 24)
+
  Foreign-key constraints:
     "file_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE RESTRICT
-  
+
  Referenced by:
     TABLE "as_file_xfile" CONSTRAINT "as_file_xfile_id_inode_fkey" FOREIGN KEY (id_inode) REFERENCES file(id_inode) ON DELETE RESTRICT
- 
- Inherits: inode
+
+ Inherits: 
+    inode
+
+ Options:
+    fillfactor=90
 
 DESCRIPTION
 -----------
