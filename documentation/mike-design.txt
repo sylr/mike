@@ -88,11 +88,13 @@ MIKE'S LIMITS
   - A directory can 'not' contain inodes with the 'same name'.
 
 ---------------
- +---------------------+----------+-------------------------------+
- |               32767 | smallint | 2 bytes signed integer limit. |
- |          2147483647 | integer  | 4 bytes signed integer limit. |
- | 9223372036854775807 | bigint   | 8 bytes signed integer limit. |
- +---------------------+----------+-------------------------------+
+ +----------+------------------------+---------------------+
+ |   Type   |     Specifications     |       Max value     |
+ +----------+------------------------+---------------------+
+ | smallint | 2 bytes signed integer |               32767 |
+ | integer  | 4 bytes signed integer |          2147483647 |
+ | bigint   | 8 bytes signed integer | 9223372036854775807 |
+ +----------+------------------------+---------------------+
 ---------------
 
 Authors
