@@ -23,9 +23,14 @@ REFNAME=$(echo "$STDIN" | cut -d ' ' -f3)
 # -- gitstats ------------------------------------------------------------------
 
 GITSTATS=$(which gitstats)
+export PWD=`pwd`
 
-if ! test -z "$GITSTATS"; then
+if test -n "$GITSTATS"; then
     if test "$REFNAME" = "refs/heads/master"; then
-        $GITSTATS . gitstats > /dev/null 2>&1
+        $GITSTATS $PWD  gitstats > /dev/null 2>&1
+
+        if test "$?" != "0"; then
+            echo "gitstats failed ..."
+        fi
     fi
 fi
