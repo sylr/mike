@@ -4,6 +4,9 @@
 MIKE_VERSION_GEN_REALPATH=$(realpath $0)
 MIKE_PATH=$(dirname $MIKE_VERSION_GEN_REALPATH)
 
+# include mike.sh
+. $MIKE_PATH/lib/mike.sh
+
 # Mike info
 MIKE_GIT_URL="sylvain@git.abstraction.fr:~/priv/git/mike.git"
 MIKE_WHO=$(whoami)@$(hostname)
