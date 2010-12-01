@@ -119,27 +119,35 @@ clean-target:
 	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 info:
-	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);  $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);    $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_BRANCH $(MIKE_BRANCH);    $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_BRANCH', '$(MIKE_BRANCH)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_WHO_INSTALLED $(MIKE_WHO_INSTALLED); \
-	                                                    $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;        $(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', NOW()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_USER;                     $(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_COMMIT', '$(MIKE_COMMIT)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_BRANCH $(MIKE_BRANCH);
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_BRANCH', '$(MIKE_BRANCH)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_WHO_INSTALLED $(MIKE_WHO_INSTALLED);
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_USER;
+	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	
 	@# MIKE_TAG_DIFF_FILE
 	@$(ECHO) -n; \
 	if test -f $(MIKE_TAG_DIFF_FILE); then \
-	$(ECHO) '    ' LINK MIKE_TAG_DIFF_FILE;             ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_TAG_DIFF', E'"; \
-	                                                    cat $(MIKE_TAG_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
-	                                                    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
+	    $(ECHO) '    ' LINK MIKE_TAG_DIFF_FILE; \
+	    ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_TAG_DIFF', E'"; \
+	    cat $(MIKE_TAG_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
+	    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
+	
 	@# MIKE_HEAD_DIFF_FILE
 	@$(ECHO) -n; \
 	if test -f $(MIKE_HEAD_DIFF_FILE); then \
-	$(ECHO) '    ' LINK MIKE_HEAD_DIFF_FILE;            ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_HEAD_DIFF', E'"; \
-	                                                    cat $(MIKE_HEAD_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
-	                                                    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
+	    $(ECHO) '    ' LINK MIKE_HEAD_DIFF_FILE; \
+	    ($(ECHO) -n "INSERT INTO mike.info VALUES ('MIKE_HEAD_DIFF', E'"; \
+	    cat $(MIKE_HEAD_DIFF_FILE) | $(SED) "s/\(['\\]\)/\1\1/g"; \
+	    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
 
 dumps: clean-target $(DATABASE_DUMPS) info
@@ -158,21 +166,27 @@ dry-run::
 dry-run-sub: dumps
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
-	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' IMPORTING CONTRIB ltree;    $(PSQL_FULL_CMD) --file $(PG_CONTRIB_LTREE) --quiet
+	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
+	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
+	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;
+	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
+	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
+	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING SCHEMA mike;
+	@$(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' ALTERING search_path;
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "ROLLBACK;") | \
-	                $(PSQL_FULL_CMD) | \
-	                $(TEE) $(DRY_RUN_LOG)
+	@$(ECHO)
+	@$(PSQL_FULL_CMD) --single-transaction --file $(TARGET_FILE) --log-file $(DRY_RUN_LOG) > /dev/null
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
 
@@ -184,21 +198,27 @@ install:
 install-sub: dumps
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
-	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST); $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;  $(ECHO) "CREATE LANGUAGE plpgsql;"  | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;   $(ECHO) "CREATE LANGUAGE plperl;"   | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' IMPORTING CONTRIB ltree;    $(PSQL_FULL_CMD) --file $(PG_CONTRIB_LTREE) --quiet
+	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
+	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
+	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;
+	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
+	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS; $(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING SCHEMA mike; $(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' ALTERING search_path; $(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
+	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING SCHEMA mike;
+	@$(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' ALTERING search_path;
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' EXECUTING; $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO);   ($(ECHO) "BEGIN;"; $(ECHO) $(CREATE_SCHEMA); $(CAT) $(TARGET_FILE); $(ECHO) "COMMIT;") | \
-	                $(PSQL_FULL_CMD) | \
-	                $(TEE) $(INSTALL_LOG)
+	@$(ECHO)
+	@$(PSQL_FULL_CMD) --single-transaction --file $(TARGET_FILE) --log-file $(INSTALL_LOG) > /dev/null
 
 # -- drop ----------------------------------------------------------------------
 
@@ -220,6 +240,8 @@ drop-functions:
 	         | $(PSQL_FULL_CMD) > /dev/null
 	@$(ECHO) "DROP FUNCTION mike.perform(text);" | $(PSQL_FULL_CMD) > /dev/null
 
+# -- clean ---------------------------------------------------------------------
+
 clean:
 ifneq ($(GIT),)
 	@$(GIT) clean -fdx
@@ -240,7 +262,19 @@ clean-no-git: clean-doc
 	@$(ECHO) Removing dry-run.log; $(RM) $(RM_EXTRA) dry-run.log;
 	@$(ECHO) Removing install.log; $(RM) $(RM_EXTRA) install.log;
 
+# -- development ---------------------------------------------------------------
 
+dev-functions: $(DATABASE_FUNCTIONS)
+
+$(DATABASE_FUNCTIONS):
+	@$(ECHO) '    ' CC $@;
+	@$(PSQL_FULL_CMD) --file functions/$@ > /dev/null
+
+dev-triggers: $(DATABASE_TRIGGERS)
+
+$(DATABASE_TRIGGERS):
+	@$(ECHO) '    ' CC $@;
+	@$(PSQL_FULL_CMD) --file triggers/$@ > /dev/null
 
 # -- git -----------------------------------------------------------------------
 
