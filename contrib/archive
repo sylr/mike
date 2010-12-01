@@ -45,6 +45,11 @@ done
 
 # ------------------------------------------------------------------------------
 
+# check refname value
+if [ -z "$REF_NAME" ]; then
+    die "you need to specify --ref option"
+fi
+
 # check if working tree is dirty
 if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
     die "working tree can not be dirty to archive"
@@ -52,11 +57,7 @@ else
     CURRENT_HEAD=$($GIT show-ref $(cat .git/HEAD) | cut -d ' ' -f2 | cut -d "/" -f 3-)
 fi
 
-# check refname value
-if [ -z "$REF_NAME" ]; then
-    die "you need to specify --ref option"
-fi
-
+# last tag
 LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev $REF_NAME 2>/dev/null)
 
 # check refname validity
@@ -66,7 +67,7 @@ fi
 
 # checking out $REF_NAME
 $GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
-echo "checking out ref $REF_NAME"
+echo "checking out ref $REF_NAME ..."
 
 # generating version files
 $MIKE_PATH/MIKE_VERSION_GEN || die "generating MIKE_VERSION_FILE failed"
