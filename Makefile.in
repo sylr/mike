@@ -69,8 +69,8 @@ include triggers/triggers.mak
 include functions/functions.mak
 
 DATABASE_FILES          = mike.sql data/mimetypes.sql
-DATABASE_FILES          += $(patsubst %, triggers/%, $(DATABASE_TRIGGERS))
 DATABASE_FILES          += $(patsubst %, functions/%, $(DATABASE_FUNCTIONS))
+DATABASE_FILES          += $(patsubst %, triggers/%, $(DATABASE_TRIGGERS))
 DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
