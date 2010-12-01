@@ -75,6 +75,8 @@ DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_F
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
 
+# -- custom files --------------------------------------------------------------
+
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
