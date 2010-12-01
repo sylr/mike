@@ -62,15 +62,15 @@ PG_SHAREDIR             = @PG_SHAREDIR@
 
 # -- database schema -----------------------------------------------------------
 
-# include triggers list
-include triggers/triggers.mak
-
-# include functions list
+# include database files list
 include functions/functions.mak
+include triggers/triggers.mak
+include data/data.mak
 
-DATABASE_FILES          = mike.sql data/mimetypes.sql
+DATABASE_FILES          = mike.sql
 DATABASE_FILES          += $(patsubst %, functions/%, $(DATABASE_FUNCTIONS))
 DATABASE_FILES          += $(patsubst %, triggers/%, $(DATABASE_TRIGGERS))
+DATABASE_FILES          += $(patsubst %, data/%, $(DATABASE_DATA))
 DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
 DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
 TARGET_FILE             = mike.o
