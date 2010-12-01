@@ -200,6 +200,26 @@ endif
 	                $(PSQL_FULL_CMD) | \
 	                $(TEE) $(INSTALL_LOG)
 
+# -- drop ----------------------------------------------------------------------
+
+drop-database:
+	@$(ECHO) '    ' DROPPING mike DATABASE;
+	@$(ECHO) "DROP DATABASE mike;" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
+
+drop-schema:
+	@$(ECHO) '    ' DROPPING mike SCHEMA;
+	@$(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL_FULL_CMD)
+
+drop-functions:
+	@$(ECHO) '    ' DROPPING mike FUNCTIONS;
+	@$(ECHO) "SELECT mike.perform('DROP FUNCTION ' || p.proname || '(' || " \
+	         "pg_catalog.pg_get_function_identity_arguments(p.oid) || ')') " \
+	         "FROM pg_catalog.pg_proc p " \
+	         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace " \
+	         "WHERE n.nspname = 'mike' AND p.proname != 'perform'" \
+	         | $(PSQL_FULL_CMD) > /dev/null
+	@$(ECHO) "DROP FUNCTION mike.perform(text);" | $(PSQL_FULL_CMD) > /dev/null
+
 clean:
 ifneq ($(GIT),)
 	@$(GIT) clean -fdx
@@ -220,11 +240,7 @@ clean-no-git: clean-doc
 	@$(ECHO) Removing dry-run.log; $(RM) $(RM_EXTRA) dry-run.log;
 	@$(ECHO) Removing install.log; $(RM) $(RM_EXTRA) install.log;
 
-drop-database:
-	@$(ECHO) '    ' DROPPING mike DATABASE; $(ECHO) "DROP DATABASE mike;" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
 
-drop-schema:
-	@$(ECHO) '    ' DROPPING mike SCHEMA; $(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL_FULL_CMD)
 
 # -- git -----------------------------------------------------------------------
 

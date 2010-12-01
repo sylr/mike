@@ -10,3 +10,4 @@ DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += get-id-mimetype.sql
 DATABASE_FUNCTIONS  += touch.sql
+DATABASE_FUNCTIONS  += perform.sql
