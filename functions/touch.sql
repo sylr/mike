@@ -47,7 +47,8 @@ BEGIN
         name,
         path,
         treepath,
-        datec
+        datec,
+        size
     )
     VALUES (
         out_id_inode,
@@ -57,13 +58,16 @@ BEGIN
         in_name,
         v_directory.path || '/' || in_name,
         v_directory.treepath || out_id_inode::text::ltree,
-        in_datec
+        in_datec,
+        in_size
     );
 
     -- update id_inode parent
     UPDATE mike.directory SET
         file_count          = file_count + 1,
         inner_file_count    = inner_file_count + 1,
+        size                = size + in_size,
+        inner_size          = inner_size + in_size,
         datem               = greatest(datem, in_datec),
         inner_datem         = greatest(inner_datem, in_datec)
     WHERE
@@ -72,6 +76,7 @@ BEGIN
     -- update ancestors metadata
     UPDATE mike.directory SET
         inner_file_count    = inner_file_count + 1,
+        inner_size          = inner_size + in_size,
         inner_datem         = greatest(inner_datem, in_datec)
     WHERE
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
