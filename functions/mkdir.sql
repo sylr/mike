@@ -56,6 +56,7 @@ DROP FUNCTION IF EXISTS mike.mkdir(
     IN  in_id_user              bigint,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
+    IN  in_return_if_exists     boolean,
     OUT out_id_inode            bigint
 ) CASCADE;
 
@@ -63,17 +64,24 @@ CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_id_user              bigint,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
+    IN  in_return_if_exists     boolean DEFAULT false,
     OUT out_id_inode            bigint
 ) AS $__$
 
 DECLARE
-    v_id_inode      bigint;
     v_directory     mike.directory%rowtype;
     v_treepath      ltree;
 BEGIN
     -- check name unicity
-    SELECT id_inode INTO v_id_inode FROM inode WHERE id_inode_parent = in_id_inode_parent AND name = in_name;
-    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in id_inode_parent #%', in_name, in_id_inode_parent; END IF;
+    SELECT id_inode INTO out_id_inode FROM inode WHERE id_inode_parent = in_id_inode_parent AND name = in_name;
+
+    IF FOUND THEN
+        IF in_return_if_exists THEN
+            RETURN;
+        ELSE
+            RAISE EXCEPTION 'inode name ''%'' already exists in directory #%', in_name, in_id_inode_parent;
+        END IF;
+    END IF;
 
     -- select id_inode
     SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
