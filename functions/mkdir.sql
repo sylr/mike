@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_id_user          bigint,
     IN  in_name             text,
     OUT out_id_inode        bigint
-) RETURNS bigint AS $__$
+) AS $__$
 
 DECLARE
     v_directory             mike.directory%rowtype;
@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
     OUT out_id_inode            bigint
-) RETURNS bigint AS $__$
+) AS $__$
 
 DECLARE
     v_id_inode      bigint;

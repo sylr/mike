@@ -7,5 +7,6 @@
 DATABASE_FUNCTIONS   = mkdir.sql
 DATABASE_FUNCTIONS  += mvdir.sql
 DATABASE_FUNCTIONS  += rmdir.sql
+DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += get-id-mimetype.sql
 DATABASE_FUNCTIONS  += touch.sql

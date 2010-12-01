@@ -4,102 +4,103 @@
 -- date: 21/09/2010
 -- copyright: All rights reserved
 
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/msword');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/octet-stream');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/ogg');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/pdf');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/pgp');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/pgp-keys');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/pgp-signature');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/postscript');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/vnd.ms-cab-compressed');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/vnd.ms-office');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/vnd.oasis.opendocument.text');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-7z-compressed');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-arc');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-archive');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-bittorrent');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-bzip2');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-coredump');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-debian-package');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-dosexec');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-dvi');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-elc');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-empty');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-executable');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-freemind');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-gdbm');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-gnupg-keyring');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-gzip');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-iso9660-image');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-java-applet');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-java-keystore');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-kdelnk');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/xml');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-object');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-pgp-keyring');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-rar');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-rpm');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-ruby');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-sharedlib');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-shockwave-flash');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-tar');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/x-tex-tfm');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/zip');
-INSERT INTO mike.mimetype (mimetype) VALUES ('application/zipimage/x-bmp');
-INSERT INTO mike.mimetype (mimetype) VALUES ('audio/mp4');
-INSERT INTO mike.mimetype (mimetype) VALUES ('audio/mpeg');
-INSERT INTO mike.mimetype (mimetype) VALUES ('audio/x-hx-aac-adts');
-INSERT INTO mike.mimetype (mimetype) VALUES ('audio/x-mod');
-INSERT INTO mike.mimetype (mimetype) VALUES ('audio/x-wav');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/gif');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/jpeg');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/png');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/svg+xml');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/tiff');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/tiff-fx');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/vnd.adobe.photoshop');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-bmp');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-ico');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-ms-bmp');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-portable-bitmap');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-portable-greymap');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-portable-pixmap');
-INSERT INTO mike.mimetype (mimetype) VALUES ('image/x-xcf');
-INSERT INTO mike.mimetype (mimetype) VALUES ('message/news');
-INSERT INTO mike.mimetype (mimetype) VALUES ('message/rfc822');
-INSERT INTO mike.mimetype (mimetype) VALUES ('model/vrml');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/html');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/PGP');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/plain');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/rtf');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/troff');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/vnd.graphviz');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-asm');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-awk');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-c');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-c++');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-diff');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-fortran');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-gawk');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-java');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-lisp');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-m4');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-mail');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-makefile');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-msdos-batch');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-news');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-pascal');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-perl');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-php');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-pl1');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-po');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-shellscript');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-tex');
-INSERT INTO mike.mimetype (mimetype) VALUES ('text/x-texinfo');
-INSERT INTO mike.mimetype (mimetype) VALUES ('video/mp4');
-INSERT INTO mike.mimetype (mimetype) VALUES ('video/quicktime');
-INSERT INTO mike.mimetype (mimetype) VALUES ('video/x-flv');
-INSERT INTO mike.mimetype (mimetype) VALUES ('video/x-ms-asf');
-INSERT INTO mike.mimetype (mimetype) VALUES ('video/x-msvideo');
-INSERT INTO mike.mimetype (mimetype) VALUES ('x-epoc/x-sisx-app');
+INSERT INTO mike.mimetype (mimetype) VALUES
+    ('application/msword'),
+    ('application/octet-stream'),
+    ('application/ogg'),
+    ('application/pdf'),
+    ('application/pgp'),
+    ('application/pgp-keys'),
+    ('application/pgp-signature'),
+    ('application/postscript'),
+    ('application/vnd.ms-cab-compressed'),
+    ('application/vnd.ms-office'),
+    ('application/vnd.oasis.opendocument.text'),
+    ('application/x-7z-compressed'),
+    ('application/x-arc'),
+    ('application/x-archive'),
+    ('application/x-bittorrent'),
+    ('application/x-bzip2'),
+    ('application/x-coredump'),
+    ('application/x-debian-package'),
+    ('application/x-dosexec'),
+    ('application/x-dvi'),
+    ('application/x-elc'),
+    ('application/x-empty'),
+    ('application/x-executable'),
+    ('application/x-freemind'),
+    ('application/x-gdbm'),
+    ('application/x-gnupg-keyring'),
+    ('application/x-gzip'),
+    ('application/x-iso9660-image'),
+    ('application/x-java-applet'),
+    ('application/x-java-keystore'),
+    ('application/x-kdelnk'),
+    ('application/xml'),
+    ('application/x-object'),
+    ('application/x-pgp-keyring'),
+    ('application/x-rar'),
+    ('application/x-rpm'),
+    ('application/x-ruby'),
+    ('application/x-sharedlib'),
+    ('application/x-shockwave-flash'),
+    ('application/x-tar'),
+    ('application/x-tex-tfm'),
+    ('application/zip'),
+    ('application/zipimage/x-bmp'),
+    ('audio/mp4'),
+    ('audio/mpeg'),
+    ('audio/x-hx-aac-adts'),
+    ('audio/x-mod'),
+    ('audio/x-wav'),
+    ('image/gif'),
+    ('image/jpeg'),
+    ('image/png'),
+    ('image/svg+xml'),
+    ('image/tiff'),
+    ('image/tiff-fx'),
+    ('image/vnd.adobe.photoshop'),
+    ('image/x-bmp'),
+    ('image/x-ico'),
+    ('image/x-ms-bmp'),
+    ('image/x-portable-bitmap'),
+    ('image/x-portable-greymap'),
+    ('image/x-portable-pixmap'),
+    ('image/x-xcf'),
+    ('message/news'),
+    ('message/rfc822'),
+    ('model/vrml'),
+    ('text/html'),
+    ('text/PGP'),
+    ('text/plain'),
+    ('text/rtf'),
+    ('text/troff'),
+    ('text/vnd.graphviz'),
+    ('text/x-asm'),
+    ('text/x-awk'),
+    ('text/x-c'),
+    ('text/x-c++'),
+    ('text/x-diff'),
+    ('text/x-fortran'),
+    ('text/x-gawk'),
+    ('text/x-java'),
+    ('text/x-lisp'),
+    ('text/x-m4'),
+    ('text/x-mail'),
+    ('text/x-makefile'),
+    ('text/x-msdos-batch'),
+    ('text/x-news'),
+    ('text/x-pascal'),
+    ('text/x-perl'),
+    ('text/x-php'),
+    ('text/x-pl1'),
+    ('text/x-po'),
+    ('text/x-shellscript'),
+    ('text/x-tex'),
+    ('text/x-texinfo'),
+    ('video/mp4'),
+    ('video/quicktime'),
+    ('video/x-flv'),
+    ('video/x-ms-asf'),
+    ('video/x-msvideo'),
+    ('x-epoc/x-sisx-app');
