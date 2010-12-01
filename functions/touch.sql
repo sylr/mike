@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS mike.touch(
     IN  in_id_user          bigint,
     IN  in_id_inode_parent  bigint,
     IN  in_name             text,
+    IN  in_mimetype         text,
     IN  in_size             bigint,
     IN  in_datec            timestamptz,
     OUT out_id_inode        bigint
@@ -29,7 +30,7 @@ DECLARE
 BEGIN
     -- check name unicity
     SELECT id_inode INTO v_id_inode FROM inode WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
-    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in id_inode_parent #%', in_name, in_id_inode_parent; END IF;
+    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in directory #%', in_name, in_id_inode_parent; END IF;
 
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
