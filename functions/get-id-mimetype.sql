@@ -8,7 +8,7 @@ BEGIN
     SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE lower(mimetype) = lower(in_mimetype);
 
     IF NOT FOUND THEN
-        SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_mimetype;
+        SELECT nextval('mimetype_id_mimetype_seq'::regclass) INTO out_id_mimetype;
 
         INSERT INTO mimetype (
             id_mimetype,
