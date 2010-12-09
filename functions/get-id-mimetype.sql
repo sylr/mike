@@ -1,3 +1,8 @@
+-- Mike's Function
+-- vim: set tabstop=4 expandtab autoindent smartindent:
+-- author: Sylvain Rabot <sylvain@abstraction.fr>
+-- date: 10/12/2010
+-- copyright: All rights reserved
 
 CREATE OR REPLACE FUNCTION mike.get_id_mimetype(
     IN  in_mimetype         text,
