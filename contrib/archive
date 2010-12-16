@@ -22,9 +22,17 @@ fi
 
 . $MIKE_PATH/lib/mike.sh
 
+# -- usage ---------------------------------------------------------------------
+
+usage()
+{
+    echo >&2 "$0 usage:"
+    echo >&2 "   --ref   ref name to archive"
+}
+
 # ------------------------------------------------------------------------------
 
-ARGV=`getopt --long ref: -n "$0" -- $0 $@`
+ARGV=`getopt --long h,help,ref: -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -39,6 +47,7 @@ do
     case "$1" in
         --ref)      REF_NAME=$2;        shift 2;;
         --)         shift;              break;;
+        -h|--help)  usage;              exit 0;;
         *)          usage;              exit 1;;
     esac
 done
