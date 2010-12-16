@@ -65,6 +65,9 @@ if [ -z "$LAST_TAG" ]; then
     die "unknown refname $REF_NAME"
 fi
 
+# get the commit of the ref name
+COMMIT=$(git show $REF_NAME | grep -E "commit [a-f0-9]{40}" | cut -d ' ' -f2)
+
 # checking out $REF_NAME
 $GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
 echo "checking out ref $REF_NAME ..."
@@ -88,8 +91,8 @@ echo "uncompressing mike-$LAST_TAG.tar ..."
 echo "adding untracked files ..."
 
 # compressing
-tar czf mike-$LAST_TAG.tar.gz mike-$LAST_TAG || die "generating mike-$LAST_TAG.tar.gz archive failed"
 echo "generating mike-$LAST_TAG.tar.gz archive ..."
+tar --pax-option "comment=$COMMIT" -czf mike-$LAST_TAG.tar.gz mike-$LAST_TAG || die "generating mike-$LAST_TAG.tar.gz archive failed"
 
 # cleaning
 rm -rf mike-$LAST_TAG.tar
