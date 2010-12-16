@@ -69,26 +69,26 @@ fi
 COMMIT=$(git show $REF_NAME | grep -E "commit [a-f0-9]{40}" | cut -d ' ' -f2)
 
 # checking out $REF_NAME
-$GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
 echo "checking out ref $REF_NAME ..."
+$GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
 
 # generating version files
-$MIKE_PATH/MIKE_VERSION_GEN || die "generating MIKE_VERSION_FILE failed"
 echo "generating MIKE_VERSION_FILE ..."
+$MIKE_PATH/MIKE_VERSION_GEN || die "generating MIKE_VERSION_FILE failed"
 
 # generating archive
-$GIT archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NAME
 echo "generating mike-$LAST_TAG.tar archive ..."
+$GIT archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NAME
 
 # uncompressing archive
-tar xf mike-$LAST_TAG.tar
 echo "uncompressing mike-$LAST_TAG.tar ..."
+tar xf mike-$LAST_TAG.tar
 
 # adding unversionned file 
+echo "adding untracked version files ..."
 [ -f MIKE_VERSION_FILE ] && cp MIKE_VERSION_FILE mike-$LAST_TAG/
 [ -f MIKE_TAG_DIFF_FILE ] && cp MIKE_TAG_DIFF_FILE mike-$LAST_TAG/
 [ -f MIKE_HEAD_DIFF_FILE ] && cp MIKE_HEAD_DIFF_FILE mike-$LAST_TAG/
-echo "adding untracked files ..."
 
 # compressing
 echo "generating mike-$LAST_TAG.tar.gz archive ..."
