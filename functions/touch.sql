@@ -28,13 +28,13 @@ DECLARE
     v_id_inode              bigint;
     v_directory             mike.directory%rowtype;
 BEGIN
-    -- check name unicity
-    SELECT id_inode INTO v_id_inode FROM inode WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
-    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in directory #%', in_name, in_id_inode_parent; END IF;
-
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
     IF NOT FOUND THEN RAISE EXCEPTION 'directory ''%'' not found', in_id_inode_parent; END IF;
+
+    -- check name unicity
+    SELECT id_inode INTO v_id_inode FROM inode WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
+    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in directory ''%''', in_name, in_id_inode_parent; END IF;
 
     -- select id_inode
     SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
