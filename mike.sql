@@ -133,7 +133,7 @@ CREATE TABLE mike.inode (
     id_inode_parent         bigint          REFERENCES mike.inode (id_inode) ON DELETE CASCADE,
     id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
     state                   smallint        NOT NULL DEFAULT 0::smallint REFERENCES mike.inode_state (state),
-    id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype),
+    id_mimetype             smallint        REFERENCES mike.mimetype (id_mimetype),
     name                    text            NOT NULL CHECK (name != '' AND length(name) <= 255),
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
     treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= 24),
