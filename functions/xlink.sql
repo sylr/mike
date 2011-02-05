@@ -6,12 +6,12 @@
 
 DROP FUNCTION IF EXISTS mike.xlink(
     IN  in_id_inode     bigint,
-    IN  id_id_xfile     bigint
+    IN  in_id_xfile     bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.xlink(
     IN  in_id_inode     bigint,
-    IN  id_id_xfile     bigint
+    IN  in_id_xfile     bigint
 ) RETURNS void AS $__$
 
 DECLARE
@@ -63,8 +63,8 @@ BEGIN
         versioning_size         = versioning_size - v_file.versioning_size + v_versioning_size,
         inner_size              = inner_size - v_file.size + v_xfile.size,
         inner_versioning_size   = inner_versioning_size - v_file.versioning_size + v_versioning_size,
-        datem                   = greatest(datem, in_datec),
-        inner_datem             = greatest(inner_datem, in_datec)
+        datem                   = greatest(datem, now()),
+        inner_datem             = greatest(inner_datem, now())
     WHERE
         id_inode = v_file.id_inode_parent;
 
@@ -72,8 +72,8 @@ BEGIN
     UPDATE mike.directory SET
         inner_size              = inner_size - v_file.size + v_xfile.size,
         inner_versioning_size   = inner_versioning_size - v_file.versioning_size + v_versioning_size,
-        datem                   = greatest(datem, in_datec),
-        inner_datem             = greatest(inner_datem, in_datec)
+        datem                   = greatest(datem, now()),
+        inner_datem             = greatest(inner_datem, now())
     WHERE
         treepath @> subpath(v_file.treepath, 0, nlevel(v_file.treepath) - 2);
 END;
