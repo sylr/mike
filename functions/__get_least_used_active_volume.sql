@@ -20,7 +20,7 @@ BEGIN
     SELECT id_volume INTO out_id_volume
     FROM mike.volume
     WHERE
-        state = 1
+        state = 0
         AND used_size < max_size - (max_size * 5 / 100)
     ORDER BY used_size ASC
     LIMIT 1;
