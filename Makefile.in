@@ -232,13 +232,13 @@ drop-schema:
 
 drop-functions:
 	@$(ECHO) '    ' DROPPING mike FUNCTIONS;
-	@$(ECHO) "SELECT mike.perform('DROP FUNCTION ' || p.proname || '(' || " \
+	@$(ECHO) "SELECT mike.__perform('DROP FUNCTION ' || p.proname || '(' || " \
 	         "pg_catalog.pg_get_function_identity_arguments(p.oid) || ')') " \
 	         "FROM pg_catalog.pg_proc p " \
 	         "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace " \
-	         "WHERE n.nspname = 'mike' AND p.proname != 'perform'" \
+	         "WHERE n.nspname = 'mike' AND p.proname != '__perform'" \
 	         | $(PSQL_FULL_CMD) > /dev/null
-	@$(ECHO) "DROP FUNCTION mike.perform(text);" | $(PSQL_FULL_CMD) > /dev/null
+	@$(ECHO) "DROP FUNCTION mike.__perform(text);" | $(PSQL_FULL_CMD) > /dev/null
 
 # -- clean ---------------------------------------------------------------------
 

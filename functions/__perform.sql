@@ -4,7 +4,7 @@
 -- date: 27/11/2010
 -- copyright: All rights reserved
 
-CREATE OR REPLACE FUNCTION mike.perform(
+CREATE OR REPLACE FUNCTION mike.__perform(
     IN  in_sql          text
 ) RETURNS void AS $__$
 

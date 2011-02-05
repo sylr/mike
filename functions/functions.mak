@@ -10,6 +10,6 @@ DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += __get_id_mimetype.sql
 DATABASE_FUNCTIONS  += __get_least_used_active_volume.sql
+DATABASE_FUNCTIONS  += __perform.sql
 DATABASE_FUNCTIONS  += touch.sql
-DATABASE_FUNCTIONS  += perform.sql
 DATABASE_FUNCTIONS  += xtouch.sql
