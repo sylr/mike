@@ -24,7 +24,7 @@ DECLARE
     v_id_inode              bigint;
     v_directory             mike.directory%rowtype;
 BEGIN
-    -- select id_inode_parent
+    -- check id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
     IF NOT FOUND THEN RAISE EXCEPTION 'directory ''%'' not found', in_id_inode_parent; END IF;
 
@@ -55,7 +55,7 @@ BEGIN
         in_datec
     );
 
-    -- update id_inode parent
+    -- update parent directory
     UPDATE mike.directory SET
         file_count              = file_count + 1,
         inner_file_count        = inner_file_count + 1,
@@ -64,7 +64,7 @@ BEGIN
     WHERE
         id_inode = in_id_inode_parent;
 
-    -- update ancestors metadata
+    -- update great parents directories
     UPDATE mike.directory SET
         inner_file_count    = inner_file_count + 1,
         inner_datem         = greatest(inner_datem, in_datec)
