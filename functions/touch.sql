@@ -55,7 +55,7 @@ BEGIN
         out_id_inode,
         in_id_user,
         in_id_inode_parent,
-        mike.get_id_mimetype(in_mimetype),
+        mike.__get_id_mimetype(in_mimetype),
         in_name,
         v_directory.path || '/' || in_name,
         v_directory.treepath || out_id_inode::text::ltree,

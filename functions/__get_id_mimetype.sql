@@ -4,7 +4,7 @@
 -- date: 10/12/2010
 -- copyright: All rights reserved
 
-CREATE OR REPLACE FUNCTION mike.get_id_mimetype(
+CREATE OR REPLACE FUNCTION mike.__get_id_mimetype(
     IN  in_mimetype         text,
     OUT out_id_mimetype     smallint
 ) RETURNS smallint AS $__$
@@ -30,7 +30,7 @@ $__$ LANGUAGE plpgsql VOLATILE;
 
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION mike.get_id_mimetype_stable(
+CREATE OR REPLACE FUNCTION mike.__get_id_mimetype_stable(
     IN  in_mimetype         text,
     OUT out_id_mimetype     smallint
 ) RETURNS smallint AS $__$
