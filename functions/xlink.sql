@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION mike.xlink(
 DECLARE
     v_file              mike.file%rowtype;
     v_xfile             mike.xfile%rowtype;
+    v_as_file_xfile     mike.as_file_xfile%rowtype;
     v_versioning_size   bigint;
 BEGIN
     -- file
@@ -25,7 +26,17 @@ BEGIN
 
     -- xfile
     SELECT * INTO v_xfile FROM mike.xfile WHERE id_xfile = in_id_xfile;
-    IF NOT FOUND THEN RAISE EXCEPTION 'xfile ''%'' not found', in_id_file; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'xfile ''%'' not found', in_id_xfile; END IF;
+
+    -- as_file_xfile
+    SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_inode = in_id_inode ORDER BY datec DESC LIMIT 1;
+
+    -- check if last xfile linked is not already the one we are linking
+    IF FOUND THEN
+        IF v_as_file_xfile.id_xfile = in_id_xfile THEN
+            RAISE EXCEPTION 'xfile ''%'' is already the last linked to ''%''', in_id_xfile, in_id_file;
+        END IF;
+    END IF;
 
     -- linking
     INSERT INTO mike.as_file_xfile (
