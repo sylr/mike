@@ -169,6 +169,8 @@ CREATE INDEX inode_datem_btree_idx              ON mike.inode   USING btree (dat
 CREATE INDEX inode_path_btree_idx               ON mike.inode   USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (treepath)           WITH (fillfactor = 95);
 
+CLUSTER mike.file USING inode_id_user_btree_idx;
+
 -- mike.directory --------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.directory CASCADE;
@@ -218,6 +220,8 @@ CREATE INDEX directory_datem_btree_idx              ON mike.directory   USING bt
 CREATE INDEX directory_path_btree_idx               ON mike.directory   USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath)           WITH (fillfactor = 95);
 
+CLUSTER mike.directory USING directory_id_user_btree_idx;
+
 -- mike.file -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.file CASCADE;
@@ -252,6 +256,8 @@ CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (dat
 CREATE INDEX file_datem_btree_idx               ON mike.file    USING btree (datem)             WITH (fillfactor = 95);
 CREATE INDEX file_path_btree_idx                ON mike.file    USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath)           WITH (fillfactor = 95);
+
+CLUSTER mike.file USING file_id_inode_parent_btree_idx;
 
 -- mike.volume_state -----------------------------------------------------------
 
@@ -330,4 +336,6 @@ CREATE TABLE mike.as_file_xfile (
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
 
 CREATE INDEX as_file_xfile_id_inode_btree_idx   ON mike.as_file_xfile   USING btree (id_inode)  WITH (fillfactor = 95);
+
+CLUSTER mike.as_file_xfile USING as_file_xfile_id_inode_btree_idx;
 
