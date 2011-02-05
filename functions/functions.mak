@@ -9,5 +9,6 @@ DATABASE_FUNCTIONS  += mvdir.sql
 DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += get-id-mimetype.sql
+DATABASE_FUNCTIONS  += __get_least_used_active_volume.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += perform.sql
