@@ -13,3 +13,4 @@ DATABASE_FUNCTIONS  += __get_least_used_active_volume.sql
 DATABASE_FUNCTIONS  += __perform.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += xtouch.sql
+DATABASE_FUNCTIONS  += xlink.sql

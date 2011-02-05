@@ -322,8 +322,9 @@ CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5)   WITH (fi
 DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
 
 CREATE TABLE mike.as_file_xfile (
-    id_inode                bigint  NOT NULL REFERENCES mike.file (id_inode) ON DELETE RESTRICT,
-    id_xfile                bigint  NOT NULL REFERENCES mike.xfile (id_xfile) ON DELETE CASCADE
+    id_inode                bigint          NOT NULL REFERENCES mike.file (id_inode) ON DELETE RESTRICT,
+    id_xfile                bigint          NOT NULL REFERENCES mike.xfile (id_xfile) ON DELETE CASCADE,
+    datec                   timestamptz     NOT NULL DEFAULT now()
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
