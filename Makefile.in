@@ -223,8 +223,8 @@ endif
 # -- drop ----------------------------------------------------------------------
 
 drop-database:
-	@$(ECHO) '    ' DROPPING mike DATABASE;
-	@$(ECHO) "DROP DATABASE mike;" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
+	@$(ECHO) '    ' DROPPING $(DATABASE_NAME) DATABASE;
+	@$(ECHO) "DROP DATABASE $(DATABASE_NAME);" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
 
 drop-schema:
 	@$(ECHO) '    ' DROPPING mike SCHEMA;
