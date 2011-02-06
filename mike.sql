@@ -159,14 +159,12 @@ COMMENT ON COLUMN mike.inode.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
 
-CREATE INDEX inode_id_inode_btree_idx           ON mike.inode   USING btree (id_inode)          WITH (fillfactor = 95);
+ALTER INDEX mike.inode_pkey SET (fillfactor = 95);
+
 CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent)   WITH (fillfactor = 95);
 CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX inode_id_mimetype_btree_idx        ON mike.inode   USING btree (id_mimetype)       WITH (fillfactor = 95);
 CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX inode_datec_btree_idx              ON mike.inode   USING btree (datec)             WITH (fillfactor = 95);
-CREATE INDEX inode_datem_btree_idx              ON mike.inode   USING btree (datem)             WITH (fillfactor = 95);
-CREATE INDEX inode_path_btree_idx               ON mike.inode   USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (treepath)           WITH (fillfactor = 95);
 
 CLUSTER mike.file USING inode_id_user_btree_idx;
@@ -211,13 +209,12 @@ COMMENT ON COLUMN mike.directory.inner_dir_count IS 'number of child directories
 COMMENT ON COLUMN mike.directory.file_count IS 'number of direct child files';
 COMMENT ON COLUMN mike.directory.inner_file_count IS 'number of child files';
 
-CREATE INDEX directory_id_inode_btree_idx           ON mike.directory   USING btree (id_inode)          WITH (fillfactor = 95);
+ALTER INDEX mike.directory_pkey SET (fillfactor = 95);
+
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95);
 CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name)              WITH (fillfactor = 95);
 CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec)             WITH (fillfactor = 95);
-CREATE INDEX directory_datem_btree_idx              ON mike.directory   USING btree (datem)             WITH (fillfactor = 95);
-CREATE INDEX directory_path_btree_idx               ON mike.directory   USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath)           WITH (fillfactor = 95);
 
 CLUSTER mike.directory USING directory_id_user_btree_idx;
@@ -247,14 +244,13 @@ COMMENT ON COLUMN mike.file.datea IS 'last access timestamp with timezone of the
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
 
-CREATE INDEX file_id_inode_btree_idx            ON mike.file    USING btree (id_inode)          WITH (fillfactor = 95);
+ALTER INDEX mike.file_pkey SET (fillfactor = 95);
+
 CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent)   WITH (fillfactor = 95);
 CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX file_id_mimetype_btree_idx         ON mike.file    USING btree (id_mimetype)       WITH (fillfactor = 95);
 CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name)              WITH (fillfactor = 95);
 CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (datec)             WITH (fillfactor = 95);
-CREATE INDEX file_datem_btree_idx               ON mike.file    USING btree (datem)             WITH (fillfactor = 95);
-CREATE INDEX file_path_btree_idx                ON mike.file    USING btree (path)              WITH (fillfactor = 95);
 CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath)           WITH (fillfactor = 95);
 
 CLUSTER mike.file USING file_id_inode_parent_btree_idx;
