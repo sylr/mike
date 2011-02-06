@@ -42,7 +42,7 @@ BEGIN
      );
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             bigint,
@@ -127,7 +127,7 @@ BEGIN
         AND treepath @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             bigint,

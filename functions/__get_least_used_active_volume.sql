@@ -28,4 +28,4 @@ BEGIN
     IF NOT FOUND THEN RAISE EXCEPTION 'no volume found'; END IF;
 END;
 
-$__$ LANGUAGE plpgsql STABLE;
+$__$ LANGUAGE plpgsql STABLE COST 10;

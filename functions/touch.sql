@@ -72,4 +72,4 @@ BEGIN
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 1000;

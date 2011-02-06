@@ -26,7 +26,7 @@ BEGIN
     END IF;
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 10;
 
 --------------------------------------------------------------------------------
 
@@ -39,4 +39,4 @@ BEGIN
     SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE mimetype = lower(in_mimetype);
 END;
 
-$__$ LANGUAGE plpgsql STABLE;
+$__$ LANGUAGE plpgsql STABLE COST 10;

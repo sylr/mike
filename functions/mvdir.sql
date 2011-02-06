@@ -97,7 +97,7 @@ BEGIN
         AND treepath @> subpath(v_new_directory_parent.treepath, 0, nlevel(v_new_directory_parent.treepath) - 1);
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mvdir(
     IN  in_id_user              bigint,

@@ -74,7 +74,7 @@ BEGIN
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE;
+$__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.rmdir(
     IN  in_id_user          bigint,
