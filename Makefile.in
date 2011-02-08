@@ -87,6 +87,8 @@ INSTALL_LOG             = install.log
 
 ifneq ($(DATABASE_HOST),)
 	PSQL_HOST = -h $(DATABASE_HOST)
+else
+	DATABASE_HOST = localhost
 endif
 
 ifneq ($(DATABASE_PORT),)
