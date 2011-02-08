@@ -325,7 +325,8 @@ else ifeq ($(GIT_DIR),)
 	@$(ECHO) >&2 "not in a git repository ...";
 	@exit 1
 endif
-	@$(GOURCE) --title "Mike's `$(GIT) branch --no-color | $(GREP) "^*" --color=never | $(CUT) -b 3-` branch" --highlight-users --highlight-dirs --loop &
+	@$(GOURCE) --title "Mike's `$(GIT) branch --no-color | $(GREP) "^*" --color=never | $(CUT) -b 3-` branch" \
+	    --key --highlight-users --highlight-dirs --loop &
 
 # -- documentation -------------------------------------------------------------
 
