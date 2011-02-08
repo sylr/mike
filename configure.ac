@@ -299,14 +299,6 @@ AC_ARG_ENABLE(
 AC_SUBST(ENABLE_CREATE_DATABASE)
 AC_SUBST(ENABLE_CREATE_SCHEMA)
 
-AS_IF(
-    [test "$CREATE_DATABASE" = "Yes"],
-    MIKE_ERROR_IF_EMPTY(
-        [$DATABASE_HOST], 
-        [You must specify DATABASE_HOST when --enable-create-database]
-    )
-)
-
 # -- output --------------------------------------------------------------------
 
 AC_CONFIG_FILES([mike.conf Makefile documentation/Makefile])
