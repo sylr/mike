@@ -8,12 +8,22 @@ mike-functions - mike's functions
 SYNOPSIS
 --------
 [verse]
- Name  | Result data type |                                 Argument data types
--------+------------------+-------------------------------------------------------------------------------------
- mkdir | bigint           | in_id_user bigint, in_id_inode_parent bigint, in_name text, OUT out_id_inode bigint
- mkdir | bigint           | in_id_user bigint, in_name text, OUT out_id_inode bigint
- mvdir | void             | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint
- rmdir | void             | in_id_user bigint, in_id_inode bigint
+              Name              |                                                  Argument data types
+--------------------------------+------------------------------------------------------------------------------------------------------------------------
+ __get_id_mimetype              | in_mimetype text, OUT out_id_mimetype smallint
+ __get_id_mimetype_stable       | in_mimetype text, OUT out_id_mimetype smallint
+ __get_least_used_active_volume | OUT out_id_volume smallint
+ __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
+ __perform                      | in_sql text
+ adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user bigint
+ mkdir                          | in_id_user bigint, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
+ mkdir                          | in_id_user bigint, in_name text, OUT out_id_inode bigint
+ mvdir                          | in_id_user bigint, in_id_inode bigint, in_new_id_inode_parent bigint
+ rmdir                          | in_id_user bigint, in_id_inode bigint
+ touch                          | in_id_user bigint, in_id_inode_parent bigint, in_name text, in_datec timestamp with time zone, OUT out_id_inode bigint
+ xlink                          | in_id_inode bigint, in_id_xfile bigint
+ xtouch                         | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
+
 
 DESCRIPTION
 -----------
@@ -21,25 +31,61 @@ List of all functions of Mike's SQL API.
 
 FUNCTIONS
 ---------
-'mkdir'(in_id_user, in_id_inode_parent, in_name)::
- +
-Create a directory inside another directory.
-See linkmike:mike-function-mkdir[1]
 
-'mkdir'(in_id_user, in_name)::
+(smallint) __get_id_mimetype(in_mimetype text)::
  +
-Create a directory at vfs's root.
-See linkmike:mike-function-mkdir[1]
-
-'mvdir'(in_id_user, in_id_inode, in_new_id_inode_parent)::
+    Return the id of a mimetype. If the mimetype does not already exist it create it.
  +
-Move a directory inside another directory.
-See linkmike:mike-function-mvdir[1]
-
-'rmdir'(in_id_user, in_id_inode)::
  +
-Flag a directory and its children for removal.
-See linkmike:mike-function-rmdir[1]
+(smallint) __get_id_mimetype_stable(in_mimetype text)::
+ +
+    Return the id of a mimetype.
+ +
+ +
+(smallint) __get_least_used_active_volume()::
+ +
+    Returns the id of the least used active volume.
+ +
+ +
+(integer) __mod_cons_hash(in_dividend bigint, in_divisor integer)::
+ +
+    Basic consistent hash function using modulus.
+ +
+ +
+(bigint) mkdir(in_id_user, in_id_inode_parent, in_name)::
+ +
+    Create a directory inside another directory.
+ +
+ +
+(bigint) mkdir(in_id_user, in_name)::
+ +
+    Create a directory at vfs's root.
+ +
+ +
+(void) mvdir(in_id_user, in_id_inode, in_new_id_inode_parent)::
+ +
+    Move a directory inside another directory.
+ +
+ +
+(void) rmdir(in_id_user, in_id_inode)::
+ +
+    Flag a directory and its children for removal.
+ +
+ +
+(bigint) touch(in_id_user bigint, in_id_inode_parent bigint, in_name text, in_datec timestamptz)::
+ +
+    Create a file record.
+ +
+ +
+(void) xlink(in_id_inode bigint, in_id_xfile bigint)::
+ +
+    Link a xfile record to a file one.
+ +
+ +
+(record) xtouch(in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text)::
+ +
+    Create a xfile record.
+    'in_md5' and 'in_sha1' are optional parameters.
 
 Authors
 -------

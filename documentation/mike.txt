@@ -10,8 +10,8 @@ SYNOPSIS
 [verse]
 'autoconf'
 './configure' [--enable-create-database] [--enable-create-schema]
-    [DATABASE_USERNAME=] [DATABASE_NAME=]
-    [DATABASE_HOST=] [DATABASE_PORT=]
+    [DATABASE_USERNAME=...] [DATABASE_NAME=...]
+    [DATABASE_HOST=...] [DATABASE_PORT=...]
 'make'
 'make' [install|clean]
 'make' [graph|gource|stats]
@@ -49,7 +49,7 @@ the source code.
 
 Install
 -------
-See linkmike:mike-install[1].
+See linkmike:mike-install[1]
 
 Structure
 ---------
@@ -58,30 +58,13 @@ Tables
 ~~~~~~ 
 see linkmike:mike-tables[1]
 
-  - 'as_file_xfile' : see linkmike:mike-table-as-file-xfile[1]
-  - 'as_user_group' : see linkmike:mike-table-as-user-group[1]
-  - 'directory' : see linkmike:mike-table-directory[1]
-  - 'file' : see linkmike:mike-table-file[1]
-  - 'group' : see linkmike:mike-table-group[1]
-  - 'info' : see linkmike:mike-table-info[1]
-  - 'inode' : see linkmike:mike-table-inode[1]
-  - 'inode_state' : see linkmike:mike-table-inode-state[1]
-  - 'user' : see linkmike:mike-table-user[1]
-  - 'volume' : see linkmike:mike-table-volume[1]
-  - 'volume_state' : see linkmike:mike-table-volume-state[1]
-  - 'xfile' : see linkmike:mike-table-xfile[1]
-
 Functions
 ~~~~~~~~~
 see linkmike:mike-functions[1]
 
-  - 'mkdir' : see linkmike:mike-function-mkdir[1]
-  - 'mvdir' : see linkmike:mike-function-mvdir[1]
-  - 'rmdir' : see linkmike:mike-function-rmdir[1]
-
 Contrib
 -------
-See linkmike:mike-contrib[1].
+See linkmike:mike-contrib[1]
 
 Developers
 ----------

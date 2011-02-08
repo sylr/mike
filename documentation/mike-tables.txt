@@ -8,85 +8,93 @@ mike-tables - mike's tables
 SYNOPSIS
 --------
 [verse]
- Schema |     Name      | Type  
+ Schema |     Name      | Type
 --------+---------------+-------
- mike   | as_file_xfile | table 
- mike   | as_user_group | table 
- mike   | directory     | table 
- mike   | file          | table 
- mike   | group         | table 
- mike   | info          | table 
- mike   | inode         | table 
- mike   | inode_state   | table 
- mike   | user          | table 
- mike   | volume        | table 
- mike   | volume_state  | table 
- mike   | xfile         | table 
+ mike   | as_file_xfile | table
+ mike   | as_user_group | table
+ mike   | directory     | table
+ mike   | file          | table
+ mike   | group         | table
+ mike   | info          | table
+ mike   | inode         | table
+ mike   | inode_state   | table
+ mike   | mimetype      | table
+ mike   | user          | table
+ mike   | volume        | table
+ mike   | volume_state  | table
+ mike   | xfile         | table
 
 TABLES
 ------
-'as_file_xfile'::
+as_file_xfile::
  +
-Associative table between file and xfile.
-See linkmike:mike-table-as-file-xfile[1]
-
-'as_user_group'::
+    Associative table between file and xfile.
  +
-Associative table between user and group.
-See linkmike:mike-table-as-user-group[1]
-    
-'directory'::
  +
-Directory extends inode table. it contains all the inode of application/x-folder type.
-Each directory is linked to a user, and a parent directory.
-See linkmike:mike-table-directory[1]
-
-'file'::
+as_user_group::
  +
-File extends inode table. it contains all the files inodes of the vfs. Each file
-is linked to an user, a directory, one or several xfile(s).
-See linkmike:mike-table-file[1]
-
-'group'::
+    Associative table between user and group.
  +
-Group is an item which contains users (via as_user_group). Each group is linked
-to a user.
-See linkmike:mike-table-inode[1]
-
-'info'::
  +
-Info gives information about the version of the database and its deployement.
-See linkmike:mike-table-info[1]
-    
-'inode'::
+directory::
  +
-Inode is the mother table of each vfs item of the database.
-See linkmike:mike-table-inode[1]
-
-'inode_state'::
+    Directory extends inode table. it contains all the inode of application/x-folder mimetype.
+    Each directory is linked to a user, and a parent directory.
+    See linkmike:mike-table-directory[1]
  +
-References all the states possible of an inode.
-See linkmike:mike-table-inode-state[1]
-
-'user'::
  +
-User of the vfs.
-See linkmike:mike-table-user[1]
-
-'volume'::
+file::
  +
-References all the volumes of the file system associated with mike.
-See linkmike:mike-function-table-volume[1]
-
-'volume_state'::
+    File extends inode table. it contains all the files inodes of the vfs. Each file
+    is linked to an user, a directory, one or several xfile(s).
+    See linkmike:mike-table-file[1]
  +
-References all the states possible of a volume.
-See linkmike:mike-table-volume-state[1]
-    
-'xfile'::
  +
-File system representation of a file.
-See linkmike:mike-table-xfile[1]
+group::
+ +
+    Group is an item which contains users (via as_user_group). Each group is linked
+    to a user.
+ +
+ +
+info::
+ +
+    Info gives information about the version of the database and its deployement.
+ +
+ +
+inode::
+ +
+    Inode is the mother table of directory and file tables.
+    See linkmike:mike-table-inode[1]
+ +
+ +
+inode_state::
+ +
+    References all the states possible of an inode.
+ +
+ +
+mimetype_state::
+ +
+    References all the states possible of an inode.
+ +
+ +
+user::
+ +
+    User of the vfs.
+ +
+ +
+volume::
+ +
+    References all the volumes of the file system associated with mike.
+ +
+ +
+volume_state::
+ +
+    References all the states possible of a volume.
+ +
+ +
+xfile::
+ +
+    File system representation of a file.
 
 Authors
 -------
