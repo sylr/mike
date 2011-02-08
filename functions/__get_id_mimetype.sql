@@ -7,7 +7,7 @@
 CREATE OR REPLACE FUNCTION mike.__get_id_mimetype(
     IN  in_mimetype         text,
     OUT out_id_mimetype     smallint
-) RETURNS smallint AS $__$
+) AS $__$
 
 BEGIN
     SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE lower(mimetype) = lower(in_mimetype);
@@ -33,7 +33,7 @@ $__$ LANGUAGE plpgsql VOLATILE COST 10;
 CREATE OR REPLACE FUNCTION mike.__get_id_mimetype_stable(
     IN  in_mimetype         text,
     OUT out_id_mimetype     smallint
-) RETURNS smallint AS $__$
+) AS $__$
 
 BEGIN
     SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE mimetype = lower(in_mimetype);
