@@ -29,7 +29,7 @@ BEGIN
     IF NOT FOUND THEN RAISE EXCEPTION 'xfile ''%'' not found', in_id_xfile; END IF;
 
     -- as_file_xfile
-    SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_inode = in_id_inode ORDER BY datec DESC LIMIT 1;
+    SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_inode = in_id_inode ORDER BY ctime DESC LIMIT 1;
 
     -- check if last xfile linked is not already the one we are linking
     IF FOUND THEN
@@ -64,7 +64,7 @@ BEGIN
         id_mimetype     = v_xfile.id_mimetype,
         size            = v_xfile.size,
         versioning_size = v_versioning_size,
-        datem           = greatest(datem, now())
+        mtime           = greatest(mtime, now())
     WHERE
         id_inode = in_id_inode;
 
@@ -74,8 +74,8 @@ BEGIN
         versioning_size         = versioning_size - v_file.versioning_size + v_versioning_size,
         inner_size              = inner_size - v_file.size + v_xfile.size,
         inner_versioning_size   = inner_versioning_size - v_file.versioning_size + v_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         id_inode = v_file.id_inode_parent;
 
@@ -83,8 +83,8 @@ BEGIN
     UPDATE mike.directory SET
         inner_size              = inner_size - v_file.size + v_xfile.size,
         inner_versioning_size   = inner_versioning_size - v_file.versioning_size + v_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         treepath @> subpath(v_file.treepath, 0, nlevel(v_file.treepath) - 2);
 END;

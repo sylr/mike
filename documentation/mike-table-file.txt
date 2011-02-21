@@ -18,9 +18,9 @@ SYNOPSIS
   name            | text                     | not null                                                 | name of the inode, limited to 255 characters
   path            | text                     | not null                                                 | path of the inode
   treepath        | ltree                    | not null                                                 | treepath of the inode
-  datec           | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
-  datem           | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
-  datea           | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
+  ctime           | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
+  mtime           | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
+  atime           | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
   size            | bigint                   | not null default 0                                       | size of the inode
   versioning_size | bigint                   | not null default 0                                       | versioning size of the inode
 
@@ -28,8 +28,8 @@ SYNOPSIS
  Indexes:
     "file_pkey" PRIMARY KEY, btree (id_inode)
     "file_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
-    "file_datec_btree_idx" btree (datec) WITH (fillfactor=95)
-    "file_datem_btree_idx" btree (datem) WITH (fillfactor=95)
+    "file_ctime_btree_idx" btree (ctime) WITH (fillfactor=95)
+    "file_mtime_btree_idx" btree (mtime) WITH (fillfactor=95)
     "file_id_inode_btree_idx" btree (id_inode) WITH (fillfactor=95)
     "file_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
     "file_id_mimetype_btree_idx" btree (id_mimetype) WITH (fillfactor=95)

@@ -18,12 +18,12 @@ SYNOPSIS
   name                  | text                     | not null                                                 | name of the inode, limited to 255 characters
   path                  | text                     | not null                                                 | path of the inode
   treepath              | ltree                    | not null                                                 | treepath of the inode
-  datec                 | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
-  datem                 | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
-  datea                 | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
+  ctime                 | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
+  mtime                 | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
+  atime                 | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
   size                  | bigint                   | not null default 0                                       | size in bytes of the inode
   versioning_size       | bigint                   | not null default 0                                       | size in bytes of the inode
-  inner_datem           | timestamp with time zone |                                                          | modification date of last updated child directory
+  inner_mtime           | timestamp with time zone |                                                          | modification date of last updated child directory
   inner_size            | bigint                   | not null default 0                                       | size sum of child directories
   inner_versioning_size | bigint                   | not null default 0                                       | versioning size sum of child directories
   dir_count             | smallint                 | not null default (0)::smallint                           | number of direct child directories
@@ -34,8 +34,8 @@ SYNOPSIS
  Indexes:
     "directory_pkey" PRIMARY KEY, btree (id_inode)
     "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
-    "directory_datec_btree_idx" btree (datec)
-    "directory_datem_btree_idx" btree (datem)
+    "directory_ctime_btree_idx" btree (ctime)
+    "directory_mtime_btree_idx" btree (mtime)
     "directory_id_inode_btree_idx" btree (id_inode)
     "directory_id_inode_parent_btree_idx" btree (id_inode_parent)
     "directory_id_user_btree_idx" btree (id_user)

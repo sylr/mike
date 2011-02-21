@@ -15,8 +15,8 @@ SYNOPSIS
   path      | text                     | not null                                                               | path of the volumes
   used_size | bigint                   | not null default 0                                                     | used size used on the volumes
   max_size  | bigint                   | not null default 0                                                     | max size available on the volumes
-  datec     | timestamp with time zone | not null default now()                                                 | creation date off the volumes
-  datem     | timestamp with time zone |                                                                        | last modification date of the volumes
+  ctime     | timestamp with time zone | not null default now()                                                 | creation date off the volumes
+  mtime     | timestamp with time zone |                                                                        | last modification date of the volumes
   token     | text                     |                                                                        | security token for volume removal
 
  Indexes:

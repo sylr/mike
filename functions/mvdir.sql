@@ -55,8 +55,8 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         id_inode = v_directory.id_inode_parent;
 
@@ -66,8 +66,8 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         nlevel(v_old_directory_parent.treepath) > 1
         AND treepath @> subpath(v_old_directory_parent.treepath, 0, nlevel(v_old_directory_parent.treepath) - 1);
@@ -79,8 +79,8 @@ BEGIN
         inner_file_count        = inner_file_count + v_directory.inner_file_count,
         inner_size              = inner_size + v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size + v_directory.inner_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         id_inode = v_new_directory_parent.id_inode;
 
@@ -90,8 +90,8 @@ BEGIN
         inner_file_count        = inner_file_count + v_directory.inner_file_count,
         inner_size              = inner_size + v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size + v_directory.inner_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         nlevel(v_new_directory_parent.treepath) > 1
         AND treepath @> subpath(v_new_directory_parent.treepath, 0, nlevel(v_new_directory_parent.treepath) - 1);

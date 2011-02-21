@@ -38,7 +38,7 @@ BEGIN
         state       = 2,
         path        = '/' || v_directory.name || substring(path, length(v_directory.path) + 1),
         treepath    = subpath(treepath, nlevel(v_directory.treepath) - 1),
-        datem       = now()
+        mtime       = now()
     WHERE treepath <@ v_directory.treepath;
 
     -- directory removed is a root folder we stop here
@@ -53,8 +53,8 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        datem                   = greatest(datem, now()),
-        inner_datem             = greatest(inner_datem, now())
+        mtime                   = greatest(mtime, now()),
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         id_inode = v_directory.id_inode_parent;
 
@@ -69,7 +69,7 @@ BEGIN
         inner_file_count        = inner_file_count - v_directory.inner_file_count,
         inner_size              = inner_size - v_directory.inner_size,
         inner_versioning_size   = inner_versioning_size - v_directory.inner_versioning_size,
-        inner_datem             = greatest(inner_datem, now())
+        inner_mtime             = greatest(inner_mtime, now())
     WHERE
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;

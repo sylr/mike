@@ -8,7 +8,7 @@ DROP FUNCTION IF EXISTS mike.touch(
     IN  in_id_user          bigint,
     IN  in_id_inode_parent  bigint,
     IN  in_name             text,
-    IN  in_datec            timestamptz,
+    IN  in_ctime            timestamptz,
     OUT out_id_inode        bigint
 ) CASCADE;
 
@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION mike.touch(
     IN  in_id_user          bigint,
     IN  in_id_inode_parent  bigint,
     IN  in_name             text,
-    IN  in_datec            timestamptz DEFAULT now(),
+    IN  in_ctime            timestamptz DEFAULT now(),
     OUT out_id_inode        bigint
 ) RETURNS bigint AS $__$
 
@@ -43,7 +43,7 @@ BEGIN
         name,
         path,
         treepath,
-        datec
+        ctime
     )
     VALUES (
         out_id_inode,
@@ -52,22 +52,22 @@ BEGIN
         in_name,
         v_directory.path || '/' || in_name,
         v_directory.treepath || out_id_inode::text::ltree,
-        in_datec
+        in_ctime
     );
 
     -- update parent directory
     UPDATE mike.directory SET
         file_count              = file_count + 1,
         inner_file_count        = inner_file_count + 1,
-        datem                   = greatest(datem, in_datec),
-        inner_datem             = greatest(inner_datem, in_datec)
+        mtime                   = greatest(mtime, in_ctime),
+        inner_mtime             = greatest(inner_mtime, in_ctime)
     WHERE
         id_inode = in_id_inode_parent;
 
     -- update great parents directories
     UPDATE mike.directory SET
         inner_file_count    = inner_file_count + 1,
-        inner_datem         = greatest(inner_datem, in_datec)
+        inner_mtime         = greatest(inner_mtime, in_ctime)
     WHERE
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;

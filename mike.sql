@@ -38,7 +38,7 @@ CREATE TABLE mike.user (
     id_user_sso             text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
     state                   smallint        NOT NULL DEFAULT 1,
-    datec                   timestamptz     NOT NULL DEFAULT now()
+    ctime                   timestamptz     NOT NULL DEFAULT now()
 );
 
 COMMENT ON TABLE mike.user IS 'user informations';
@@ -46,7 +46,7 @@ COMMENT ON COLUMN mike.user.id_user IS 'user unique identifier';
 COMMENT ON COLUMN mike.user.id_user_sso IS 'user unique external identifier';
 COMMENT ON COLUMN mike.user.nickname IS 'user nickname';
 COMMENT ON COLUMN mike.user.state IS 'user state';
-COMMENT ON COLUMN mike.user.datec IS 'user creation date';
+COMMENT ON COLUMN mike.user.ctime IS 'user creation date';
 
 -- mike.group ------------------------------------------------------------------
 
@@ -137,9 +137,9 @@ CREATE TABLE mike.inode (
     name                    text            NOT NULL CHECK (name != '' AND length(name) <= 255),
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
     treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= 24),
-    datec                   timestamptz     NOT NULL DEFAULT now(),
-    datem                   timestamptz,
-    datea                   timestamptz,
+    ctime                   timestamptz     NOT NULL DEFAULT now(),
+    mtime                   timestamptz,
+    atime                   timestamptz,
     size                    bigint          NOT NULL DEFAULT 0,
     versioning_size         bigint          NOT NULL DEFAULT 0
 ) WITH (fillfactor = 90);
@@ -152,9 +152,9 @@ COMMENT ON COLUMN mike.inode.state IS 'state of the inode, references mike.inode
 COMMENT ON COLUMN mike.inode.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.inode.path IS 'path of the inode';
 COMMENT ON COLUMN mike.inode.treepath IS 'treepath of the inode';
-COMMENT ON COLUMN mike.inode.datec IS 'creation timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.inode.datem IS 'last modification timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.inode.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.ctime IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.mtime IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.inode.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
@@ -177,7 +177,7 @@ CREATE TABLE mike.directory (
     id_inode                bigint          NOT NULL PRIMARY KEY,
     id_inode_parent         bigint          REFERENCES mike.directory (id_inode) ON DELETE CASCADE,
     id_mimetype             smallint        NOT NULL REFERENCES mike.mimetype (id_mimetype) DEFAULT 0::smallint,
-    inner_datem             timestamptz,
+    inner_mtime             timestamptz,
     inner_size              bigint          NOT NULL DEFAULT 0,
     inner_versioning_size   bigint          NOT NULL DEFAULT 0,
     dir_count               smallint        NOT NULL DEFAULT 0::smallint,
@@ -196,10 +196,10 @@ COMMENT ON COLUMN mike.directory.state IS 'state of the inode, references mike.i
 COMMENT ON COLUMN mike.directory.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.directory.path IS 'path of the inode';
 COMMENT ON COLUMN mike.directory.treepath IS 'treepath of the inode';
-COMMENT ON COLUMN mike.directory.datec IS 'creation timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.directory.datem IS 'last modification timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.directory.inner_datem IS 'modification date of last updated child directory';
-COMMENT ON COLUMN mike.directory.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.ctime IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.mtime IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.directory.inner_mtime IS 'modification date of last updated child directory';
+COMMENT ON COLUMN mike.directory.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.directory.size IS 'size in bytes of the inode';
 COMMENT ON COLUMN mike.directory.inner_size IS 'size sum of child directories';
 COMMENT ON COLUMN mike.directory.versioning_size IS 'size in bytes of the inode';
@@ -214,7 +214,7 @@ ALTER INDEX mike.directory_pkey SET (fillfactor = 95);
 CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95);
 CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX directory_datec_btree_idx              ON mike.directory   USING btree (datec)             WITH (fillfactor = 95);
+CREATE INDEX directory_ctime_btree_idx              ON mike.directory   USING btree (ctime)             WITH (fillfactor = 95);
 CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath)           WITH (fillfactor = 95);
 
 CLUSTER mike.directory USING directory_id_user_btree_idx;
@@ -238,9 +238,9 @@ COMMENT ON COLUMN mike.file.state IS 'state of the inode, references mike.inode_
 COMMENT ON COLUMN mike.file.name IS 'name of the inode, limited to 255 characters';
 COMMENT ON COLUMN mike.file.path IS 'path of the inode';
 COMMENT ON COLUMN mike.file.treepath IS 'treepath of the inode';
-COMMENT ON COLUMN mike.file.datec IS 'creation timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.file.datem IS 'last modification timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.file.datea IS 'last access timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.ctime IS 'creation timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.mtime IS 'last modification timestamp with timezone of the inode';
+COMMENT ON COLUMN mike.file.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
 
@@ -250,7 +250,7 @@ CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_
 CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX file_id_mimetype_btree_idx         ON mike.file    USING btree (id_mimetype)       WITH (fillfactor = 95);
 CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX file_datec_btree_idx               ON mike.file    USING btree (datec)             WITH (fillfactor = 95);
+CREATE INDEX file_ctime_btree_idx               ON mike.file    USING btree (ctime)             WITH (fillfactor = 95);
 CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath)           WITH (fillfactor = 95);
 
 CLUSTER mike.file USING file_id_inode_parent_btree_idx;
@@ -283,8 +283,8 @@ CREATE TABLE mike.volume (
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
     used_size               bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
-    datec                   timestamptz     NOT NULL DEFAULT now(),
-    datem                   timestamptz,
+    ctime                   timestamptz     NOT NULL DEFAULT now(),
+    mtime                   timestamptz,
     token                   text
 ) WITH (fillfactor = 95);
 
@@ -297,8 +297,8 @@ COMMENT ON COLUMN mike.volume.state IS 'state of the volumes, references mike.vo
 COMMENT ON COLUMN mike.volume.path IS 'path of the volumes';
 COMMENT ON COLUMN mike.volume.used_size IS 'used size used on the volumes';
 COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
-COMMENT ON COLUMN mike.volume.datec IS 'creation date off the volumes';
-COMMENT ON COLUMN mike.volume.datem IS 'last modification date of the volumes';
+COMMENT ON COLUMN mike.volume.ctime IS 'creation date off the volumes';
+COMMENT ON COLUMN mike.volume.mtime IS 'last modification date of the volumes';
 COMMENT ON COLUMN mike.volume.token IS 'security token for volume removal';
 
 -- mike.xfile ------------------------------------------------------------------
@@ -326,7 +326,7 @@ DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
 CREATE TABLE mike.as_file_xfile (
     id_inode                bigint          NOT NULL REFERENCES mike.file (id_inode) ON DELETE RESTRICT,
     id_xfile                bigint          NOT NULL REFERENCES mike.xfile (id_xfile) ON DELETE CASCADE,
-    datec                   timestamptz     NOT NULL DEFAULT now()
+    ctime                   timestamptz     NOT NULL DEFAULT now()
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
