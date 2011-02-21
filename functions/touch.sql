@@ -59,15 +59,15 @@ BEGIN
     UPDATE mike.directory SET
         file_count              = file_count + 1,
         inner_file_count        = inner_file_count + 1,
-        mtime                   = greatest(mtime, in_ctime),
-        inner_mtime             = greatest(inner_mtime, in_ctime)
+        mtime                   = greatest(mtime, in_mtime),
+        inner_mtime             = greatest(inner_mtime, in_mtime)
     WHERE
         id_inode = in_id_inode_parent;
 
     -- update great parents directories
     UPDATE mike.directory SET
         inner_file_count    = inner_file_count + 1,
-        inner_mtime         = greatest(inner_mtime, in_ctime)
+        inner_mtime         = greatest(inner_mtime, in_mtime)
     WHERE
         treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
 END;
