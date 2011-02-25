@@ -9,26 +9,34 @@ CONTRIB_PATH=$(dirname $TAG_REALPATH)
 MIKE_PATH=$(dirname $CONTRIB_PATH)
 ACMATCH="\[\(.*\)\]"
 
-# loading lib/mike.sh
-. $MIKE_PATH/lib/mike.sh
-
 # -- mike.conf -----------------------------------------------------------------
 
-if [ ! -f $MIKE_PATH/mike.conf ]; then
+if [ ! -f "$MIKE_PATH/mike.conf" ]; then
     echo >&2 "$MIKE_PATH/mike.conf not found"
     echo >&2 "You need to execute autoconf && ./configure"
     exit 1
 fi
 
-. $MIKE_PATH/mike.conf
+source "$MIKE_PATH/mike.conf"
 
 # -- mike.sh -------------------------------------------------------------------
 
-. $MIKE_PATH/lib/mike.sh
+source "$MIKE_PATH/lib/mike.sh"
+
+# -- usage ---------------------------------------------------------------------
+
+usage()
+{
+    echo >&2 "$0 usage:"
+    echo >&2 "   --major    make major release"
+    echo >&2 "   --minor    make minor release"
+    echo >&2 "   --maint    make maint release"
+    echo >&2 "   --rc       make rc release"
+}
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long major,minor,maint,rc -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,major,minor,maint,rc -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -46,6 +54,7 @@ do
         --maint)    TAG_TYPE="MAINT";   shift;;
         --rc)       TAG_RC="RC";        shift;;
         --)         shift;              break;;
+        -h|--help)  usage;              exit 0;;
         *)          usage;              exit 1;;
     esac
 done
@@ -124,12 +133,12 @@ if [ "$VERSION_IN_AC" != "$NEXT_TAG_FULL" ]; then
         die "configure.ac is in dirty state ..."
     fi
 
-    cat $MIKE_PATH/configure.ac | \
+    cat "$MIKE_PATH/configure.ac" | \
     sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\AC_INIT([\1], [$NEXT_TAG_FULL], [\3], , [\4])#" > \
-        $MIKE_PATH/configure.ac.tmp
+        "$MIKE_PATH/configure.ac.tmp"
 
-    mv $MIKE_PATH/configure.ac.tmp $MIKE_PATH/configure.ac
-    $GIT add $MIKE_PATH/configure.ac &&
+    mv "$MIKE_PATH/configure.ac.tmp" "$MIKE_PATH/configure.ac"
+    $GIT add "$MIKE_PATH/configure.ac" &&
     $GIT commit -as -m "Mike $NEXT_TAG_FULL"
 fi
 

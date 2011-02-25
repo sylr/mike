@@ -16,11 +16,11 @@ if [ ! -f $MIKE_PATH/mike.conf ]; then
     exit 1
 fi
 
-. $MIKE_PATH/mike.conf
+source "$MIKE_PATH/mike.conf"
 
 # -- mike.sh -------------------------------------------------------------------
 
-. $MIKE_PATH/lib/mike.sh
+source "$MIKE_PATH/lib/mike.sh"
 
 # -- usage ---------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ usage()
 
 ARGV=`getopt --long h,help,ref: -n "$0" -- $0 $@`
 
-if [ $? != 0 ] ; then
+if [ "$?" -ne "0" ] ; then
     die "Terminating ...";
 fi
 

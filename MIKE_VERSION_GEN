@@ -5,38 +5,38 @@ MIKE_VERSION_GEN_REALPATH=$(realpath $0)
 MIKE_PATH=$(dirname $MIKE_VERSION_GEN_REALPATH)
 
 # include mike.sh
-. $MIKE_PATH/lib/mike.sh
+source "$MIKE_PATH/lib/mike.sh"
 
 # Mike info
 MIKE_GIT_URL="sylvain@git.abstraction.fr:~/priv/git/mike.git"
 MIKE_WHO=$(whoami)@$(hostname)
 
 # default values
-MIKE_VERSION_FILE=$MIKE_PATH/MIKE_VERSION_FILE
-MIKE_HEAD_DIFF_FILE=$MIKE_PATH/MIKE_HEAD_DIFF_FILE
-MIKE_TAG_DIFF_FILE=$MIKE_PATH/MIKE_TAG_DIFF_FILE
+MIKE_VERSION_FILE="$MIKE_PATH/MIKE_VERSION_FILE"
+MIKE_HEAD_DIFF_FILE="$MIKE_PATH/MIKE_HEAD_DIFF_FILE"
+MIKE_TAG_DIFF_FILE="$MIKE_PATH/MIKE_TAG_DIFF_FILE"
 
 # MIKE_VERSION_FILE
-if [ ! -z $1 ]; then
+if [ ! -z "$1" ]; then
     MIKE_VERSION_FILE=$1;
 fi
 
 # MIKE_COMMIT_DIFF_FILE
-if [ ! -z $2 ]; then
+if [ ! -z "$2" ]; then
     MIKE_HEAD_DIFF_FILE=$2
 fi
 
 # MIKE_TAG_DIFF_FILE
-if [ ! -z $3 ]; then
+if [ ! -z "$3" ]; then
     MIKE_TAG_DIFF_FILE=$3
 fi
 
 # if git repository
-if [ -d $MIKE_PATH/.git ]; then
+if [ -d "$MIKE_PATH/.git" ]; then
     # exporting git dit
-    GIT_DIR=$MIKE_PATH/.git
+    GIT_DIR="$MIKE_PATH/.git"
 
-    MIKE_COMMIT=$(git show-ref $(cat $MIKE_PATH/.git/HEAD) | cut -d ' ' -f1)
+    MIKE_COMMIT=$(git show-ref $(cat "$MIKE_PATH/.git/HEAD") | cut -d ' ' -f1)
     MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
 
     # generating MIKE_VERSION
@@ -62,7 +62,7 @@ if [ -d $MIKE_PATH/.git ]; then
     # removing for safety
     rm -f $MIKE_VERSION_FILE
 else
-    if [ ! -f $MIKE_VERSION_FILE ]; then
+    if [ ! -f "$MIKE_VERSION_FILE" ]; then
         die "not in a git repository and $MIKE_VERSION_FILE not here.\n" \
             "You messed up something"
     fi
