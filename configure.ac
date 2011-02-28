@@ -289,6 +289,8 @@ AC_ARG_ENABLE(
     [ENABLE_CREATE_SCHEMA=No]
 )
 
+AC_SUBST(ENABLE_CREATE_SCHEMA)
+
 AC_ARG_ENABLE(
     [create-database],
     AS_HELP_STRING([--enable-create-database create DATABASE_NAME, imply create-schema]),
@@ -297,7 +299,6 @@ AC_ARG_ENABLE(
 )
 
 AC_SUBST(ENABLE_CREATE_DATABASE)
-AC_SUBST(ENABLE_CREATE_SCHEMA)
 
 # -- output --------------------------------------------------------------------
 
