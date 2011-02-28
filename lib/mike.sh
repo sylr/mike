@@ -49,3 +49,33 @@ parse_tag()
     sed "s/^v\([0-9]*\).\([0-9]*\).\([0-9]*\)\(-rc\([0-9]*\)\)\?$/\1 \2 \3 \5/" | \
     sed -e "s/^ *//" -e "s/ *$//"
 }
+
+# -- die if non zero function --------------------------------------------------
+
+dieifnzero()
+{
+    if [ "$1" -ne "0" ]; then
+        die $2 $1
+    fi
+
+    if [ -n "$3" ]; then
+        echo "$3"
+    fi
+}
+
+# -- strrpad -------------------------------------------------------------------
+
+strrpad()
+{
+    FULL_LENGTH=$(echo -n "$1" | wc -m)
+    PAD_LENGTH=$2
+    PAD_CHAR=$3
+
+    if [ "$FULL_LENGTH" -lt "$PAD_LENGTH" ]; then
+        REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
+        S_PAD=$(printf "%${REMAINDER}s")
+        PAD=${S_PAD// /$PAD_CHAR}
+
+        echo ${1}${PAD}
+    fi
+}
