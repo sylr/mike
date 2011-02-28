@@ -10,7 +10,7 @@ die()
 {
     echo >&2 $1;
     
-    if test -z "$2"; then
+    if [ -z "$2" ]; then
         exit 1
     else
         exit $2
@@ -24,9 +24,9 @@ abort()
     echo -n "Do you want to continue [Y/n]? "
     read input
 
-    if test "$input" = "n"; then
+    if [ "$input" = "n" ]; then
         die "aborting ..."
-    elif test "$input" = "Y"; then
+    elif [ "$input" = "Y" ]; then
         return 0
     else
         abort
