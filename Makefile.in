@@ -104,7 +104,9 @@ ifneq ($(GIT),)
 	endif
 endif
 
-PSQL_FULL_CMD = $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
+# -- psql ----------------------------------------------------------------------
+
+PSQL_FULL_CMD = PGOPTIONS='--client-min-messages=warning' $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
 
 # -- version -------------------------------------------------------------------
 
