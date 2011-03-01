@@ -29,21 +29,23 @@ XMLTO                   = @XMLTO@
 XMLTO_EXTRA             =
 INSTALL                 = @INSTALL@
 SHELL                   = @SHELL@
+
 DOC_TXT                 = $(wildcard *.txt)
 DOC_HTML                = $(patsubst %.txt, %.html, $(DOC_TXT))
 DOC_XML                 = $(patsubst %.txt, %.xml,  $(DOC_TXT))
 DOC_ODT                 = $(patsubst %.txt, %.odt,  $(DOC_TXT))
 DOC_PDF                 = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
 DOC_MAN1                = $(patsubst %.txt, %.1,    $(DOC_TXT))
+
 MIKE_VERSION_FILE       = ../MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = ../MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = ../MIKE_HEAD_DIFF_FILE
 
-prefix              = @prefix@
-htmldir             ?= $(prefix)/share/doc/mike
-pdfdir              ?= $(prefix)/share/doc/mike
-mandir              ?= $(prefix)/share/man
-man1dir             =  $(mandir)/man1
+prefix                  = @prefix@
+htmldir                 ?= $(prefix)/share/doc/mike
+pdfdir                  ?= $(prefix)/share/doc/mike
+mandir                  ?= $(prefix)/share/man
+man1dir                 =  $(mandir)/man1
 
 # -- version -------------------------------------------------------------------
 
