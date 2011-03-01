@@ -80,7 +80,7 @@ EXTENSIONS[2]="txt xls"
 EXTENSIONS[3]="avi mkv"
 
 for dir in $(seq 0 3); do
-    strrpad "-- ${INIT_DIR[dir]} " "80" "-"
+    strrpad "-- ${INIT_DIR[dir]} " "40" "-"
 
     for ext in ${EXTENSIONS[$dir]}; do
         for base in ${BASENAMES}; do
