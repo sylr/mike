@@ -1,4 +1,4 @@
-mike-functions(1)
+mike-functions(3)
 =================
 
 NAME

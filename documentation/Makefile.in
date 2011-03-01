@@ -17,6 +17,7 @@ all::
 
 ECHO                    = @ECHO@
 RM                      = @RM@ -f
+GREP                    = @GREP@ --color=never
 ASCIIDOC                = @ASCIIDOC@
 ASCIIDOC_EXTRA          = -a data-uri -a icons -a iconsdir=/usr/share/asciidoc/icons --unsafe -f asciidoc.conf
 DOCBOOK2ODF             = @DOCBOOK2ODF@
@@ -35,7 +36,10 @@ DOC_HTML                = $(patsubst %.txt, %.html, $(DOC_TXT))
 DOC_XML                 = $(patsubst %.txt, %.xml,  $(DOC_TXT))
 DOC_ODT                 = $(patsubst %.txt, %.odt,  $(DOC_TXT))
 DOC_PDF                 = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
-DOC_MAN1                = $(patsubst %.txt, %.1,    $(DOC_TXT))
+
+DOC_MAN1                = $(patsubst %.txt, %.1,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(1\)$$' $(DOC_TXT)))
+DOC_MAN3                = $(patsubst %.txt, %.3,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(3\)$$' $(DOC_TXT)))
+DOC_MAN7                = $(patsubst %.txt, %.7,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(7\)$$' $(DOC_TXT)))
 
 MIKE_VERSION_FILE       = ../MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = ../MIKE_TAG_DIFF_FILE
@@ -46,6 +50,8 @@ htmldir                 ?= $(prefix)/share/doc/mike
 pdfdir                  ?= $(prefix)/share/doc/mike
 mandir                  ?= $(prefix)/share/man
 man1dir                 =  $(mandir)/man1
+man3dir                 =  $(mandir)/man3
+man7dir                 =  $(mandir)/man7
 
 # -- version -------------------------------------------------------------------
 
@@ -77,7 +83,7 @@ html-sub: $(DOC_HTML)
 
 xml-sub: $(DOC_XML)
 
-man-sub: $(DOC_XML) $(DOC_MAN1)
+man-sub: $(DOC_XML) $(DOC_MAN1) $(DOC_MAN3) $(DOC_MAN7)
 
 odt-sub: $(DOC_XML) $(DOC_ODT)
 
@@ -100,6 +106,12 @@ pdf-sub: $(DOC_XML) $(DOC_PDF)
 %.1 : %.xml
 	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null
 
+%.3 : %.xml
+	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null
+
+%.7 : %.xml
+	@$(ECHO) '    ' XMLTO MAN  $@; $(XMLTO) -o ./ man $< 2> /dev/null
+
 %.pdf : %.xml
 	@$(ECHO) '    ' DOCBOOK2PDF $@; $(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
 
@@ -117,6 +129,8 @@ install-html: html
 install-man: man
 	$(INSTALL) -d -m 755 $(man1dir)
 	$(INSTALL) -m 644 $(DOC_MAN1) $(man1dir)
+	$(INSTALL) -m 644 $(DOC_MAN3) $(man3dir)
+	$(INSTALL) -m 644 $(DOC_MAN7) $(man7dir)
 
 # -- clean ---------------------------------------------------------------------
 
@@ -125,7 +139,7 @@ clean:
 	@$(RM) $(DOC_XML)
 	@$(RM) $(DOC_ODT)
 	@$(RM) $(DOC_PDF)
-	@$(RM) $(DOC_MAN1)
+	@$(RM) $(DOC_MAN1) $(DOC_MAN3) $(DOC_MAN7)
 	@$(RM) *~
 
 # -- phony ---------------------------------------------------------------------

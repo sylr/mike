@@ -1,4 +1,4 @@
-mike-table-directory(1)
+mike-table-directory(3)
 =======================
 
 NAME

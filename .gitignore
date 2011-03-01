@@ -12,6 +12,8 @@ autom4te.cache
 documentation/**.html
 documentation/**.xml
 documentation/**.1
+documentation/**.3
+documentation/**.7
 documentation/**.odf
 documentation/**.pdf
 stats

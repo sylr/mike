@@ -1,4 +1,4 @@
-mike-table-inode(1)
+mike-table-inode(3)
 ===================
 
 NAME

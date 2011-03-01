@@ -1,4 +1,4 @@
-mike-table-file(1)
+mike-table-file(3)
 ==================
 
 NAME

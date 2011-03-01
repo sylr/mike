@@ -1,4 +1,4 @@
-mike(1)
+mike(3)
 =======
 
 NAME
@@ -31,7 +31,7 @@ most of the time, but rarely modified. Knowing that, Mike stores for each inodes
 metadata which are recalculated only when the file system is modified in order to
 make browsing the fastest possible because all the data fetched are stored, not calculated.
 
-See linkmike:mike-design[1].
+See linkmike:mike-design[3].
 
 Versions
 --------
@@ -58,15 +58,15 @@ Structure
 
 Tables
 ~~~~~~ 
-see linkmike:mike-tables[1]
+see linkmike:mike-tables[3]
 
 Functions
 ~~~~~~~~~
-see linkmike:mike-functions[1]
+see linkmike:mike-functions[3]
 
 Contrib
 -------
-See linkmike:mike-contrib[1]
+See linkmike:mike-contrib[7]
 
 Developers
 ----------
