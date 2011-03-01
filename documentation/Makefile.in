@@ -28,6 +28,7 @@ A2X_EXTRA               =
 XMLTO                   = @XMLTO@
 XMLTO_EXTRA             =
 INSTALL                 = @INSTALL@
+SHELL                   = @SHELL@
 DOC_TXT                 = $(wildcard *.txt)
 DOC_HTML                = $(patsubst %.txt, %.html, $(DOC_TXT))
 DOC_XML                 = $(patsubst %.txt, %.xml,  $(DOC_TXT))
