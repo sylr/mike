@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# vim: set tabstop=4 expandtab autoindent smartindent:
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 28/02/2011
+# copyright: All rights reserved
+
+TEST_REALPATH=$(realpath $0)
+TEST_PATH=$(dirname $TEST_REALPATH)
+MIKE_PATH=$(dirname $TEST_PATH)
+
+# -- mike.conf -----------------------------------------------------------------
+
+if [ ! -f "$MIKE_PATH/mike.conf" ]; then
+    echo >&2 "$MIKE_PATH/mike.conf not found"
+    echo >&2 "You need to execute autoconf && ./configure"
+    exit 1
+fi
+
+source "$MIKE_PATH/mike.conf"
+
+# -- mike.sh -------------------------------------------------------------------
+
+source "$MIKE_PATH/lib/mike.sh"
+
+# -- usage ---------------------------------------------------------------------
+
+usage()
+{
+    echo >&2 "$0 usage:"
+    echo >&2 "   --verbose    make tests verbose"
+}
+
+# ------------------------------------------------------------------------------
+
+ARGV=`$GETOPT --long v,verbose -n "$0" -- $0 $@`
+
+if [ $? != 0 ] ; then
+    die "Terminating ...";
+fi
+
+eval set -- "$ARGV"
+
+# ------------------------------------------------------------------------------
+
+while true ;
+do
+    case "$1" in
+        -v|--verbose)   VERBOSE="Yes";      shift;;
+        --)             shift;              break;;
+        *)              usage;              exit 1;;
+    esac
+done
+
+# -- main ----------------------------------------------------------------------
+
+TESTS_OK=0
+TESTS_FAILED=0
+
+for test in $(ls t[0-9][0-9][0-9][0-9]-*.*); do
+    if [ "$VERBOSE" = "Yes" ]; then
+        ./$test
+    else
+        ./$test > /dev/null
+    fi
+
+    if [ "$?" -eq "0" ]; then
+        echo "$test ... OK"
+        TESTS_OK=$(($TEST_OK + 1))
+    else
+        echo >&2 "$test ... Failed"
+        TESTS_FAILED=$(($TEST_FAILED + 1))
+    fi
+done
+
+# -- results -------------------------------------------------------------------
+
+strrpad "-- test results " "40" "-"
+echo "Tests OK : $TESTS_OK"
+echo "Tests Failed : $TESTS_FAILED"
+
+if [ "$TESTS_FAILED" -gt "0" ]; then
+    exit 1
+else
+    exit 0
+fi
