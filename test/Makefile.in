@@ -1,0 +1,70 @@
+# Mike's Makefile
+# vim: set tabstop=4 expandtab autoindent smartindent:
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 03/07/2010
+# copyright: All rights reserved
+
+#          __  _________ ______
+#         /  |/  /  _/ //_/ __/
+#        / /|_/ // // ,< / _/  
+#       /_/  /_/___/_/|_/___/  
+#
+
+# -- variables -----------------------------------------------------------------
+
+prefix                  = @prefix@
+
+APGDIFF                 = @APGDIFF@
+AWK                     = @AWK@
+BASENAME                = @BASENAME@
+BASH                    = @BASH@
+CAT                     = @CAT@
+CREATEDB                = @CREATEDB@
+CUT                     = @CUT@
+DATE                    = @DATE@
+DIRNAME                 = @DIRNAME@
+DROPDB                  = @DROPDB@
+ECHO                    = @ECHO@
+GETOPT                  = @GETOPT@
+GIT                     = @GIT@
+GITSTATS                = @GITSTATS@
+GOURCE                  = @GOURCE@
+GREP                    = @GREP@
+MAKE                    = @MAKE@
+PG_CONFIG               = @PG_CONFIG@
+PG_DUMP                 = @PG_DUMP@
+PSQL                    = @PSQL@
+REALPATH                = @REALPATH@
+RM                      = @RM@
+SED                     = @SED@
+SHELL                   = @SHELL@
+SLEEP                   = @SLEEP@
+TEE                     = @TEE@
+TEST                    = @TEST@
+WHICH                   = @WHICH@
+
+SLEEP_TIME              = @SLEEP_TIME@
+SLEEP_TIME              ?= 0.1
+PSQL_EXTRA              = --no-psqlrc -v ON_ERROR_STOP=on
+RM_EXTRA                = -rf
+
+DATABASE_HOST           = @DATABASE_HOST@
+DATABASE_NAME           = @DATABASE_NAME@
+DATABASE_PORT           = @DATABASE_PORT@
+DATABASE_USER           = @DATABASE_USER@
+ENABLE_CREATE_DATABASE  = @ENABLE_CREATE_DATABASE@
+ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
+PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
+PG_SHAREDIR             = @PG_SHAREDIR@
+
+# -- tests ---------------------------------------------------------------------
+
+TEST_SCRIPTS = $(wildcard t[0-9][0-9][0-9][0-9]-*.*)
+
+all : $(TEST_SCRIPTS)
+
+$(TEST_SCRIPTS) :
+	@$(ECHO) -n "$@ ... "
+	@./$@ > /dev/null && $(ECHO) OK
+
+.PHONY : $(TEST_SCRIPTS)

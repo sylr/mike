@@ -302,6 +302,6 @@ AC_SUBST(ENABLE_CREATE_DATABASE)
 
 # -- output --------------------------------------------------------------------
 
-AC_CONFIG_FILES([mike.conf Makefile documentation/Makefile])
+AC_CONFIG_FILES([mike.conf Makefile test/Makefile documentation/Makefile])
 AC_OUTPUT
 
