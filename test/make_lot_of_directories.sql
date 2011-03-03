@@ -5,9 +5,9 @@
 -- copyright: All rights reserved
 
 CREATE OR REPLACE FUNCTION make_lot_of_directories(
-    in_id_user      bigint,
+    in_id_user      integer,
     in_level        integer DEFAULT 2,
-    in_nb_by_level  integer DEFAULT 9
+    in_nb_by_level  integer DEFAULT 10
 ) RETURNS void AS $__$
 
 DECLARE
@@ -32,7 +32,7 @@ BEGIN
         FOR v_ij IN SELECT id_inode FROM directory WHERE id_user = in_id_user AND nlevel(treepath) = v_i LOOP
             RAISE NOTICE 'v_ij = %', v_ij;
 
-            FOR v_ijk IN SELECT generate_series(0, in_nb_by_level) LOOP
+            FOR v_ijk IN SELECT generate_series(0, in_nb_by_level - 1) LOOP
                 PERFORM mkdir(in_id_user, v_ij, v_ijk::text);
             END LOOP;
         END LOOP;
