@@ -95,9 +95,9 @@ tar xf mike-$LAST_TAG.tar
 
 # adding unversionned file 
 echo "adding untracked version files ..."
-[ -f MIKE_VERSION_FILE ] && cp MIKE_VERSION_FILE mike-$LAST_TAG/
-[ -f MIKE_TAG_DIFF_FILE ] && cp MIKE_TAG_DIFF_FILE mike-$LAST_TAG/
-[ -f MIKE_HEAD_DIFF_FILE ] && cp MIKE_HEAD_DIFF_FILE mike-$LAST_TAG/
+[ -f $MIKE_PATH/MIKE_VERSION_FILE ] && cp $MIKE_PATH/MIKE_VERSION_FILE $MIKE_PATH/mike-$LAST_TAG/
+[ -f $MIKE_PATH/MIKE_TAG_DIFF_FILE ] && cp $MIKE_PATH/MIKE_TAG_DIFF_FILE $MIKE_PATH/mike-$LAST_TAG/
+[ -f $MIKE_PATH/MIKE_HEAD_DIFF_FILE ] && cp $MIKE_PATH/MIKE_HEAD_DIFF_FILE $MIKE_PATH/mike-$LAST_TAG/
 
 # compressing
 echo "generating mike-$LAST_TAG.tar.gz archive ..."
