@@ -15,3 +15,4 @@ DATABASE_FUNCTIONS  += __perform.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += xtouch.sql
 DATABASE_FUNCTIONS  += xlink.sql
+DATABASE_FUNCTIONS  += ls.sql
