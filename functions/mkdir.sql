@@ -35,7 +35,7 @@ BEGIN
      VALUES (
         out_id_inode,
         in_id_user,
-        out_id_inode,
+        NULL,
         in_name,
         '/' || in_name,
         out_id_inode::text::ltree

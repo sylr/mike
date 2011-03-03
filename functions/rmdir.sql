@@ -41,8 +41,8 @@ BEGIN
         mtime       = now()
     WHERE treepath <@ v_directory.treepath;
 
-    -- directory removed is a root folder we stop here
-    IF v_directory.id_inode = v_directory.id_inode_parent THEN
+    -- directory removed is a root directory we stop here
+    IF v_directory.id_inode_parent = NULL THEN
         RETURN;
     END IF;
 
@@ -58,8 +58,8 @@ BEGIN
     WHERE
         id_inode = v_directory.id_inode_parent;
 
-    -- parent directory removed is a root folder we stop here
-    IF v_directory_parent.id_inode = v_directory_parent.id_inode_parent THEN
+    -- parent directory removed is a root directory we stop here
+    IF v_directory_parent.id_inode_parent = NULL THEN
         RETURN;
     END IF;
 
