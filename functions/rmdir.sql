@@ -31,15 +31,22 @@ BEGIN
     SELECT * INTO v_directory_parent FROM mike.directory WHERE id_inode = v_directory.id_inode_parent AND id_user = in_id_user;
 
     -- dereferencing directory
-    UPDATE mike.directory SET id_inode_parent = id_inode WHERE id_inode = in_id_inode;
+    UPDATE mike.directory SET
+        id_inode_parent = id_inode,
+        state           = 2,
+        name            = substring('3487$$' || name, 0, 255),
+        path            = '/' || substring('3487$$' || name, 0, 255),
+        treepath        = subpath(treepath, nlevel(v_directory.treepath) - 1),
+        mtime           = now()
+    WHERE id_inode = in_id_inode;
 
     -- update children state to 'waiting for physical removal'
     UPDATE mike.inode SET
         state       = 2,
-        path        = '/' || v_directory.name || substring(path, length(v_directory.path) + 1),
+        path        = '/' || substring('3487$$' || name, 0, 255) || substring(path, length(v_directory.path) + 1),
         treepath    = subpath(treepath, nlevel(v_directory.treepath) - 1),
         mtime       = now()
-    WHERE treepath <@ v_directory.treepath;
+    WHERE treepath <@ v_directory.treepath AND id_inode != in_id_inode;
 
     -- directory removed is a root directory we stop here
     IF v_directory.id_inode_parent = NULL THEN
