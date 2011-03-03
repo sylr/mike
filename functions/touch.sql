@@ -21,7 +21,6 @@ CREATE OR REPLACE FUNCTION mike.touch(
 ) RETURNS bigint AS $__$
 
 DECLARE
-    v_id_inode              bigint;
     v_directory             mike.directory%rowtype;
 BEGIN
     -- check id_inode_parent
@@ -29,7 +28,7 @@ BEGIN
     IF NOT FOUND THEN RAISE EXCEPTION 'directory ''%'' not found', in_id_inode_parent; END IF;
 
     -- check name unicity
-    SELECT id_inode INTO v_id_inode FROM inode WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
+    PERFORM id_inode FROM mike.file WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
     IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in directory ''%''', in_name, in_id_inode_parent; END IF;
 
     -- select id_inode
