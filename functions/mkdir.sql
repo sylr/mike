@@ -5,13 +5,13 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.mkdir(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_name             text,
     OUT out_id_inode        bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.mkdir(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_name             text,
     OUT out_id_inode        bigint
 ) AS $__$
@@ -45,7 +45,7 @@ END;
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mkdir(
-    IN  id_user             bigint,
+    IN  id_user             integer,
     IN  name                text,
     OUT id_inode            bigint
 ) IS 'create a directory which does not have an id_inode_parent, root folder';
@@ -53,7 +53,7 @@ COMMENT ON FUNCTION mike.mkdir(
 --------------------------------------------------------------------------------
 
 DROP FUNCTION IF EXISTS mike.mkdir(
-    IN  in_id_user              bigint,
+    IN  in_id_user              integer,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
     IN  in_return_if_exists     boolean,
@@ -61,7 +61,7 @@ DROP FUNCTION IF EXISTS mike.mkdir(
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.mkdir(
-    IN  in_id_user              bigint,
+    IN  in_id_user              integer,
     IN  in_id_inode_parent      bigint,
     IN  in_name                 text,
     IN  in_return_if_exists     boolean DEFAULT false,
@@ -130,7 +130,7 @@ END;
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mkdir(
-    IN  id_user             bigint,
+    IN  id_user             integer,
     IN  name                text,
     OUT id_inode            bigint
 ) IS 'create a directory with an id_inode_parent';

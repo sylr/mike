@@ -5,7 +5,7 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.touch(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_id_inode_parent  bigint,
     IN  in_name             text,
     IN  in_ctime            timestamptz,
@@ -13,7 +13,7 @@ DROP FUNCTION IF EXISTS mike.touch(
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.touch(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_id_inode_parent  bigint,
     IN  in_name             text,
     IN  in_ctime            timestamptz DEFAULT now(),

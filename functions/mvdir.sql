@@ -5,13 +5,13 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.mvdir(
-    IN  in_id_user              bigint,
+    IN  in_id_user              integer,
     IN  in_id_inode             bigint,
     IN  in_new_id_inode_parent  bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.mvdir(
-    IN  in_id_user              bigint,
+    IN  in_id_user              integer,
     IN  in_id_inode             bigint,
     IN  in_new_id_inode_parent  bigint
 ) RETURNS void AS $__$
@@ -100,7 +100,7 @@ END;
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.mvdir(
-    IN  in_id_user              bigint,
+    IN  in_id_user              integer,
     IN  in_id_inode             bigint,
     IN  in_new_id_inode_parent  bigint
 ) IS 'copy a directory and its content inside another one';

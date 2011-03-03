@@ -5,12 +5,12 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.rmdir(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_id_inode         bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.rmdir(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_id_inode         bigint
 ) RETURNS void AS $__$
 
@@ -77,6 +77,6 @@ END;
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
 COMMENT ON FUNCTION mike.rmdir(
-    IN  in_id_user          bigint,
+    IN  in_id_user          integer,
     IN  in_id_inode         bigint
 ) IS 'this function flags a directory and all its children inodes as removed';
