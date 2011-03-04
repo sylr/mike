@@ -139,7 +139,6 @@ CREATE TABLE mike.inode (
     treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= 24),
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
-    atime                   timestamptz,
     size                    bigint          NOT NULL DEFAULT 0,
     versioning_size         bigint          NOT NULL DEFAULT 0
 ) WITH (fillfactor = 90);
@@ -154,7 +153,6 @@ COMMENT ON COLUMN mike.inode.path IS 'path of the inode';
 COMMENT ON COLUMN mike.inode.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.inode.ctime IS 'creation timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.mtime IS 'last modification timestamp with timezone of the inode';
-COMMENT ON COLUMN mike.inode.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
@@ -199,7 +197,6 @@ COMMENT ON COLUMN mike.directory.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.directory.ctime IS 'creation timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.directory.mtime IS 'last modification timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.directory.inner_mtime IS 'modification date of last updated child directory';
-COMMENT ON COLUMN mike.directory.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.directory.size IS 'size in bytes of the inode';
 COMMENT ON COLUMN mike.directory.inner_size IS 'size sum of child directories';
 COMMENT ON COLUMN mike.directory.versioning_size IS 'size in bytes of the inode';
@@ -226,6 +223,7 @@ DROP TABLE IF EXISTS mike.file CASCADE;
 CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
     id_inode_parent         bigint  NOT NULL REFERENCES mike.directory (id_inode) ON DELETE RESTRICT,
+    atime                   timestamptz,
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 

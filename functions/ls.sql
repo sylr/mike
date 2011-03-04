@@ -14,35 +14,65 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_inode             bigint
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
-BEGIN
-    RETURN QUERY
-        (
-            -- directories
-            SELECT *
-            FROM mike.directory
-            WHERE
-                id_user         = in_id_user AND
-                id_inode_parent = in_id_inode
-            ORDER BY name
-        )
-        UNION ALL
-        (
-            -- files
-            SELECT *,
-                NULL AS inner_mtime,
-                NULL AS inner_size,
-                NULL AS inner_versioning_size,
-                NULL AS dir_count,
-                NULL AS inner_dir_count,
-                NULL AS file_count,
-                NULL AS inner_file_count
-            FROM mike.file
-            WHERE
-                id_user         = in_id_user AND
-                id_inode_parent = in_id_inode
-            ORDER BY name
-        );
-END;
+(
+    -- directories
+    SELECT
+        id_inode,
+        id_inode_parent,
+        id_user,
+        state,
+        id_mimetype,
+        name,
+        path,
+        treepath,
+        ctime,
+        mtime,
+        inner_mtime,
+        NULL AS atime,
+        size,
+        inner_size,
+        versioning_size,
+        inner_versioning_size,
+        dir_count,
+        inner_dir_count,
+        file_count,
+        inner_file_count
+    FROM mike.directory
+    WHERE
+        id_user         = $1 AND
+        id_inode_parent = $2
+    ORDER BY mike.__natsort(name)
+)
+UNION ALL
+(
+    -- files
+    SELECT
+        id_inode,
+        id_inode_parent,
+        id_user,
+        state,
+        id_mimetype,
+        name,
+        path,
+        treepath,
+        ctime,
+        mtime,
+        NULL AS inner_mtime,
+        atime,
+        size,
+        NULL AS inner_size,
+        versioning_size,
+        NULL AS inner_versioning_size,
+        NULL AS dir_count,
+        NULL AS inner_dir_count,
+        NULL AS file_count,
+        NULL AS inner_file_count
+    FROM mike.file
+    WHERE
+        id_user         = $1 AND
+        id_inode_parent = $2
+    ORDER BY mike.__natsort(name)
+);
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
@@ -57,49 +87,79 @@ DROP FUNCTION IF EXISTS mike.ls(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
     IN  in_limit                integer,
-    IN  in_offser               integer
+    IN  in_offset               integer
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
-    IN  in_limit                integer DEFAULT NULL,
-    IN  in_offset               integer DEFAULT NULL
+    IN  in_limit                integer,
+    IN  in_offset               integer DEFAULT 0
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
-BEGIN
-    RETURN QUERY
-        SELECT * FROM (
-            (
-                -- directories
-                SELECT *
-                FROM mike.directory
-                WHERE
-                    id_user         = in_id_user AND
-                    id_inode_parent = in_id_inode
-                ORDER BY name
-            )
-            UNION ALL
-            (
-                -- files
-                SELECT *,
-                    NULL AS inner_mtime,
-                    NULL AS inner_size,
-                    NULL AS inner_versioning_size,
-                    NULL AS dir_count,
-                    NULL AS inner_dir_count,
-                    NULL AS file_count,
-                    NULL AS inner_file_count
-                FROM mike.file
-                WHERE
-                    id_user         = in_id_user AND
-                    id_inode_parent = in_id_inode
-                ORDER BY name
-            )
-        ) AS aggregate
-        LIMIT in_limit
-        OFFSET in_offset;
-END;
+SELECT * FROM (
+    (
+        -- directories
+        SELECT
+            id_inode,
+            id_inode_parent,
+            id_user,
+            state,
+            id_mimetype,
+            name,
+            path,
+            treepath,
+            ctime,
+            mtime,
+            inner_mtime,
+            NULL AS atime,
+            size,
+            inner_size,
+            versioning_size,
+            inner_versioning_size,
+            dir_count,
+            inner_dir_count,
+            file_count,
+            inner_file_count
+        FROM mike.directory
+        WHERE
+            id_user         = $1 AND
+            id_inode_parent = $2
+        ORDER BY mike.__natsort(name)
+    )
+    UNION ALL
+    (
+        -- files
+        SELECT
+            id_inode,
+            id_inode_parent,
+            id_user,
+            state,
+            id_mimetype,
+            name,
+            path,
+            treepath,
+            ctime,
+            mtime,
+            NULL AS inner_mtime,
+            atime,
+            size,
+            NULL AS inner_size,
+            versioning_size,
+            NULL AS inner_versioning_size,
+            NULL AS dir_count,
+            NULL AS inner_dir_count,
+            NULL AS file_count,
+            NULL AS inner_file_count
+        FROM mike.file
+        WHERE
+            id_user         = $1 AND
+            id_inode_parent = $2
+        ORDER BY mike.__natsort(name)
+    )
+) AS aggregate
+LIMIT $3
+OFFSET $4;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 
@@ -129,7 +189,27 @@ BEGIN
         SELECT * FROM (
             (
                 -- directories
-                SELECT *
+                SELECT
+                    id_inode,
+                    id_inode_parent,
+                    id_user,
+                    state,
+                    id_mimetype,
+                    name,
+                    path,
+                    treepath,
+                    ctime,
+                    mtime,
+                    inner_mtime,
+                    NULL AS atime,
+                    size,
+                    inner_size,
+                    versioning_size,
+                    inner_versioning_size,
+                    dir_count,
+                    inner_dir_count,
+                    file_count,
+                    inner_file_count
                 FROM mike.directory
                 WHERE
                     id_user         = $1 AND
@@ -138,9 +218,22 @@ BEGIN
             UNION ALL
             (
                 -- files
-                SELECT *,
+                SELECT
+                    id_inode,
+                    id_inode_parent,
+                    id_user,
+                    state,
+                    id_mimetype,
+                    name,
+                    path,
+                    treepath,
+                    ctime,
+                    mtime,
                     NULL AS inner_mtime,
+                    atime,
+                    size,
                     NULL AS inner_size,
+                    versioning_size,
                     NULL AS inner_versioning_size,
                     NULL AS dir_count,
                     NULL AS inner_dir_count,
@@ -180,8 +273,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
     IN  in_order_by             text,
-    IN  in_limit                integer DEFAULT NULL,
-    IN  in_offset               integer DEFAULT NULL
+    IN  in_limit                integer,
+    IN  in_offset               integer DEFAULT 0
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
 BEGIN
@@ -189,7 +282,27 @@ BEGIN
         SELECT * FROM (
             (
                 -- directories
-                SELECT *
+                SELECT
+                    id_inode,
+                    id_inode_parent,
+                    id_user,
+                    state,
+                    id_mimetype,
+                    name,
+                    path,
+                    treepath,
+                    ctime,
+                    mtime,
+                    inner_mtime,
+                    NULL AS atime,
+                    size,
+                    inner_size,
+                    versioning_size,
+                    inner_versioning_size,
+                    dir_count,
+                    inner_dir_count,
+                    file_count,
+                    inner_file_count
                 FROM mike.directory
                 WHERE
                     id_user         = $1 AND
@@ -198,9 +311,22 @@ BEGIN
             UNION ALL
             (
                 -- files
-                SELECT *,
+                SELECT
+                    id_inode,
+                    id_inode_parent,
+                    id_user,
+                    state,
+                    id_mimetype,
+                    name,
+                    path,
+                    treepath,
+                    ctime,
+                    mtime,
                     NULL AS inner_mtime,
+                    atime,
+                    size,
                     NULL AS inner_size,
+                    versioning_size,
                     NULL AS inner_versioning_size,
                     NULL AS dir_count,
                     NULL AS inner_dir_count,
@@ -214,7 +340,7 @@ BEGIN
         )  AS aggregate
         ORDER BY    $$ || in_order_by || $$
         LIMIT       $3
-        OFFSET      $4 $$
+        OFFSET      $4;$$
         USING
             in_id_user,
             in_id_inode,
