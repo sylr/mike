@@ -4,16 +4,17 @@
 # date: 13/11/2010
 # copyright: All rights reserved
 
-DATABASE_FUNCTIONS  += __check_order_by_cond.sql
-DATABASE_FUNCTIONS   = mkdir.sql
-DATABASE_FUNCTIONS  += mvdir.sql
-DATABASE_FUNCTIONS  += rmdir.sql
-DATABASE_FUNCTIONS  += adduser.sql
+DATABASE_FUNCTIONS  = __check_order_by_cond.sql
 DATABASE_FUNCTIONS  += __get_id_mimetype.sql
 DATABASE_FUNCTIONS  += __get_least_used_active_volume.sql
 DATABASE_FUNCTIONS  += __mod_cons_hash.sql
+DATABASE_FUNCTIONS  += __natsort.pl
 DATABASE_FUNCTIONS  += __perform.sql
+DATABASE_FUNCTIONS  += adduser.sql
+DATABASE_FUNCTIONS  += ls.sql
+DATABASE_FUNCTIONS  += mkdir.sql
+DATABASE_FUNCTIONS  += mvdir.sql
+DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += xtouch.sql
 DATABASE_FUNCTIONS  += xlink.sql
-DATABASE_FUNCTIONS  += ls.sql
