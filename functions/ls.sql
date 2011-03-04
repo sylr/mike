@@ -185,6 +185,9 @@ CREATE OR REPLACE FUNCTION mike.ls(
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
 BEGIN
+    -- sanity check
+    PERFORM mike.__check_order_by_cond(in_order_by, 'inode_full_t');
+
     RETURN QUERY EXECUTE $$
         SELECT * FROM (
             (
@@ -278,6 +281,9 @@ CREATE OR REPLACE FUNCTION mike.ls(
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
 BEGIN
+    -- sanity check
+    PERFORM mike.__check_order_by_cond(in_order_by, 'inode_full_t');
+
     RETURN QUERY EXECUTE $$
         SELECT * FROM (
             (

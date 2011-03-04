@@ -4,6 +4,7 @@
 # date: 13/11/2010
 # copyright: All rights reserved
 
+DATABASE_FUNCTIONS  += __check_order_by_cond.sql
 DATABASE_FUNCTIONS   = mkdir.sql
 DATABASE_FUNCTIONS  += mvdir.sql
 DATABASE_FUNCTIONS  += rmdir.sql
