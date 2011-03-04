@@ -192,7 +192,6 @@ ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' IMPORTING $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO)
 	@$(PSQL_FULL_CMD) --single-transaction --file $(TARGET_FILE) --log-file $(DRY_RUN_LOG) > /dev/null
 	@$(ECHO) 
 	@$(ECHO) "THIS WAS A DRY RUN !!!!"
@@ -224,7 +223,6 @@ ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
 endif
 	@$(ECHO) '    ' IMPORTING $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO)
 	@$(PSQL_FULL_CMD) --single-transaction --file $(TARGET_FILE) --log-file $(INSTALL_LOG) > /dev/null
 
 # -- drop ----------------------------------------------------------------------
