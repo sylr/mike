@@ -31,4 +31,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[1] suite
+Part of the linkmike:mike[3] suite

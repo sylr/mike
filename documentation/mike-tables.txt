@@ -40,14 +40,14 @@ directory::
  +
     Directory extends inode table. it contains all the inode of application/x-folder mimetype.
     Each directory is linked to a user, and a parent directory.
-    See linkmike:mike-table-directory[1]
+    See linkmike:mike-table-directory[3]
  +
  +
 file::
  +
     File extends inode table. it contains all the files inodes of the vfs. Each file
     is linked to an user, a directory, one or several xfile(s).
-    See linkmike:mike-table-file[1]
+    See linkmike:mike-table-file[3]
  +
  +
 group::
@@ -64,7 +64,7 @@ info::
 inode::
  +
     Inode is the mother table of directory and file tables.
-    See linkmike:mike-table-inode[1]
+    See linkmike:mike-table-inode[3]
  +
  +
 inode_state::
