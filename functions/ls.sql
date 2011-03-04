@@ -74,7 +74,7 @@ UNION ALL
     ORDER BY mike.__natsort(name)
 );
 
-$__$ LANGUAGE plpgsql VOLATILE COST 1000;
+$__$ LANGUAGE sql STABLE COST 1000;
 
 COMMENT ON FUNCTION mike.ls(
     IN  in_id_user              integer,
@@ -161,7 +161,7 @@ SELECT * FROM (
 LIMIT $3
 OFFSET $4;
 
-$__$ LANGUAGE plpgsql VOLATILE COST 1000;
+$__$ LANGUAGE sql STABLE COST 1000;
 
 COMMENT ON FUNCTION mike.ls(
     IN  in_id_user              integer,
@@ -251,7 +251,7 @@ BEGIN
             in_id_inode;
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE COST 1000;
+$__$ LANGUAGE plpgsql STABLE COST 1000;
 
 COMMENT ON FUNCTION mike.ls(
     IN  in_id_user              integer,
@@ -348,7 +348,7 @@ BEGIN
             in_offset;
 END;
 
-$__$ LANGUAGE plpgsql VOLATILE COST 1000;
+$__$ LANGUAGE plpgsql STABLE COST 1000;
 
 COMMENT ON FUNCTION mike.ls(
     IN  in_id_user              integer,
