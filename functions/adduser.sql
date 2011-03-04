@@ -8,18 +8,18 @@ DROP FUNCTION IF EXISTS mike.adduser(
     IN in_id_user_sso       text,
     IN in_nickname          text,
     IN in_state             smallint,
-    OUT out_id_user         bigint
+    OUT out_id_user         integer
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.adduser(
     IN in_id_user_sso       text,
     IN in_nickname          text,
     IN in_state             smallint,
-    OUT out_id_user         bigint
+    OUT out_id_user         integer
 ) RETURNS bigint AS $__$
 
 DECLARE
-    v_id_user       bigint;
+    v_id_user       integer;
 BEGIN
     SELECT id_user INTO v_id_user FROM mike.user WHERE id_user_sso = in_id_user_sso;
     IF FOUND THEN RAISE EXCEPTION 'id_user_sso ''%'' already exists', in_id_user_sso; END IF;
@@ -47,5 +47,5 @@ COMMENT ON FUNCTION mike.adduser(
     IN in_id_user_sso       text,
     IN in_nickname          text,
     IN in_state             smallint,
-    OUT out_id_user         bigint
-) IS 'this function flags a directory and all its children inodes as removed';
+    OUT out_id_user         integer
+) IS 'this function add a user';
