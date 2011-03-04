@@ -21,8 +21,8 @@ BEGIN
             SELECT *
             FROM mike.directory
             WHERE
-                id_user = in_id_user
-                AND id_inode_parent = in_id_inode
+                id_user         = in_id_user AND
+                id_inode_parent = in_id_inode
             ORDER BY name
         )
         UNION ALL
@@ -38,8 +38,8 @@ BEGIN
                 NULL AS inner_file_count
             FROM mike.file
             WHERE
-                id_user = in_id_user
-                AND id_inode_parent = in_id_inode
+                id_user         = in_id_user AND
+                id_inode_parent = in_id_inode
             ORDER BY name
         );
 END;
@@ -132,8 +132,8 @@ BEGIN
                 SELECT *
                 FROM mike.directory
                 WHERE
-                    id_user         = $$ || in_id_user    || $$ AND
-                    id_inode_parent = $$ || in_id_inode   || $$
+                    id_user         = $1 AND
+                    id_inode_parent = $2
             )
             UNION ALL
             (
@@ -148,11 +148,14 @@ BEGIN
                     NULL AS inner_file_count
                 FROM mike.file
                 WHERE
-                    id_user         = $$ || in_id_user    || $$ AND
-                    id_inode_parent = $$ || in_id_inode   || $$
+                    id_user         = $1 AND
+                    id_inode_parent = $2
             )
         )  AS aggregate
-        ORDER BY $$ || in_order_by;
+        ORDER BY $$ || in_order_by || $$;$$
+        USING
+            in_id_user,
+            in_id_inode;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
@@ -189,8 +192,8 @@ BEGIN
                 SELECT *
                 FROM mike.directory
                 WHERE
-                    id_user         = $$ || in_id_user    || $$ AND
-                    id_inode_parent = $$ || in_id_inode   || $$
+                    id_user         = $1 AND
+                    id_inode_parent = $2
             )
             UNION ALL
             (
@@ -205,13 +208,18 @@ BEGIN
                     NULL AS inner_file_count
                 FROM mike.file
                 WHERE
-                    id_user         = $$ || in_id_user    || $$ AND
-                    id_inode_parent = $$ || in_id_inode   || $$
+                    id_user         = $1 AND
+                    id_inode_parent = $2
             )
         )  AS aggregate
-        ORDER BY    $$ || in_order_by   || $$
-        LIMIT       $$ || in_limit      || $$
-        OFFSET      $$ || in_offset;
+        ORDER BY    $$ || in_order_by || $$
+        LIMIT       $3
+        OFFSET      $4 $$
+        USING
+            in_id_user,
+            in_id_inode,
+            in_limit,
+            in_offset;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
