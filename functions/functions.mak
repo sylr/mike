@@ -18,3 +18,6 @@ DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += xtouch.sql
 DATABASE_FUNCTIONS  += xlink.sql
+DATABASE_FUNCTIONS  += stat.sql
+DATABASE_FUNCTIONS  += statd.sql
+DATABASE_FUNCTIONS  += statf.sql
