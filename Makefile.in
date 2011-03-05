@@ -69,14 +69,12 @@ include functions/functions.mak
 include triggers/triggers.mak
 include data/data.mak
 
-DATABASE_FILES          = mike.sql
+DATABASE_FILES           = mike.sql
 DATABASE_FILES          += $(patsubst %, types/%,       $(DATABASE_TYPES))
 DATABASE_FILES          += $(patsubst %, functions/%,   $(DATABASE_FUNCTIONS))
 DATABASE_FILES          += $(patsubst %, triggers/%,    $(DATABASE_TRIGGERS))
 DATABASE_FILES          += $(patsubst %, data/%,        $(DATABASE_DATA))
-DATABASE_DUMPS          = $(patsubst %.sql, %.dump, $(filter %.sql, $(DATABASE_FILES)))
-DATABASE_DUMPS          += $(patsubst %.pl, %.dump, $(filter %.pl,  $(DATABASE_FILES)))
-TARGET_FILE             = mike.o
+TARGET_FILE              = mike.o
 
 # -- custom files --------------------------------------------------------------
 
@@ -157,20 +155,15 @@ info:
 	    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
 
-dumps: clean-target $(DATABASE_DUMPS) info
-
-%.dump : %.sql
-	@$(ECHO) '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-
-%.dump : %.pl
-	@$(ECHO) '    ' LINK $<; $(CAT) $< >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+$(DATABASE_FILES) :
+	@$(ECHO) '    ' LINK $@; $(CAT) $@ >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 # -- dry-run -------------------------------------------------------------------
 
 dry-run::
 	@$(MAKE) --no-print-directory dry-run-sub $(MAKEFLAGS)
 
-dry-run-sub: dumps
+dry-run-sub: clean-target $(DATABASE_FILES) info
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
@@ -201,7 +194,7 @@ endif
 install:
 	@$(MAKE) --no-print-directory install-sub $(MAKEFLAGS)
 
-install-sub: dumps
+install-sub: clean-target $(DATABASE_FILES) info
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
@@ -357,5 +350,5 @@ clean-doc:
 
 # -- special targets -----------------------------------------------------------
 
-.NOTPARALLEL : %.dump
-.PHONY: $(MIKE_VERSION_FILE) .FORCE
+.NOTPARALLEL: $(DATABASE_FILES) drop-database
+.PHONY: $(MIKE_VERSION_FILE) $(DATABASE_FILES) .FORCE
