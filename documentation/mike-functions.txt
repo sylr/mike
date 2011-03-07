@@ -23,6 +23,7 @@ SYNOPSIS
  mkdir                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
  mkdir                          | in_id_user integer, in_name text, OUT out_id_inode bigint
  mvdir                          | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint
+ rmdir                          | in_id_user integer, in_id_inode bigint, in_new_name text
  rmdir                          | in_id_user integer, in_id_inode bigint
  touch                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
  xlink                          | in_id_inode bigint, in_id_xfile bigint
@@ -94,6 +95,11 @@ FUNCTIONS
 (void) mvdir(in_id_user, in_id_inode, in_new_id_inode_parent)::
  +
     Move a directory inside another directory.
+ +
+ +
+(void) rename(in_id_user, in_id_inode, in_new_name)::
+ +
+    Rename an inode.
  +
  +
 (void) rmdir(in_id_user, in_id_inode)::

@@ -14,6 +14,7 @@ DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += ls.sql
 DATABASE_FUNCTIONS  += mkdir.sql
 DATABASE_FUNCTIONS  += mvdir.sql
+DATABASE_FUNCTIONS  += rename.sql
 DATABASE_FUNCTIONS  += rmdir.sql
 DATABASE_FUNCTIONS  += touch.sql
 DATABASE_FUNCTIONS  += xtouch.sql
