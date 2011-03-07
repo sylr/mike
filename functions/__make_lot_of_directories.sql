@@ -4,7 +4,7 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
-CREATE OR REPLACE FUNCTION make_lot_of_directories(
+CREATE OR REPLACE FUNCTION __make_lot_of_directories(
     in_id_user      integer,
     in_level        integer DEFAULT 2,
     in_nb_by_level  integer DEFAULT 10
@@ -40,3 +40,9 @@ BEGIN
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
+
+COMMENT ON FUNCTION mike.__make_lot_of_directories(
+    in_id_user      integer,
+    in_level        integer,
+    in_nb_by_level  integer
+) IS 'create a tree on several level';
