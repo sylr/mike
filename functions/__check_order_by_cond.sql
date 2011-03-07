@@ -50,9 +50,9 @@ BEGIN
              LEFT JOIN pg_catalog.pg_attribute ON pg_catalog.pg_attribute.attrelid = pg_catalog.pg_class.oid
         WHERE
             pg_catalog.pg_namespace.nspname = v_schema AND
-            pg_catalog.pg_class.relname = v_relname AND
+            pg_catalog.pg_class.relname     = v_relname AND
             pg_catalog.pg_attribute.attname = v_column AND
-            pg_catalog.pg_attribute.attnum > 0;
+            pg_catalog.pg_attribute.attnum  > 0;
 
         IF NOT FOUND THEN RAISE EXCEPTION 'column ''%'' not found in relation %', v_column, in_relname; END IF;
 
