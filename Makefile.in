@@ -70,13 +70,13 @@ include triggers/triggers.mak
 include indexes/indexes.mak
 include data/data.mak
 
+TARGET_FILE              = mike.o
 DATABASE_FILES           = mike.sql
 DATABASE_FILES          += $(patsubst %, types/%,       $(DATABASE_TYPES))
 DATABASE_FILES          += $(patsubst %, functions/%,   $(DATABASE_FUNCTIONS))
 DATABASE_FILES          += $(patsubst %, triggers/%,    $(DATABASE_TRIGGERS))
 DATABASE_FILES          += $(patsubst %, indexes/%,     $(DATABASE_INDEXES))
 DATABASE_FILES          += $(patsubst %, data/%,        $(DATABASE_DATA))
-TARGET_FILE              = mike.o
 
 # -- custom files --------------------------------------------------------------
 
