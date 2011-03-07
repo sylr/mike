@@ -57,18 +57,21 @@ TESTS_OK=0
 TESTS_FAILED=0
 
 for test in $(ls $TEST_PATH/t[0-9][0-9][0-9][0-9]-*.*); do
+
     if [ "$VERBOSE" = "Yes" ]; then
+        echo "$(basename $test) ... "
         $test
     else
+        echo -n "$(basename $test) ... "
         $test > /dev/null
     fi
 
     if [ "$?" -eq "0" ]; then
-        echo "$test ... OK"
-        TESTS_OK=$(($TEST_OK + 1))
+        [ "$VERBOSE" != "Yes" ] && echo "OK"
+        TESTS_OK=$(($TESTS_OK + 1))
     else
-        echo >&2 "$test ... Failed"
-        TESTS_FAILED=$(($TEST_FAILED + 1))
+        [ "$VERBOSE" != "Yes" ] && echo "FAILED"
+        TESTS_FAILED=$(($TESTS_FAILED + 1))
     fi
 done
 
