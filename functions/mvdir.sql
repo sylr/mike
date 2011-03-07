@@ -33,8 +33,13 @@ BEGIN
     SELECT * INTO v_new_directory_parent FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND state = 0;
     IF NOT FOUND THEN RAISE EXCEPTION 'in_new_id_inode_parent #% not found', in_new_id_inode_parent; END IF;
 
+    -- check target validity
+    IF v_new_directory_parent.treepath <@ v_directory.treepath THEN
+        RAISE EXCEPTION 'you can not move a directory to one of its children';
+    END IF;
+
     -- look if folder name already exists in target
-    PERFORM id_inode FROM mike.inode WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
+    PERFORM id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
     IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in #%', v_directory.name, in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
