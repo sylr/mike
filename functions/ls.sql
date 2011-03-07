@@ -126,6 +126,7 @@ SELECT * FROM (
             id_user         = $1 AND
             id_inode_parent = $2
         ORDER BY mike.__natsort(name)
+        LIMIT $3 + $4
     )
     UNION ALL
     (
@@ -156,6 +157,7 @@ SELECT * FROM (
             id_user         = $1 AND
             id_inode_parent = $2
         ORDER BY mike.__natsort(name)
+        LIMIT $3 + $4
     )
 ) AS aggregate
 LIMIT $3
