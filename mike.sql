@@ -65,8 +65,6 @@ COMMENT ON COLUMN mike.group.id_user IS 'group owner';
 COMMENT ON COLUMN mike.group.name IS 'group name';
 COMMENT ON COLUMN mike.group.description IS 'group description';
 
-CREATE INDEX group_id_user_btree_idx    ON mike.group   USING btree (id_user)   WITH (fillfactor = 95);
-
 -- mike.as_user_group ----------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.as_user_group CASCADE;
@@ -79,9 +77,6 @@ CREATE TABLE mike.as_user_group (
 COMMENT ON TABLE mike.as_user_group IS 'associative table between mike.user and mike.group';
 COMMENT ON COLUMN mike.as_user_group.id_user IS 'user identifier';
 COMMENT ON COLUMN mike.as_user_group.id_group IS 'group identifier';
-
-CREATE INDEX as_user_group_id_user_btree_idx    ON mike.as_user_group   USING btree (id_user);
-CREATE INDEX as_user_group_id_group_btree_idx   ON mike.as_user_group   USING btree (id_group);
 
 -- mike.inode_state ------------------------------------------------------------
 
@@ -120,8 +115,6 @@ COMMENT ON TABLE mike.mimetype IS 'list of mimetypes';
 COMMENT ON COLUMN mike.mimetype.id_mimetype IS 'mimetype identifier';
 COMMENT ON COLUMN mike.mimetype.mimetype IS 'mimetype';
 
-CREATE INDEX mimetype_mimetype_btree_idx   ON mike.mimetype     USING btree (mimetype);
-
 INSERT INTO mike.mimetype (id_mimetype, mimetype) VALUES (0::smallint, 'application/x-directory');
 
 -- mike.inode ------------------------------------------------------------------
@@ -156,16 +149,6 @@ COMMENT ON COLUMN mike.inode.mtime IS 'last modification timestamp with timezone
 COMMENT ON COLUMN mike.inode.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';
-
-ALTER INDEX mike.inode_pkey SET (fillfactor = 95);
-
-CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_inode_parent)   WITH (fillfactor = 95);
-CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user)           WITH (fillfactor = 95);
-CREATE INDEX inode_id_mimetype_btree_idx        ON mike.inode   USING btree (id_mimetype)       WITH (fillfactor = 95);
-CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist (treepath)           WITH (fillfactor = 95);
-
-CLUSTER mike.inode USING inode_id_user_btree_idx;
 
 -- mike.directory --------------------------------------------------------------
 
@@ -206,16 +189,6 @@ COMMENT ON COLUMN mike.directory.inner_dir_count IS 'number of child directories
 COMMENT ON COLUMN mike.directory.file_count IS 'number of direct child files';
 COMMENT ON COLUMN mike.directory.inner_file_count IS 'number of child files';
 
-ALTER INDEX mike.directory_pkey SET (fillfactor = 95);
-
-CREATE INDEX directory_id_inode_parent_btree_idx    ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95);
-CREATE INDEX directory_id_user_btree_idx            ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95);
-CREATE INDEX directory_name_btree_idx               ON mike.directory   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX directory_ctime_btree_idx              ON mike.directory   USING btree (ctime)             WITH (fillfactor = 95);
-CREATE INDEX directory_treepath_gist_idx            ON mike.directory   USING gist (treepath)           WITH (fillfactor = 95);
-
-CLUSTER mike.directory USING directory_id_user_btree_idx;
-
 -- mike.file -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.file CASCADE;
@@ -241,17 +214,6 @@ COMMENT ON COLUMN mike.file.mtime IS 'last modification timestamp with timezone 
 COMMENT ON COLUMN mike.file.atime IS 'last access timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
-
-ALTER INDEX mike.file_pkey SET (fillfactor = 95);
-
-CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_inode_parent)   WITH (fillfactor = 95);
-CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user)           WITH (fillfactor = 95);
-CREATE INDEX file_id_mimetype_btree_idx         ON mike.file    USING btree (id_mimetype)       WITH (fillfactor = 95);
-CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX file_ctime_btree_idx               ON mike.file    USING btree (ctime)             WITH (fillfactor = 95);
-CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist (treepath)           WITH (fillfactor = 95);
-
-CLUSTER mike.file USING file_id_inode_parent_btree_idx;
 
 -- mike.volume_state -----------------------------------------------------------
 
@@ -314,9 +276,6 @@ CREATE TABLE mike.xfile (
 
 COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
 
-CREATE INDEX xfile_sha1_btree_idx   ON mike.xfile   USING btree (sha1)  WITH (fillfactor = 95);
-CREATE INDEX xfile_md5_btree_idx    ON mike.xfile   USING btree (md5)   WITH (fillfactor = 95);
-
 -- mike.as_file_xfile ----------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
@@ -328,8 +287,4 @@ CREATE TABLE mike.as_file_xfile (
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
-
-CREATE INDEX as_file_xfile_id_inode_btree_idx   ON mike.as_file_xfile   USING btree (id_inode)  WITH (fillfactor = 95);
-
-CLUSTER mike.as_file_xfile USING as_file_xfile_id_inode_btree_idx;
 
