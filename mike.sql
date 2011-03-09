@@ -241,7 +241,8 @@ CREATE TABLE mike.volume (
     id_volume               smallint        NOT NULL PRIMARY KEY,
     state                   integer         NOT NULL REFERENCES mike.volume_state (state) DEFAULT 1,
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/' AND substring(path, '.$') = '/'),
-    used_size               bigint          NOT NULL DEFAULT 0,
+    virtual_used_size       bigint          NOT NULL DEFAULT 0,
+    real_used_size          bigint          NOT NULL DEFAULT 0,
     max_size                bigint          NOT NULL DEFAULT 0,
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
@@ -255,7 +256,8 @@ COMMENT ON TABLE mike.volume IS 'volumes informations';
 COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
 COMMENT ON COLUMN mike.volume.state IS 'state of the volumes, references mike.volume_state';
 COMMENT ON COLUMN mike.volume.path IS 'path of the volumes';
-COMMENT ON COLUMN mike.volume.used_size IS 'used size used on the volumes';
+COMMENT ON COLUMN mike.volume.virtual_used_size IS 'real used size used on the volumes';
+COMMENT ON COLUMN mike.volume.real_used_size IS 'real used size used on the volumes';
 COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
 COMMENT ON COLUMN mike.volume.ctime IS 'creation date off the volumes';
 COMMENT ON COLUMN mike.volume.mtime IS 'last modification date of the volumes';
