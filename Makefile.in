@@ -136,7 +136,7 @@ info:
 	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE DEFAULT USERS;
+	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('sylvain', 'srab');"                >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('paul', 'cheval');"                 >> $(TARGET_FILE);
@@ -151,6 +151,9 @@ info:
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('emmanuel', 'manu');"               >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('yannick', 'jefferson');"           >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('yan', 'jurax');"                   >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('arnaud', 'arn');"                  >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mathilde', 'mathilde');"           >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('khaled', 'Mr. K');"                >> $(TARGET_FILE);
 	@$(SLEEP) $(SLEEP_TIME)
 	
 	@# MIKE_TAG_DIFF_FILE
