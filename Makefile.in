@@ -59,6 +59,7 @@ DATABASE_USER           = @DATABASE_USER@
 ENABLE_CREATE_DATABASE  = @ENABLE_CREATE_DATABASE@
 ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
+PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
 
 # -- database schema -----------------------------------------------------------
@@ -193,6 +194,8 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;
+	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
@@ -224,6 +227,8 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;
+	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
 endif
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),Yes)

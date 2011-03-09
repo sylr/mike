@@ -267,6 +267,14 @@ AC_CHECK_FILE(
 
 AC_SUBST(PG_CONTRIB_LTREE)
 
+AC_CHECK_FILE(
+    [$PG_SHAREDIR/contrib/pgcrypto.sql],
+    [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/contrib/pgcrypto.sql],
+    AC_MSG_ERROR([pgcrypto contrib not found in $PG_SHAREDIR/contrib])
+)
+
+AC_SUBST(PG_CONTRIB_PGCRYPTO)
+
 # -- variables -----------------------------------------------------------------
 
 AC_ARG_VAR(SLEEP_TIME, [sleep between each make action (default: 0.1)])
