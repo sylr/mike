@@ -17,30 +17,40 @@ CREATE OR REPLACE FUNCTION mike.mvdir(
 ) RETURNS void AS $__$
 
 DECLARE
+    v_int                       integer;
+    v_nlevel                    integer;
     v_directory                 mike.directory%rowtype;
     v_old_directory_parent      mike.directory%rowtype;
     v_new_directory_parent      mike.directory%rowtype;
 BEGIN
     -- select in_id_inode
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode #% not found', in_id_inode; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode % not found', in_id_inode; END IF;
 
     -- select v_old_id_inode_parent
     SELECT * INTO v_old_directory_parent FROM mike.directory WHERE id_inode = v_directory.id_inode_parent AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'v_old_id_inode_parent #% not found', v_old_id_inode_parent; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'v_old_id_inode_parent % not found', v_old_id_inode_parent; END IF;
 
     -- select in_new_id_inode_parent
     SELECT * INTO v_new_directory_parent FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'in_new_id_inode_parent #% not found', in_new_id_inode_parent; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'in_new_id_inode_parent % not found', in_new_id_inode_parent; END IF;
 
     -- check target validity
     IF v_new_directory_parent.treepath <@ v_directory.treepath THEN
         RAISE EXCEPTION 'you can not move a directory to one of its children';
     END IF;
 
+    -- check treepath max depth in source children
+    SELECT max(nlevel(treepath)) INTO v_nlevel FROM mike.directory WHERE v_directory.treepath @> treepath;
+    v_int := v_nlevel - nlevel(v_directory.treepath) + nlevel(v_new_directory_parent.treepath);
+
+    IF v_int >= mike.__get_conf_int('tree_max_depth') THEN
+        RAISE EXCEPTION 'source tree depth too large for target directory';
+    END IF;
+
     -- look if folder name already exists in target
     PERFORM id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
-    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in #%', v_directory.name, in_new_id_inode_parent; END IF;
+    IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in %', v_directory.name, in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
     UPDATE mike.directory SET id_inode_parent = in_new_id_inode_parent WHERE id_inode = in_id_inode;
