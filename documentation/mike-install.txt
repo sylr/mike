@@ -15,7 +15,7 @@ SYNOPSIS
     [DATABASE_HOST=<database_host>]
     [DATABASE_PORT=<database_port>]
 'make'
-'make' [install|clean]
+'make' [test|install|clean]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
 
@@ -193,6 +193,9 @@ and all its content will be 'lost'.
 
 'stats'::
     Display mike's developers commit statistics (development environment required).
+
+'test'::
+    Run mike's battery test.
 
 ENABLE_CREATE_DATABASE=[Yes|No]::
     If set to 'Yes', will behave like if '--enable-create-database' had been specified
