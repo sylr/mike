@@ -48,7 +48,7 @@ BEGIN
     );
 
     -- update volume
-    UPDATE mike.volume SET used_size = used_size + in_size WHERE id_volume = out_id_volume;
+    UPDATE mike.volume SET virtual_used_size = virtual_used_size + in_size WHERE id_volume = out_id_volume;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 10;

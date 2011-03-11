@@ -37,7 +37,7 @@ abort()
 
 trim()
 {
-    echo $1 | sed -e "s/^ *//" -e "s/ *$//"
+    echo "$1" | sed -e "s/^ *//" -e "s/ *$//"
 }
 
 # -- parse tag function --------------------------------------------------------
@@ -55,7 +55,7 @@ parse_tag()
 dieifnzero()
 {
     if [ "$1" -ne "0" ]; then
-        die $2 $1
+        die "$2" $1
     fi
 
     if [ -n "$3" ]; then

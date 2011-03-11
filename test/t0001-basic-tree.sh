@@ -42,9 +42,9 @@ TRUNCATE=$($PSQL_FULL_CMD -c "TRUNCATE volume CASCADE")
 
 # -- volume --------------------------------------------------------------------
 
-VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure01/', '123465789', 0)")
-VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure02/', '123465789', 0)")
-VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure03/', '123465789', 0)")
+VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure01/', '17592186044416', 0)")
+VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure02/', '17592186044416', 0)")
+VOLUME=$($PSQL_FULL_CMD -c "INSERT INTO mike.volume (path, max_size, state) VALUES ('/storage/nas01/enclosure03/', '17592186044416', 0)")
 
 # -- root ----------------------------------------------------------------------
 

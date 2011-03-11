@@ -79,7 +79,7 @@ BEGIN
         IF in_return_if_exists THEN
             RETURN;
         ELSE
-            RAISE EXCEPTION 'inode name ''%'' already exists in directory #%', in_name, in_id_inode_parent;
+            RAISE EXCEPTION 'inode name ''%'' already exists in directory %', in_name, in_id_inode_parent;
         END IF;
     END IF;
 
@@ -89,7 +89,12 @@ BEGIN
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
 
-    v_treepath :=  v_directory.treepath || out_id_inode::text::ltree;
+    -- check parent inode depth
+    IF nlevel(v_directory.treepath) >= mike.__get_conf_int('tree_max_depth') - 1 THEN
+        RAISE 'parent inode depth too large to ';
+    END IF;
+
+    v_treepath := v_directory.treepath || out_id_inode::text::ltree;
 
     -- insert into mike.directory
     INSERT INTO mike.directory (

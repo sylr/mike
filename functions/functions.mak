@@ -5,6 +5,8 @@
 # copyright: All rights reserved
 
 DATABASE_FUNCTIONS   = __check_order_by_cond.sql
+DATABASE_FUNCTIONS  += __get_conf.sql
+DATABASE_FUNCTIONS  += __set_conf.sql
 DATABASE_FUNCTIONS  += __get_id_mimetype.sql
 DATABASE_FUNCTIONS  += __get_least_used_active_volume.sql
 DATABASE_FUNCTIONS  += __mod_cons_hash.sql

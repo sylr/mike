@@ -5,3 +5,4 @@
 # copyright: All rights reserved
 
 DATABASE_DATA   = mimetypes.sql
+DATABASE_DATA   = conf.sql

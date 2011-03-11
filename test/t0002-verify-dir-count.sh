@@ -69,8 +69,7 @@ cat <<EOT | $PSQL_FULL_CMD -f - --single-transaction > /dev/null
     SELECT
         mike.mvdir($ID_USER,
                    $RANDOM_DIR,
-                   (SELECT id_inode FROM directory WHERE id_user = $ID_USER AND id_inode_parent IS NULL AND state = 0)
-        );
+                   (SELECT id_inode FROM directory WHERE id_user = $ID_USER AND id_inode_parent IS NULL AND state = 0));
 EOT
 
 dieifnzero $? "something went wrong when doing noise"

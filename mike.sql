@@ -29,6 +29,21 @@ COMMENT ON TABLE mike.info IS 'informations about database deployement';
 COMMENT ON COLUMN mike.info.key IS 'information identifier';
 COMMENT ON COLUMN mike.info.value IS 'information value';
 
+-- mike.info -------------------------------------------------------------------
+
+DROP TABLE IF EXISTS mike.conf CASCADE;
+
+CREATE TABLE mike.conf (
+    key                     text            NOT NULL PRIMARY KEY CHECK (key ~ '^[a-z0-9_]{2,}$') UNIQUE,
+    value                   text,
+    ctime                   timestamptz     NOT NULL DEFAULT now(),
+    mtime                   timestamptz
+);
+
+COMMENT ON TABLE mike.conf IS 'configurations table';
+COMMENT ON COLUMN mike.conf.key IS 'configuration identifier';
+COMMENT ON COLUMN mike.conf.value IS 'configuration value';
+
 -- mike.user -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.user CASCADE;
