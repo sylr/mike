@@ -32,7 +32,7 @@ DECLARE
 BEGIN
     IF array_length(in_dirs_by_level, 1) != array_length(in_files_by_level, 1) AND
        array_length(in_dirs_by_level, 1)  < array_length(in_files_by_level, 1) THEN
-        RAISE NOTICE 'dir level must be inferior or equal to file level';
+        RAISE EXCEPTION 'dir level must be inferior or equal to file level';
     END IF;
 
     SELECT id_inode INTO v_id_root_directory FROM mike.directory WHERE id_user = in_id_user AND id_inode = id_inode_parent;
