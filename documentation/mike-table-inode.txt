@@ -20,7 +20,6 @@ SYNOPSIS
   treepath        | ltree                    | not null                                                 | treepath of the inode
   ctime           | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
   mtime           | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
-  atime           | timestamp with time zone |                                                          | last access timestamp with timezone of the inode
   size            | bigint                   | not null default 0                                       | size of the inode
   versioning_size | bigint                   | not null default 0                                       | versioning size of the inode
 

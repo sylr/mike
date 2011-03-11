@@ -10,13 +10,25 @@ SYNOPSIS
 [verse]
               Name              |                                                   Argument data types
 --------------------------------+-------------------------------------------------------------------------------------------------------------------------
+ __check_order_by_cond          | in_order_by text, in_relname text
+ __get_conf                     | in_key text, in_mandatory boolean, in_default text
+ __get_conf_array               | in_key text, in_mandatory boolean, in_default text[]
+ __get_conf_bigint              | in_key text, in_mandatory boolean, in_default bigint
+ __get_conf_bigint_array        | in_key text, in_mandatory boolean, in_default bigint[]
+ __get_conf_int                 | in_key text, in_mandatory boolean, in_default integer
+ __get_conf_int_array           | in_key text, in_mandatory boolean, in_default integer[]
  __get_id_mimetype              | in_mimetype text, OUT out_id_mimetype smallint
  __get_id_mimetype_stable       | in_mimetype text, OUT out_id_mimetype smallint
  __get_least_used_active_volume | OUT out_id_volume smallint
  __get_mimetype                 | in_id_mimetype smallint
+ __make_lot_of_directories      | in_id_user integer, in_level integer, in_nb_by_level integer
+ __make_tree                    | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[]
+ __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
+ __natsort                      | in_text text
  __perform                      | in_sql text
- adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user bigint
+ __set_conf                     | in_key text, in_value text
+ adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
  ls                             | in_id_user integer, in_id_inode bigint
  ls                             | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
  ls                             | in_id_user integer, in_id_inode bigint, in_order_by text
@@ -24,8 +36,11 @@ SYNOPSIS
  mkdir                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
  mkdir                          | in_id_user integer, in_name text, OUT out_id_inode bigint
  mvdir                          | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint
- rmdir                          | in_id_user integer, in_id_inode bigint, in_new_name text
+ rename                         | in_id_user integer, in_id_inode bigint, in_new_name text
  rmdir                          | in_id_user integer, in_id_inode bigint
+ stat                           | in_id_user integer, in_id_inode bigint
+ statd                          | in_id_user integer, in_id_inode bigint
+ statf                          | in_id_user integer, in_id_inode bigint
  touch                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
  xlink                          | in_id_inode bigint, in_id_xfile bigint
  xtouch                         | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
@@ -38,6 +53,17 @@ List of all functions of Mike's SQL API.
 FUNCTIONS
 ---------
 
+(void) __check_order_by_cond(in_order_by text, in_relname text)::
+ +
+    Check that a order clause contains columns owned by 'in_relname'.
+ +
+ +
+(mixed) \__get_conf[_*](in_key text, in_mandatory boolean, in_default mixed)::
+ +
+    Set of functions that retrieve configuration in the conf table and cast it
+    as requested.
+ +
+ +
 (smallint) __get_id_mimetype(in_mimetype text)::
  +
     Return the id of a mimetype. If the mimetype does not already exist it create it.
@@ -50,7 +76,7 @@ FUNCTIONS
  +
 (smallint) __get_least_used_active_volume()::
  +
-    Returns the id of the least used active volume.
+    Return the id of the least used active volume.
  +
  +
 (text) __get_mimetype(smallint)::
@@ -120,7 +146,8 @@ FUNCTIONS
  +
 (void) xlink(in_id_inode bigint, in_id_xfile bigint)::
  +
-    Link a xfile record to a file one.
+    Link a xfile record to a file one. It basically creates a record in the table
+    'as_file_xfile' and updates the file record with the data of the xfile record.
  +
  +
 (record) xtouch(in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text)::

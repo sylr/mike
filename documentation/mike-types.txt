@@ -1,0 +1,39 @@
+mike-types(3)
+=============
+
+NAME
+----
+mike-types - mike's types
+
+SYNOPSIS
+--------
+[verse]
+ Schema |     Name
+--------+--------------
+ mike   | inode_full_t
+
+inode_full_t
+------------
+[verse]
+        Column         |           Type
+-----------------------+--------------------------
+ id_inode              | bigint
+ id_inode_parent       | bigint
+ id_user               | integer
+ state                 | smallint
+ mimetype              | text
+ name                  | text
+ path                  | text
+ treepath              | ltree
+ ctime                 | timestamp with time zone
+ mtime                 | timestamp with time zone
+ inner_mtime           | timestamp with time zone
+ atime                 | timestamp with time zone
+ size                  | bigint
+ inner_size            | bigint
+ versioning_size       | bigint
+ inner_versioning_size | bigint
+ dir_count             | smallint
+ inner_dir_count       | integer
+ file_count            | smallint
+ inner_file_count      | integer
