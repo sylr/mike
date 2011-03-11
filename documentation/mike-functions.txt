@@ -13,6 +13,7 @@ SYNOPSIS
  __get_id_mimetype              | in_mimetype text, OUT out_id_mimetype smallint
  __get_id_mimetype_stable       | in_mimetype text, OUT out_id_mimetype smallint
  __get_least_used_active_volume | OUT out_id_volume smallint
+ __get_mimetype                 | in_id_mimetype smallint
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
  __perform                      | in_sql text
  adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user bigint
@@ -50,6 +51,11 @@ FUNCTIONS
 (smallint) __get_least_used_active_volume()::
  +
     Returns the id of the least used active volume.
+ +
+ +
+(text) __get_mimetype(smallint)::
+ +
+    Return mimetype label.
  +
  +
 (integer) __mod_cons_hash(in_dividend bigint, in_divisor integer)::
