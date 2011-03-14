@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_inode             bigint
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
+-- PREPARE ls(int, bigint) AS
 (
     -- directories
     SELECT
@@ -21,7 +22,7 @@ CREATE OR REPLACE FUNCTION mike.ls(
         id_inode_parent,
         id_user,
         state,
-        mike.__get_mimetype(0) AS mimetype,
+        mike.__get_mimetype(0::smallint) AS mimetype,
         name,
         path,
         treepath,
@@ -105,7 +106,7 @@ SELECT * FROM (
             id_inode_parent,
             id_user,
             state,
-            mike.__get_mimetype(0) AS mimetype,
+            mike.__get_mimetype(0::smallint) AS mimetype,
             name,
             path,
             treepath,
@@ -199,7 +200,7 @@ BEGIN
                     id_inode_parent,
                     id_user,
                     state,
-                    mike.__get_mimetype(0) AS mimetype,
+                    mike.__get_mimetype(0::smallint) AS mimetype,
                     name,
                     path,
                     treepath,
@@ -295,7 +296,7 @@ BEGIN
                     id_inode_parent,
                     id_user,
                     state,
-                    mike.__get_mimetype(0) AS mimetype,
+                    mike.__get_mimetype(0::smallint) AS mimetype,
                     name,
                     path,
                     treepath,
