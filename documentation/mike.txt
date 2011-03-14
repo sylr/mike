@@ -51,22 +51,22 @@ the source code.
 
 Install
 -------
-See linkmike:mike-install[1]
+See linkmike:mike-install[1].
 
 Structure
 ---------
 
 Tables
 ~~~~~~ 
-see linkmike:mike-tables[3]
+See linkmike:mike-tables[3].
 
 Functions
 ~~~~~~~~~
-see linkmike:mike-functions[3]
+See linkmike:mike-functions[3].
 
 Contrib
 -------
-See linkmike:mike-contrib[7]
+See linkmike:mike-contrib[7].
 
 Developers
 ----------
@@ -78,4 +78,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[3] suite
+Part of the linkmike:mike[3] suite.

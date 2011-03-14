@@ -25,10 +25,16 @@ Make a tag.
  +
 Make an archive.
 
+DIRECTORIES
+-----------
+'contrib/sql'::
+ +
+Files with sql queries.
+
 Authors
 -------
 Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[3] suite
+Part of the linkmike:mike[3] suite.

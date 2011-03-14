@@ -24,15 +24,12 @@ SYNOPSIS
   versioning_size | bigint                   | not null default 0                                       | versioning size of the inode
 
  Indexes:
-    "inode_pkey" PRIMARY KEY, btree (id_inode)
-    "inode_ctime_btree_idx" btree (ctime) WITH (fillfactor=95)
-    "inode_mtime_btree_idx" btree (mtime) WITH (fillfactor=95)
-    "inode_id_inode_btree_idx" btree (id_inode) WITH (fillfactor=95)
+    "inode_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
     "inode_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
     "inode_id_mimetype_btree_idx" btree (id_mimetype) WITH (fillfactor=95)
-    "inode_id_user_btree_idx" btree (id_user) WITH (fillfactor=95)
+    "inode_id_user_btree_idx" btree (id_user) WITH (fillfactor=95) CLUSTER
     "inode_name_btree_idx" btree (name) WITH (fillfactor=95)
-    "inode_path_btree_idx" btree (path) WITH (fillfactor=95)
+    "inode_name_natsort_btree_idx" btree (__natsort(name)) WITH (fillfactor=95)
     "inode_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
 
  Check constraints:
@@ -62,4 +59,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[1] suite
+Part of the linkmike:mike[1] suite.

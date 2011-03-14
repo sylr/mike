@@ -26,16 +26,14 @@ SYNOPSIS
 
 
  Indexes:
-    "file_pkey" PRIMARY KEY, btree (id_inode)
+    "file_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
     "file_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
     "file_ctime_btree_idx" btree (ctime) WITH (fillfactor=95)
-    "file_mtime_btree_idx" btree (mtime) WITH (fillfactor=95)
-    "file_id_inode_btree_idx" btree (id_inode) WITH (fillfactor=95)
-    "file_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
+    "file_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95) CLUSTER
     "file_id_mimetype_btree_idx" btree (id_mimetype) WITH (fillfactor=95)
     "file_id_user_btree_idx" btree (id_user) WITH (fillfactor=95)
     "file_name_btree_idx" btree (name) WITH (fillfactor=95)
-    "file_path_btree_idx" btree (path) WITH (fillfactor=95)
+    "file_name_natsort_btree_idx" btree (__natsort(name)) WITH (fillfactor=95)
     "file_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
 
  Check constraints:
@@ -65,4 +63,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[3] suite
+Part of the linkmike:mike[3] suite.

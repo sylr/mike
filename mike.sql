@@ -271,7 +271,7 @@ COMMENT ON TABLE mike.volume IS 'volumes informations';
 COMMENT ON COLUMN mike.volume.id_volume IS 'volume unique identifier';
 COMMENT ON COLUMN mike.volume.state IS 'state of the volumes, references mike.volume_state';
 COMMENT ON COLUMN mike.volume.path IS 'path of the volumes';
-COMMENT ON COLUMN mike.volume.virtual_used_size IS 'real used size used on the volumes';
+COMMENT ON COLUMN mike.volume.virtual_used_size IS 'virtual used size used on the volumes';
 COMMENT ON COLUMN mike.volume.real_used_size IS 'real used size used on the volumes';
 COMMENT ON COLUMN mike.volume.max_size IS 'max size available on the volumes';
 COMMENT ON COLUMN mike.volume.ctime IS 'creation date off the volumes';

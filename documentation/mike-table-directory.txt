@@ -8,46 +8,46 @@ mike-table-directory - mike's directory table
 SYNOPSIS
 --------
 
-         Column         |           Type           |                        Modifiers                         |                      Description                       
- -----------------------+--------------------------+----------------------------------------------------------+--------------------------------------------------------
-  id_inode              | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | inode unique identifier
-  id_inode_parent       | bigint                   |                                                          | identifier of parent inode
-  id_user               | integer                  | not null                                                 | owner of the inode
-  state                 | smallint                 | not null default (0)::smallint                           | state of the inode, references mike.inode_state
-  id_mimetype           | smallint                 | not null default (0)::smallint                           | mimetype of the inode
-  name                  | text                     | not null                                                 | name of the inode, limited to 255 characters
-  path                  | text                     | not null                                                 | path of the inode
-  treepath              | ltree                    | not null                                                 | treepath of the inode
-  ctime                 | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
-  mtime                 | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
-  size                  | bigint                   | not null default 0                                       | size in bytes of the inode
-  versioning_size       | bigint                   | not null default 0                                       | size in bytes of the inode
-  inner_mtime           | timestamp with time zone |                                                          | modification date of last updated child directory
-  inner_size            | bigint                   | not null default 0                                       | size sum of child directories
-  inner_versioning_size | bigint                   | not null default 0                                       | versioning size sum of child directories
-  dir_count             | smallint                 | not null default (0)::smallint                           | number of direct child directories
-  inner_dir_count       | integer                  | not null default 0                                       | number of child directories
-  file_count            | smallint                 | not null default (0)::smallint                           | number of direct child files
-  inner_file_count      | integer                  | not null default 0                                       | number of child files
+         Column         |           Type           |                        Modifiers                         | Storage  |                      Description
+ -----------------------+--------------------------+----------------------------------------------------------+----------+--------------------------------------------------------
+  id_inode              | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | plain    | inode unique identifier
+  id_inode_parent       | bigint                   |                                                          | plain    | identifier of parent inode
+  id_user               | integer                  | not null                                                 | plain    | owner of the inode
+  state                 | smallint                 | not null default (0)::smallint                           | plain    | state of the inode, references mike.inode_state
+  id_mimetype           | smallint                 | not null default (0)::smallint                           | plain    | mimetype of the inode
+  name                  | text                     | not null                                                 | extended | name of the inode, limited to 255 characters
+  path                  | text                     | not null                                                 | extended | path of the inode
+  treepath              | ltree                    | not null                                                 | extended | treepath of the inode
+  ctime                 | timestamp with time zone | not null default now()                                   | plain    | creation timestamp with timezone of the inode
+  mtime                 | timestamp with time zone |                                                          | plain    | last modification timestamp with timezone of the inode
+  size                  | bigint                   | not null default 0                                       | plain    | size in bytes of the inode
+  versioning_size       | bigint                   | not null default 0                                       | plain    | size in bytes of the inode
+  inner_mtime           | timestamp with time zone |                                                          | plain    | modification date of last updated child directory
+  inner_size            | bigint                   | not null default 0                                       | plain    | size sum of child directories
+  inner_versioning_size | bigint                   | not null default 0                                       | plain    | versioning size sum of child directories
+  dir_count             | smallint                 | not null default (0)::smallint                           | plain    | number of direct child directories
+  inner_dir_count       | integer                  | not null default 0                                       | plain    | number of child directories
+  file_count            | smallint                 | not null default (0)::smallint                           | plain    | number of direct child files
+  inner_file_count      | integer                  | not null default 0                                       | plain    | number of child files
 
  Indexes:
-    "directory_pkey" PRIMARY KEY, btree (id_inode)
+    "directory_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
     "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
-    "directory_ctime_btree_idx" btree (ctime)
-    "directory_mtime_btree_idx" btree (mtime)
-    "directory_id_inode_btree_idx" btree (id_inode)
-    "directory_id_inode_parent_btree_idx" btree (id_inode_parent)
-    "directory_id_user_btree_idx" btree (id_user)
-    "directory_mimetype_btree_idx" btree (mimetype)
-    "directory_name_btree_idx" btree (name)
-    "directory_path_btree_idx" btree (path)
-    "directory_treepath_gist_idx" gist (treepath)
+    "directory_ctime_btree_idx" btree (ctime) WITH (fillfactor=95)
+    "directory_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
+    "directory_id_user_btree_idx" btree (id_user) WITH (fillfactor=95) CLUSTER
+    "directory_name_btree_idx" btree (name) WITH (fillfactor=95)
+    "directory_name_natsort_btree_idx" btree (__natsort(name)) WITH (fillfactor=95)
+    "directory_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
 
  Check constraints:
-    "inode_name_check" CHECK (name::text <> ''::text)
+    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255)
+    "inode_path_check" CHECK (substr(path, 1, 1) = '/'::text)
+    "inode_treepath_check" CHECK (nlevel(treepath) <= 24)
 
  Foreign-key constraints:
     "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
+    "directory_id_mimetype_fkey" FOREIGN KEY (id_mimetype) REFERENCES mimetype(id_mimetype)
 
  Referenced by:
     TABLE "directory" CONSTRAINT "directory_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES directory(id_inode) ON DELETE CASCADE
@@ -66,4 +66,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[3] suite
+Part of the linkmike:mike[3] suite.

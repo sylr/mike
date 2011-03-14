@@ -37,3 +37,11 @@ inode_full_t
  inner_dir_count       | integer
  file_count            | smallint
  inner_file_count      | integer
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[3] suite.

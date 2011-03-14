@@ -89,6 +89,11 @@ FUNCTIONS
     Basic consistent hash function using modulus.
  +
  +
+(text) __natsort(in_text)::
+ +
+    Rewrite input to do natural sorting.
+ +
+ +
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
  +
     Add a user.
@@ -96,22 +101,26 @@ FUNCTIONS
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint)::
  +
-    List a directory
+    List a directory.
+    See linkmike:mike-types[3].
  +
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_limit , in_offset)::
  +
-    List a directory with paging
+    List a directory with paging.
+    See linkmike:mike-types[3].
  +
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_order_by)::
  +
-    List a directory with sorting
+    List a directory with sorting.
+    See linkmike:mike-types[3].
  +
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_order_by, in_limit , in_offset)::
  +
-    List a directory with sorting and paging
+    List a directory with sorting and paging.
+    See linkmike:mike-types[3].
  +
  +
 (bigint) mkdir(in_id_user, in_id_inode_parent, in_name)::
@@ -161,4 +170,4 @@ Written by Sylvain Rabot <sylvain@abstraction.fr>
 
 MIKE
 ----
-Part of the linkmike:mike[3] suite
+Part of the linkmike:mike[3] suite.
