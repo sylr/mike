@@ -35,6 +35,7 @@ fi
 if [ -d "$MIKE_PATH/.git" ]; then
     # exporting git dit
     GIT_DIR="$MIKE_PATH/.git"
+    export GIT_DIR
 
     MIKE_COMMIT=$(git show-ref $(cat "$MIKE_PATH/.git/HEAD") | cut -d ' ' -f1)
     MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')

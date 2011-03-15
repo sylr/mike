@@ -54,6 +54,9 @@ done
 
 # ------------------------------------------------------------------------------
 
+GIT_DIR="$MIKE_PATH/.git"
+export GIT_DIR
+
 # check refname value
 if [ -z "$REF_NAME" ]; then
     die "you need to specify --ref option"
