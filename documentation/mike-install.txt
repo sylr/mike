@@ -78,7 +78,6 @@ sylvain@kheops:~/mike.git/$ make install DATABASE_USERNAME=mike DATABASE_NAME=my
 
 configure options
 -----------------
-
 --enable-create-database::
     enable database creation with DATABASE_NAME. imply --enable-create-schema. If
     the database already exists it will be dropped and re-created.

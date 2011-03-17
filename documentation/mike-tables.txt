@@ -85,7 +85,7 @@ mimetype_state::
  +
 user::
  +
-    User of the vfs.
+    Users of the vfs.
  +
  +
 volume::

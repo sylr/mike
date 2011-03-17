@@ -7,7 +7,7 @@ mike-design - mike's design
 
 DESCRIPTION
 -----------
-Describe all the technical thnigs there is to know about mike
+Describe all the technical things there is to know about mike.
 
 DESIGN
 ------
