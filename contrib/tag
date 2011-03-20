@@ -85,19 +85,31 @@ if [ "$TAG_TYPE" == "MAJOR" ]; then
     NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1));
     NEXT_TAG_MINOR=0;
     NEXT_TAG_MAINT=0;
-    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1"
+    if [ "$TAG_RC" == "RC" ]; then
+        NEXT_TAG_RC="-rc1"
+    elif [ "$LAST_TAG_RC" -ne "0" ]; then
+        NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
+    fi
 # generating minor version
 elif [ "$TAG_TYPE" == "MINOR" ]; then
     NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
     NEXT_TAG_MINOR=$(($LAST_TAG_MINOR + 1));
     NEXT_TAG_MAINT=0;
-    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1"
+    if [ "$TAG_RC" == "RC" ]; then
+        NEXT_TAG_RC="-rc1"
+    elif [ "$LAST_TAG_RC" -ne "0" ]; then
+        NEXT_TAG_MINOR=$LAST_TAG_MINOR;
+    fi
 # generating maint version
 elif [ "$TAG_TYPE" == "MAINT" ]; then
     NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
     NEXT_TAG_MINOR=$LAST_TAG_MINOR;
     NEXT_TAG_MAINT=$(($LAST_TAG_MAINT + 1));
-    [ "$TAG_RC" == "RC" ] && NEXT_TAG_RC="-rc1"
+    if [ "$TAG_RC" == "RC" ]; then
+        NEXT_TAG_RC="-rc1"
+    elif [ "$LAST_TAG_RC" -ne "0" ]; then
+        NEXT_TAG_MAINT=$LAST_TAG_MAINT;
+    fi
 else
     if [ "$TAG_RC" == "RC" ]; then
         if [ "$LAST_TAG_RC" == "0" ]; then
