@@ -76,7 +76,7 @@ ifneq ($(TREE_MAX_DEPTH),no)
     endif
 endif
 
-ifeq ($(NO_ATIME),Yes)
+ifneq ($(NO_ATIME),no)
     DEFINES += -D NO_ATIME
 endif
 
