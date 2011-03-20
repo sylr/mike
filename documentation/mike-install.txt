@@ -9,7 +9,11 @@ SYNOPSIS
 --------
 [verse]
 'autoconf'
-'./configure' [--help[=short]] [--enable-create-database] [--enable-create-schema]
+'./configure' [--help[=short]]
+    [--enable-create-database]
+    [--enable-create-schema]
+    [--enable-tree-max-depth[=<depth>]]
+    [--enable-no-atime]
     [DATABASE_USERNAME=<database_username>]
     [DATABASE_NAME=<database_name>]
     [DATABASE_HOST=<database_host>]
@@ -85,6 +89,17 @@ configure options
 --enable-create-schema::
     enable mike schema creation into DATABASE_NAME. If the schema already exists
     it will be dropped and re-created.
+
+--enable-tree-max-depth::
+    enable tree maximum depth support in mike. This feature is 'enabled by default' and
+    its value is '24' which means a directory can only have '22 ancestors', it being
+    the at the 23rd level and the last level beign reserved for files. Disabling
+    this feature can 'speed up some operations' at a 'low depth' but allows big 'deep
+    trees' which could lead to' performance issues' because a modification on a directory
+    will update its ancestors as well.
+
+--enable-no-atime::
+    disable atime support in order to improve performances.
 
 --with-a2x=<path>::
     specify a2x path.

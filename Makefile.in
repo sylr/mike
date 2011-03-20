@@ -68,8 +68,12 @@ PG_SHAREDIR             = @PG_SHAREDIR@
 TREE_MAX_DEPTH  = @TREE_MAX_DEPTH@
 NO_ATIME        = @NO_ATIME@
 
-ifneq ($(TREE_MAX_DEPTH),)
-    DEFINES += -D TREE_MAX_DEPTH=$(TREE_MAX_DEPTH)
+ifneq ($(TREE_MAX_DEPTH),no)
+    ifneq ($(TREE_MAX_DEPTH),yes)
+        DEFINES += -D TREE_MAX_DEPTH=$(TREE_MAX_DEPTH)
+    else
+        DEFINES += -D TREE_MAX_DEPTH=24
+    endif
 endif
 
 ifeq ($(NO_ATIME),Yes)
