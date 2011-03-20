@@ -21,8 +21,10 @@ COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file sy
 DROP TABLE IF EXISTS mike.info CASCADE;
 
 CREATE TABLE mike.info (
-    key                     text    NOT NULL CHECK (key ~ '^[A-Z0-9_]{2,}$') UNIQUE,
-    value                   text
+    key                     text        NOT NULL CHECK (key ~ '^[A-Z0-9_]{2,}$'),
+    ctime                   timestamptz NOT NULL DEFAULT now(),
+    value                   text,
+    PRIMARY KEY (key, ctime)
 );
 
 COMMENT ON TABLE mike.info IS 'informations about database deployement';
