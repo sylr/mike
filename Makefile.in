@@ -63,6 +63,14 @@ PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
 
+# -- defines -------------------------------------------------------------------
+
+TREE_MAX_DEPTH=@TREE_MAX_DEPTH@
+
+ifneq ($(TREE_MAX_DEPTH),)
+    DEFINES += -D TREE_MAX_DEPTH=$(TREE_MAX_DEPTH)
+endif
+
 # -- database schema -----------------------------------------------------------
 
 # include database files list
@@ -138,6 +146,8 @@ info:
 	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK DEFINES;
+	@$(ECHO) "INSERT INTO mike.info VALUES ('MIKE_DEFINES', '$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('sylvain', 'srab');"                >> $(TARGET_FILE);

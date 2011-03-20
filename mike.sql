@@ -144,7 +144,11 @@ CREATE TABLE mike.inode (
     id_mimetype             smallint        REFERENCES mike.mimetype (id_mimetype),
     name                    text            NOT NULL CHECK (name != '' AND length(name) <= 255),
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
-    treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= 24),
+#ifdef TREE_MAX_DEPTH
+    treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= TREE_MAX_DEPTH),
+#else
+    treepath                ltree           NOT NULL,
+#endif /* TREE_MAX_DEPTH */
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
     size                    bigint          NOT NULL DEFAULT 0,

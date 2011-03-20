@@ -89,10 +89,12 @@ BEGIN
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
 
+#ifdef TREE_MAX_DEPTH
     -- check parent inode depth
     IF nlevel(v_directory.treepath) >= mike.__get_conf_int('tree_max_depth') - 1 THEN
         RAISE 'parent inode depth too large to ';
     END IF;
+#endif /* TREE_MAX_DEPTH */
 
     v_treepath := v_directory.treepath || out_id_inode::text::ltree;
 
