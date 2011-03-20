@@ -55,3 +55,4 @@ PG_SHAREDIR=@PG_SHAREDIR@
 # -- defines -------------------------------------------------------------------
 
 TREE_MAX_DEPTH=@TREE_MAX_DEPTH@
+NO_ATIME=@NO_ATIME@

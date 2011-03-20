@@ -296,8 +296,6 @@ AC_ARG_VAR(DATABASE_HOST, [database host])
 
 AC_ARG_VAR(DATABASE_PORT, [database port])
 
-AC_ARG_VAR(TREE_MAX_DEPTH, [maximum tree depth])
-
 AC_ARG_ENABLE(
     [create-schema],
     AS_HELP_STRING([--enable-create-schema create mike schema in DATABASE_NAME]),
@@ -315,6 +313,11 @@ AC_ARG_ENABLE(
 )
 
 AC_SUBST(ENABLE_CREATE_DATABASE)
+
+# -- defines -------------------------------------------------------------------
+
+AC_ARG_VAR(TREE_MAX_DEPTH, [maximum tree depth])
+AC_ARG_VAR(NO_ATIME, [do not use atime (default: No)])
 
 # -- output --------------------------------------------------------------------
 

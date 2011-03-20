@@ -215,7 +215,9 @@ DROP TABLE IF EXISTS mike.file CASCADE;
 CREATE TABLE mike.file (
     id_inode                bigint  NOT NULL PRIMARY KEY,
     id_inode_parent         bigint  NOT NULL REFERENCES mike.directory (id_inode) ON DELETE RESTRICT,
+#ifndef NO_ATIME
     atime                   timestamptz,
+#endif /* NO_ATIME */
     UNIQUE(id_inode_parent, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
@@ -230,7 +232,9 @@ COMMENT ON COLUMN mike.file.path IS 'path of the inode';
 COMMENT ON COLUMN mike.file.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.file.ctime IS 'creation timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.file.mtime IS 'last modification timestamp with timezone of the inode';
+#ifndef NO_ATIME
 COMMENT ON COLUMN mike.file.atime IS 'last access timestamp with timezone of the inode';
+#endif /* NO_ATIME */
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
 

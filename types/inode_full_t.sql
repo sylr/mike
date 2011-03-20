@@ -18,7 +18,9 @@ CREATE TYPE mike.inode_full_t AS (
     ctime                   timestamp with time zone,
     mtime                   timestamp with time zone,
     inner_mtime             timestamp with time zone,
+#ifndef NO_ATIME
     atime                   timestamp with time zone,
+#endif
     size                    bigint,
     inner_size              bigint,
     versioning_size         bigint,

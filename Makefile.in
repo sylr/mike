@@ -65,10 +65,15 @@ PG_SHAREDIR             = @PG_SHAREDIR@
 
 # -- defines -------------------------------------------------------------------
 
-TREE_MAX_DEPTH=@TREE_MAX_DEPTH@
+TREE_MAX_DEPTH  = @TREE_MAX_DEPTH@
+NO_ATIME        = @NO_ATIME@
 
 ifneq ($(TREE_MAX_DEPTH),)
     DEFINES += -D TREE_MAX_DEPTH=$(TREE_MAX_DEPTH)
+endif
+
+ifeq ($(NO_ATIME),Yes)
+    DEFINES += -D NO_ATIME
 endif
 
 # -- database schema -----------------------------------------------------------
