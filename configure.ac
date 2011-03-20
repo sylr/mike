@@ -298,7 +298,7 @@ AC_ARG_VAR(DATABASE_PORT, [database port])
 
 AC_ARG_ENABLE(
     [create-schema],
-    AS_HELP_STRING([--enable-create-schema create mike schema in DATABASE_NAME]),
+    AS_HELP_STRING([--enable-create-schema], [create mike schema in DATABASE_NAME]),
     [ENABLE_CREATE_SCHEMA=Yes],
     [ENABLE_CREATE_SCHEMA=No]
 )
@@ -307,7 +307,7 @@ AC_SUBST(ENABLE_CREATE_SCHEMA)
 
 AC_ARG_ENABLE(
     [create-database],
-    AS_HELP_STRING([--enable-create-database create DATABASE_NAME, imply create-schema]),
+    AS_HELP_STRING([--enable-create-database], [create DATABASE_NAME, imply --enable-create-schema]),
     [ENABLE_CREATE_DATABASE=Yes; ENABLE_CREATE_SCHEMA=Yes],
     [ENABLE_CREATE_DATABASE=No]
 )
@@ -316,8 +316,23 @@ AC_SUBST(ENABLE_CREATE_DATABASE)
 
 # -- defines -------------------------------------------------------------------
 
-AC_ARG_VAR(TREE_MAX_DEPTH, [maximum tree depth])
-AC_ARG_VAR(NO_ATIME, [do not use atime (default: No)])
+AC_ARG_ENABLE(
+    [tree-max-depth],
+    AS_HELP_STRING([--enable-tree-max-depth], [enable tree maximum depth support (default: 24)]),
+    [TREE_MAX_DEPTH=$enable_tree_max_depth],
+    [TREE_MAX_DEPTH=24]
+)
+
+AC_SUBST(TREE_MAX_DEPTH)
+
+AC_ARG_ENABLE(
+    [no-atime],
+    AS_HELP_STRING([--enable-no-atime], [disable atime support (default: No)]),
+    [NO_ATIME=$enable_no_atime],
+    [NO_ATIME=no]
+)
+
+AC_SUBST(NO_ATIME)
 
 # -- output --------------------------------------------------------------------
 
