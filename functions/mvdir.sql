@@ -40,6 +40,7 @@ BEGIN
         RAISE EXCEPTION 'you can not move a directory to one of its children';
     END IF;
 
+#ifdef TREE_MAX_DEPTH
     -- check treepath max depth in source children
     SELECT max(nlevel(treepath)) INTO v_nlevel FROM mike.directory WHERE v_directory.treepath @> treepath;
     v_int := v_nlevel - nlevel(v_directory.treepath) + nlevel(v_new_directory_parent.treepath);
@@ -47,6 +48,7 @@ BEGIN
     IF v_int >= mike.__get_conf_int('tree_max_depth') THEN
         RAISE EXCEPTION 'source tree depth too large for target directory';
     END IF;
+#endif /* TREE_MAX_DEPTH */
 
     -- look if folder name already exists in target
     PERFORM id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;

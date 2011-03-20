@@ -29,7 +29,9 @@ CREATE OR REPLACE FUNCTION mike.ls(
         ctime,
         mtime,
         inner_mtime,
+#ifndef NO_ATIME
         NULL AS atime,
+#endif /* NO_ATIME */
         size,
         inner_size,
         versioning_size,
@@ -59,7 +61,9 @@ UNION ALL
         ctime,
         mtime,
         NULL AS inner_mtime,
+#ifndef NO_ATIME
         atime,
+#endif /* NO_ATIME */
         size,
         NULL AS inner_size,
         versioning_size,
@@ -113,7 +117,9 @@ SELECT * FROM (
             ctime,
             mtime,
             inner_mtime,
+#ifndef NO_ATIME
             NULL AS atime,
+#endif /* NO_ATIME */
             size,
             inner_size,
             versioning_size,
@@ -144,7 +150,9 @@ SELECT * FROM (
             ctime,
             mtime,
             NULL AS inner_mtime,
+#ifndef NO_ATIME
             atime,
+#endif /* NO_ATIME */
             size,
             NULL AS inner_size,
             versioning_size,
@@ -207,7 +215,9 @@ BEGIN
                     ctime,
                     mtime,
                     inner_mtime,
+#ifndef NO_ATIME
                     NULL AS atime,
+#endif /* NO_ATIME */
                     size,
                     inner_size,
                     versioning_size,
@@ -236,7 +246,9 @@ BEGIN
                     ctime,
                     mtime,
                     NULL AS inner_mtime,
+#ifndef NO_ATIME
                     atime,
+#endif /* NO_ATIME */
                     size,
                     NULL AS inner_size,
                     versioning_size,
@@ -303,7 +315,9 @@ BEGIN
                     ctime,
                     mtime,
                     inner_mtime,
+#ifndef NO_ATIME
                     NULL AS atime,
+#endif /* NO_ATIME */
                     size,
                     inner_size,
                     versioning_size,
@@ -332,7 +346,9 @@ BEGIN
                     ctime,
                     mtime,
                     NULL AS inner_mtime,
+#ifndef NO_ATIME
                     atime,
+#endif /* NO_ATIME */
                     size,
                     NULL AS inner_size,
                     versioning_size,

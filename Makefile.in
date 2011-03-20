@@ -29,6 +29,7 @@ DATE                    = @DATE@
 DIRNAME                 = @DIRNAME@
 DROPDB                  = @DROPDB@
 ECHO                    = @ECHO@
+GCC                     = @GCC@
 GETOPT                  = @GETOPT@
 GIT                     = @GIT@
 GITSTATS                = @GITSTATS@
@@ -61,6 +62,23 @@ ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
+
+# -- cc defines ----------------------------------------------------------------
+
+TREE_MAX_DEPTH  = @TREE_MAX_DEPTH@
+NO_ATIME        = @NO_ATIME@
+
+ifneq ($(TREE_MAX_DEPTH),no)
+    ifneq ($(TREE_MAX_DEPTH),yes)
+        DEFINES += -D TREE_MAX_DEPTH=$(TREE_MAX_DEPTH)
+    else
+        DEFINES += -D TREE_MAX_DEPTH=24
+    endif
+endif
+
+ifneq ($(NO_ATIME),no)
+    DEFINES += -D NO_ATIME
+endif
 
 # -- database schema -----------------------------------------------------------
 
@@ -137,6 +155,8 @@ info:
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_CC_DEFINES $(DEFINES);
+	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', '$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('sylvain', 'srab');"                >> $(TARGET_FILE);
@@ -176,7 +196,7 @@ info:
 	fi
 
 $(DATABASE_FILES) :
-	@$(ECHO) '    ' LINK $@; $(CAT) $@ >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK $@; $(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 # -- dry-run -------------------------------------------------------------------
 
@@ -290,13 +310,13 @@ dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS):
 	@$(ECHO) '    ' CC $@;
-	@$(PSQL_FULL_CMD) --file functions/$@ > /dev/null
+	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' CC $@;
-	@$(PSQL_FULL_CMD) --file triggers/$@ > /dev/null
+	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 # -- git -----------------------------------------------------------------------
 

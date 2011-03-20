@@ -152,6 +152,12 @@ MIKE_PARSE_WITH(make)
 AC_PATH_PROG([MAKE], [make], , [$MAKE_DIR])
 MIKE_ERROR_IF_EMPTY([$MAKE], [make not found])
 
+# looking for gcc
+MIKE_ARG_SET_PATH(gcc)
+MIKE_PARSE_WITH(gcc)
+AC_PATH_PROG([GCC], [gcc], , [$GCC_DIR])
+MIKE_ERROR_IF_EMPTY([$GCC], [gcc not found])
+
 # looking for grep
 MIKE_ARG_SET_PATH(grep)
 MIKE_PARSE_WITH(grep)
@@ -292,7 +298,7 @@ AC_ARG_VAR(DATABASE_PORT, [database port])
 
 AC_ARG_ENABLE(
     [create-schema],
-    AS_HELP_STRING([--enable-create-schema create mike schema in DATABASE_NAME]),
+    AS_HELP_STRING([--enable-create-schema], [create mike schema in DATABASE_NAME]),
     [ENABLE_CREATE_SCHEMA=Yes],
     [ENABLE_CREATE_SCHEMA=No]
 )
@@ -301,12 +307,32 @@ AC_SUBST(ENABLE_CREATE_SCHEMA)
 
 AC_ARG_ENABLE(
     [create-database],
-    AS_HELP_STRING([--enable-create-database create DATABASE_NAME, imply create-schema]),
+    AS_HELP_STRING([--enable-create-database], [create DATABASE_NAME, imply --enable-create-schema]),
     [ENABLE_CREATE_DATABASE=Yes; ENABLE_CREATE_SCHEMA=Yes],
     [ENABLE_CREATE_DATABASE=No]
 )
 
 AC_SUBST(ENABLE_CREATE_DATABASE)
+
+# -- cc defines ----------------------------------------------------------------
+
+AC_ARG_ENABLE(
+    [tree-max-depth],
+    AS_HELP_STRING([--enable-tree-max-depth], [enable tree maximum depth support (default: 24)]),
+    [TREE_MAX_DEPTH=$enable_tree_max_depth],
+    [TREE_MAX_DEPTH=24]
+)
+
+AC_SUBST(TREE_MAX_DEPTH)
+
+AC_ARG_ENABLE(
+    [no-atime],
+    AS_HELP_STRING([--enable-no-atime], [disable atime support (default: No)]),
+    [NO_ATIME=$enable_no_atime],
+    [NO_ATIME=no]
+)
+
+AC_SUBST(NO_ATIME)
 
 # -- output --------------------------------------------------------------------
 
