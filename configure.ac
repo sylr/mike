@@ -152,6 +152,12 @@ MIKE_PARSE_WITH(make)
 AC_PATH_PROG([MAKE], [make], , [$MAKE_DIR])
 MIKE_ERROR_IF_EMPTY([$MAKE], [make not found])
 
+# looking for gcc
+MIKE_ARG_SET_PATH(gcc)
+MIKE_PARSE_WITH(gcc)
+AC_PATH_PROG([GCC], [gcc], , [$GCC_DIR])
+MIKE_ERROR_IF_EMPTY([$GCC], [gcc not found])
+
 # looking for grep
 MIKE_ARG_SET_PATH(grep)
 MIKE_PARSE_WITH(grep)

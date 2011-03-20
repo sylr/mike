@@ -29,6 +29,7 @@ DATE                    = @DATE@
 DIRNAME                 = @DIRNAME@
 DROPDB                  = @DROPDB@
 ECHO                    = @ECHO@
+GCC                     = @GCC@
 GETOPT                  = @GETOPT@
 GIT                     = @GIT@
 GITSTATS                = @GITSTATS@
@@ -176,7 +177,7 @@ info:
 	fi
 
 $(DATABASE_FILES) :
-	@$(ECHO) '    ' LINK $@; $(CAT) $@ >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK $@; $(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 # -- dry-run -------------------------------------------------------------------
 
@@ -290,13 +291,13 @@ dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS):
 	@$(ECHO) '    ' CC $@;
-	@$(PSQL_FULL_CMD) --file functions/$@ > /dev/null
+	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' CC $@;
-	@$(PSQL_FULL_CMD) --file triggers/$@ > /dev/null
+	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 # -- git -----------------------------------------------------------------------
 
