@@ -37,8 +37,14 @@ if [ -d "$MIKE_PATH/.git" ]; then
     GIT_DIR="$MIKE_PATH/.git"
     export GIT_DIR
 
-    MIKE_COMMIT=$(git show-ref $(cat "$MIKE_PATH/.git/HEAD") | cut -d ' ' -f1)
-    MIKE_BRANCH=$(git symbolic-ref HEAD 2>/dev/null | sed -e 's#refs/heads/##')
+    MIKE_COMMIT=$(git rev-parse HEAD)
+    MIKE_BRANCH=$(git symbolic-ref -q HEAD | sed -e 's#refs/heads/##')
+
+    if [ -z "$MIKE_BRANCH" ]; then
+        for branch in $(git branch --contains HEAD | grep -v '(no branch)' | cut -b '3-'); do
+            MIKE_BRANCH=$(echo -n "$MIKE_BRANCH $branch" | sed -e 's#^ ##g')
+        done
+    fi
 
     # generating MIKE_VERSION
     if [ ! -z "$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --dirty 2>/dev/null)" ]; then
