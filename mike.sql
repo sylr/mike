@@ -10,8 +10,6 @@
 --      /_/  /_/___/_/|_/___/  
 --
 
-SET search_path TO mike,public;
-
 -- mike ------------------------------------------------------------------------
 
 COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file system';
