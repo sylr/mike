@@ -153,6 +153,9 @@ CREATE TABLE mike.inode (
 #endif /* TREE_MAX_DEPTH */
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
+#ifdef INODE_RAND_COLUMN
+    rand                    float           NOT NULL DEFAULT random(),
+#endif /* INODE_RAND_COLUMN */
     size                    bigint          NOT NULL DEFAULT 0,
     versioning_size         bigint          NOT NULL DEFAULT 0
 ) WITH (fillfactor = 90);
@@ -167,6 +170,9 @@ COMMENT ON COLUMN mike.inode.path IS 'path of the inode';
 COMMENT ON COLUMN mike.inode.treepath IS 'treepath of the inode';
 COMMENT ON COLUMN mike.inode.ctime IS 'creation timestamp with timezone of the inode';
 COMMENT ON COLUMN mike.inode.mtime IS 'last modification timestamp with timezone of the inode';
+#ifdef INODE_RAND_COLUMN
+COMMENT ON COLUMN mike.inode.rand IS 'random value used for random clustering';
+#endif /* INODE_RAND_COLUMN */
 COMMENT ON COLUMN mike.inode.id_mimetype IS 'mimetype of the inode';
 COMMENT ON COLUMN mike.inode.size IS 'size of the inode';
 COMMENT ON COLUMN mike.inode.versioning_size IS 'versioning size of the inode';

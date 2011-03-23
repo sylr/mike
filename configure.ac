@@ -326,6 +326,15 @@ AC_ARG_ENABLE(
 AC_SUBST(TREE_MAX_DEPTH)
 
 AC_ARG_ENABLE(
+    [inode-rand-column],
+    AS_HELP_STRING([--enable-inode-rand-column], [add rand column for random clustering (default: no)]),
+    [INODE_RAND_COLUMN=$enable_inode_rand_column],
+    [INODE_RAND_COLUMN=no]
+)
+
+AC_SUBST(INODE_RAND_COLUMN)
+
+AC_ARG_ENABLE(
     [no-atime],
     AS_HELP_STRING([--enable-no-atime], [disable atime support (default: No)]),
     [NO_ATIME=$enable_no_atime],
