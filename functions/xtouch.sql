@@ -47,8 +47,10 @@ BEGIN
         in_sha1
     );
 
+#ifndef NO_VOLUME_LOCK
     -- update volume
     UPDATE mike.volume SET virtual_used_size = virtual_used_size + in_size WHERE id_volume = out_id_volume;
+#endif /* NO_VOLUME_LOCK */
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 10;

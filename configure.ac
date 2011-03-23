@@ -343,6 +343,15 @@ AC_ARG_ENABLE(
 
 AC_SUBST(NO_ATIME)
 
+AC_ARG_ENABLE(
+    [no-volume-lock],
+    AS_HELP_STRING([--enable-no-volume-lock], [disable volume virtual size update support (default: No)]),
+    [NO_VOLUME_LOCK=$enable_no_volume_lock],
+    [NO_VOLUME_LOCK=no]
+)
+
+AC_SUBST(NO_VOLUME_LOCK)
+
 # -- output --------------------------------------------------------------------
 
 AC_CONFIG_FILES([mike.conf Makefile test/Makefile documentation/Makefile])

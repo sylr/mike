@@ -12,8 +12,9 @@ SYNOPSIS
 './configure' [--help[=short]]
     [--enable-create-database]
     [--enable-create-schema]
-    [--enable-tree-max-depth[=<depth>]]
     [--enable-no-atime]
+    [--enable-no-volume-lock]
+    [--enable-tree-max-depth[=<depth>]]
     [DATABASE_USERNAME=<database_username>]
     [DATABASE_NAME=<database_name>]
     [DATABASE_HOST=<database_host>]
@@ -89,6 +90,12 @@ configure options
 --enable-create-schema::
     enable mike schema creation into DATABASE_NAME. If the schema already exists
     it will be dropped and re-created.
+
+--enable-no-volume-lock::
+    creating a xfile using xtouch() update the virtual size of the volume chosen.
+    Using this option will prevent virtual size update which will enable 'long
+    transactions' creating xfiles to run simultaneously because 'no lock' on the
+    volume table records are used. This option is for 'test use only'.
 
 --enable-tree-max-depth::
     enable tree maximum depth support in mike. This feature is 'enabled by default' and
