@@ -314,7 +314,7 @@ AC_ARG_ENABLE(
 
 AC_SUBST(ENABLE_CREATE_DATABASE)
 
-# -- cc defines ----------------------------------------------------------------
+# -- cpp defines ---------------------------------------------------------------
 
 AC_ARG_ENABLE(
     [tree-max-depth],

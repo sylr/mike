@@ -63,7 +63,7 @@ PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
 
-# -- cc defines ----------------------------------------------------------------
+# -- cpp defines ---------------------------------------------------------------
 
 TREE_MAX_DEPTH      = @TREE_MAX_DEPTH@
 INODE_RAND_COLUMN   = @INODE_RAND_COLUMN@
@@ -160,7 +160,7 @@ info:
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_CC_DEFINES "'$(DEFINES)'";
+	@$(ECHO) '    ' LINK MIKE_CPP_DEFINES "'$(DEFINES)'";
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', '$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
