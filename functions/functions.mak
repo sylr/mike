@@ -15,6 +15,7 @@ DATABASE_FUNCTIONS  += __make_lot_of_directories.sql
 DATABASE_FUNCTIONS  += __make_tree.sql
 DATABASE_FUNCTIONS  += __natsort.pl
 DATABASE_FUNCTIONS  += __perform.sql
+DATABASE_FUNCTIONS  += __pg_locks.sql
 DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += ls.sql
 DATABASE_FUNCTIONS  += mkdir.sql
