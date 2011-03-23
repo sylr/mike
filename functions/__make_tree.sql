@@ -35,6 +35,8 @@ BEGIN
         RAISE EXCEPTION 'dir level must be inferior or equal to file level';
     END IF;
 
+    RAISE LOG '-- id_user : % -------------------------', in_id_user;
+
     SELECT id_inode INTO v_id_root_directory FROM mike.directory WHERE id_user = in_id_user AND id_inode = id_inode_parent;
 
     IF NOT FOUND THEN
@@ -42,10 +44,10 @@ BEGIN
     END IF;
 
     FOR v_i IN SELECT generate_series(1, array_length(in_dirs_by_level, 1)) LOOP
-        RAISE NOTICE 'v_i = %', v_i;
+        RAISE LOG 'v_i  = %', v_i;
 
         FOR v_ij IN SELECT id_inode FROM mike.directory WHERE id_user = in_id_user AND nlevel(treepath) = v_i LOOP
-            RAISE NOTICE 'v_ij = %', v_ij;
+            RAISE LOG 'v_ij = %', v_ij;
 
             FOR v_ijk IN SELECT generate_series(0, in_dirs_by_level[v_i] - 1) LOOP
                 -- mkdir
