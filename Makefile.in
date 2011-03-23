@@ -155,7 +155,7 @@ info:
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_CC_DEFINES $(DEFINES);
+	@$(ECHO) '    ' LINK MIKE_CC_DEFINES "'$(DEFINES)'";
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', '$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
@@ -309,13 +309,13 @@ clean-no-git: clean-doc
 dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS):
-	@$(ECHO) '    ' CC $@;
+	@$(ECHO) '    ' CPP $@;
 	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
-	@$(ECHO) '    ' CC $@;
+	@$(ECHO) '    ' CPP $@;
 	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
 
 # -- git -----------------------------------------------------------------------
