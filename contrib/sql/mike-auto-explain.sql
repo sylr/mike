@@ -10,3 +10,7 @@ SET auto_explain.log_analyze            = true;
 SET auto_explain.log_nested_statements  = true;
 SET client_min_messages                 = 'log';
 SET log_min_messages                    = 'log';
+
+-- turn paging off to see logs and timing on
+\pset pager off
+\timing on
