@@ -326,13 +326,13 @@ dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS):
 	@$(ECHO) '    ' CPP $@;
-	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
+	$(GCC) -x c -E "functions/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' CPP $@;
-	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
+	@$(GCC) -x c -E "triggers/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 # -- git -----------------------------------------------------------------------
 
