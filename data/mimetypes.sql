@@ -50,7 +50,9 @@ INSERT INTO mike.mimetype (mimetype) VALUES
     ('application/zipimage/x-bmp'),
     ('audio/mp4'),
     ('audio/mpeg'),
+    ('audio/x-flac'),
     ('audio/x-hx-aac-adts'),
+    ('audio/x-matroska'),
     ('audio/x-mod'),
     ('audio/x-wav'),
     ('image/gif'),
@@ -101,6 +103,7 @@ INSERT INTO mike.mimetype (mimetype) VALUES
     ('video/mp4'),
     ('video/quicktime'),
     ('video/x-flv'),
+    ('video/x-matroska'),
     ('video/x-ms-asf'),
     ('video/x-msvideo'),
     ('x-epoc/x-sisx-app');

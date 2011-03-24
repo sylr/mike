@@ -10,8 +10,6 @@
 --      /_/  /_/___/_/|_/___/  
 --
 
-SET search_path TO mike,public;
-
 -- mike ------------------------------------------------------------------------
 
 COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file system';
@@ -55,7 +53,8 @@ CREATE TABLE mike.user (
     id_user_sso             text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
     state                   smallint        NOT NULL DEFAULT 1,
-    ctime                   timestamptz     NOT NULL DEFAULT now()
+    ctime                   timestamptz     NOT NULL DEFAULT now(),
+    mtime                   timestamptz
 );
 
 COMMENT ON TABLE mike.user IS 'user informations';
@@ -64,6 +63,7 @@ COMMENT ON COLUMN mike.user.id_user_sso IS 'user unique external identifier';
 COMMENT ON COLUMN mike.user.nickname IS 'user nickname';
 COMMENT ON COLUMN mike.user.state IS 'user state';
 COMMENT ON COLUMN mike.user.ctime IS 'user creation date';
+COMMENT ON COLUMN mike.user.ctime IS 'user modification date';
 
 -- mike.group ------------------------------------------------------------------
 

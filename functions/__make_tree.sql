@@ -4,11 +4,21 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
+DROP TYPE IF EXISTS mike.__make_tree_t;
+
+CREATE TYPE mike.__make_tree_t AS (
+    id_user         integer,
+    directories     integer,
+    files           integer,
+    xfiles          integer
+);
+
 CREATE OR REPLACE FUNCTION mike.__make_tree(
     in_id_user          integer,
     in_dirs_by_level    integer[] DEFAULT ARRAY[5, 5, 5],
-    in_files_by_level   integer[] DEFAULT ARRAY[5, 5, 5]
-) RETURNS void AS $__$
+    in_files_by_level   integer[] DEFAULT ARRAY[5, 5, 5],
+    in_versioning       boolean   DEFAULT true
+) RETURNS mike.__make_tree_t AS $__$
 
 DECLARE
     v_id_inode_d        bigint;
@@ -26,14 +36,20 @@ DECLARE
     v_sha1              text;
     v_rand              integer;
     v_mimetype          smallint;
-    v_mimetypes         text[] := ARRAY['text/plain', 'image/jpg', 'audio/x-flac', 'text/x-shellscript', 'video/mkv'];
+    v_mimetypes         text[] := ARRAY['text/plain', 'image/jpeg', 'audio/x-flac', 'text/x-shellscript', 'video/mkv'];
     v_extension         text;
     v_extensions        text[] := ARRAY['txt', 'jpg', 'flac', 'sh', 'mkv'];
+    v_return            mike.__make_tree_t;
 BEGIN
     IF array_length(in_dirs_by_level, 1) != array_length(in_files_by_level, 1) AND
        array_length(in_dirs_by_level, 1)  < array_length(in_files_by_level, 1) THEN
         RAISE EXCEPTION 'dir level must be inferior or equal to file level';
     END IF;
+
+    v_return.id_user        := in_id_user;
+    v_return.directories    := 0;
+    v_return.files          := 0;
+    v_return.xfiles         := 0;
 
     RAISE LOG '-- id_user : % -------------------------', in_id_user;
 
@@ -41,6 +57,7 @@ BEGIN
 
     IF NOT FOUND THEN
         SELECT mike.mkdir(in_id_user, 'root') INTO v_id_root_directory;
+        v_return.directories := v_return.directories + 1;
     END IF;
 
     FOR v_i IN SELECT generate_series(1, array_length(in_dirs_by_level, 1)) LOOP
@@ -52,6 +69,7 @@ BEGIN
             FOR v_ijk IN SELECT generate_series(0, in_dirs_by_level[v_i] - 1) LOOP
                 -- mkdir
                 SELECT out_id_inode INTO v_id_inode_d FROM mike.mkdir(in_id_user, v_ij, 'dir-n' || v_i::text || '-' || v_ijk::text);
+                v_return.directories := v_return.directories + 1;
 
                 -- make dir files
                 IF in_files_by_level[v_i] IS NOT NULL AND
@@ -59,28 +77,34 @@ BEGIN
                     FOR v_ijkl IN SELECT generate_series(0, in_files_by_level[v_i] - 1) LOOP
                         v_rand      := (random() * 1000)::int;
                         v_size      := (random() * 1024 * 1024 * 17)::bigint;
-                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand  % 4 + 1]);
-                        v_extension := v_extensions[v_rand  % 4 + 1];
+                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand  % 5 + 1]);
+                        v_extension := v_extensions[v_rand  % 5 + 1];
                         v_md5       := encode(digest(random()::text, 'md5'), 'hex');
                         v_sha1      := encode(digest(random()::text, 'sha1'), 'hex');
 
                         SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-n' || v_i::text || '-' || v_ijkl::text || '.' || v_extension);
                         SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
-                        PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
 
-                        IF random()::integer = 1 THEN
+                        v_return.files  := v_return.files + 1;
+                        v_return.xfiles := v_return.xfiles + 1;
+
+                        IF in_versioning AND random()::integer = 1 THEN
                             v_size      := (random() * 1024 * 1024 * 17)::bigint;
                             v_md5       := encode(digest(random()::text, 'md5'), 'hex');
                             v_sha1      := encode(digest(random()::text, 'sha1'), 'hex');
 
                             SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
                             PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
+
+                            v_return.xfiles := v_return.xfiles + 1;
                         END IF;
                     END LOOP;
                 END IF;
             END LOOP;
         END LOOP;
     END LOOP;
+
+    RETURN v_return;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
@@ -88,7 +112,8 @@ $__$ LANGUAGE plpgsql VOLATILE;
 COMMENT ON FUNCTION mike.__make_tree(
     in_id_user          integer,
     in_dirs_by_level    int[],
-    in_files_by_level   int[]
+    in_files_by_level   int[],
+    in_versioning       boolean
 ) IS 'create a tree on several level';
 
 --------------------------------------------------------------------------------
@@ -96,8 +121,9 @@ COMMENT ON FUNCTION mike.__make_tree(
 CREATE OR REPLACE FUNCTION mike.__make_tree(
     in_id_user          integer,
     in_nb_level         integer DEFAULT 2,
-    in_inode_by_level   integer DEFAULT 10
-) RETURNS void AS $__$
+    in_inode_by_level   integer DEFAULT 10,
+    in_versioning       boolean DEFAULT true
+) RETURNS mike.__make_tree_t AS $__$
 
 SELECT * FROM mike.__make_tree(
     $1,
@@ -110,5 +136,6 @@ $__$ LANGUAGE SQL VOLATILE;
 COMMENT ON FUNCTION mike.__make_tree(
     in_id_user          integer,
     in_dirs_by_level    int,
-    in_files_by_level   int
+    in_files_by_level   int,
+    in_versioning       boolean
 ) IS 'create a tree on several level with a fixed length of inodes by level';

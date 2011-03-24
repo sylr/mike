@@ -63,11 +63,12 @@ PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
 
-# -- cc defines ----------------------------------------------------------------
+# -- cpp defines ---------------------------------------------------------------
 
 TREE_MAX_DEPTH      = @TREE_MAX_DEPTH@
 INODE_RAND_COLUMN   = @INODE_RAND_COLUMN@
 NO_ATIME            = @NO_ATIME@
+NO_VOLUME_LOCK      = @NO_VOLUME_LOCK@
 
 ifneq ($(TREE_MAX_DEPTH),no)
     ifneq ($(TREE_MAX_DEPTH),yes)
@@ -83,6 +84,10 @@ endif
 
 ifeq ($(NO_ATIME),yes)
     DEFINES += -D NO_ATIME
+endif
+
+ifeq ($(NO_VOLUME_LOCK),yes)
+    DEFINES += -D NO_VOLUME_LOCK
 endif
 
 # -- database schema -----------------------------------------------------------
@@ -160,7 +165,7 @@ info:
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_WHO_INSTALLED', '$(MIKE_WHO_INSTALLED)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_CC_DEFINES "'$(DEFINES)'";
+	@$(ECHO) '    ' LINK MIKE_CPP_DEFINES "'$(DEFINES)'";
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', '$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
 	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
@@ -213,6 +218,9 @@ dry-run-sub: clean-target $(DATABASE_FILES) info
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@$(ECHO) '    ' ALTERING DATABASE;
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO public,mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
@@ -246,6 +254,9 @@ install-sub: clean-target $(DATABASE_FILES) info
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@$(ECHO) '    ' ALTERING DATABASE;
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO public,mike;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
@@ -315,13 +326,13 @@ dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS):
 	@$(ECHO) '    ' CPP $@;
-	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
+	$(GCC) -x c -E "functions/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' CPP $@;
-	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) --file - > /dev/null
+	@$(GCC) -x c -E "triggers/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 # -- git -----------------------------------------------------------------------
 
