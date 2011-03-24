@@ -4,9 +4,9 @@
 -- date: 23/03/2011
 -- copyright: All rights reserved
 
-DROP TYPE IF EXISTS __pg_locks_t CASCADE;
+DROP TYPE IF EXISTS mike.__pg_locks_t CASCADE;
 
-CREATE TYPE __pg_locks_t AS (
+CREATE TYPE mike.__pg_locks_t AS (
     datname         name,
     relname         name,
     locktype        text,

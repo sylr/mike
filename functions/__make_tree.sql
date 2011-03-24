@@ -4,7 +4,7 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
-DROP TYPE IF EXISTS mike.__make_tree_t;
+DROP TYPE IF EXISTS mike.__make_tree_t CASCADE;
 
 CREATE TYPE mike.__make_tree_t AS (
     id_user         integer,
