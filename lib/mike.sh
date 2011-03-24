@@ -76,6 +76,38 @@ strrpad()
         S_PAD=$(printf "%${REMAINDER}s")
         PAD=${S_PAD// /$PAD_CHAR}
 
-        echo ${1}${PAD}
+        if [ "$PAD_CHAR" != "" ]; then
+            PAD=${S_PAD// /$PAD_CHAR}
+        else
+            PAD=" "
+        fi
+
+        echo -n "${1}${PAD}"
+    else
+        echo -n "${1}"
+    fi
+}
+
+# -- strlpad -------------------------------------------------------------------
+
+strlpad()
+{
+    FULL_LENGTH=$(echo -n "$1" | wc -m)
+    PAD_LENGTH=$2
+    PAD_CHAR=$3
+
+    if [ "$FULL_LENGTH" -lt "$PAD_LENGTH" ]; then
+        REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
+        S_PAD=$(printf "%${REMAINDER}s")
+
+        if [ "$PAD_CHAR" != "" ]; then
+            PAD=${S_PAD// /$PAD_CHAR}
+        else
+            PAD=" "
+        fi
+
+        echo -n "${PAD}${1}"
+    else
+        echo -n "${1}"
     fi
 }
