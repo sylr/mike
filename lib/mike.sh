@@ -25,7 +25,11 @@ abort()
     read input
 
     if [ "$input" = "n" ]; then
-        die "aborting ..."
+        if [ -n "$1" ]; then
+            die "$1"
+        else
+            die "aborting ..."
+        fi
     elif [ "$input" = "Y" ]; then
         return 0
     else

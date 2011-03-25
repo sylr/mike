@@ -27,10 +27,10 @@ source "$MIKE_PATH/lib/mike.sh"
 usage()
 {
     echo >&2 "$0 usage:"
-    echo >&2 "  fill account with inodes"
+    echo >&2 "  stream data into mike"
     echo >&2 ""
     echo >&2 "   --detach       lauch jobs in detach mode"
-    echo >&2 "   --jobs         number of parallel jobs (imply --detach)"
+    echo >&2 "   --streams      number of parallel stream (imply --detach)"
     echo >&2 "   --dirs         dirs by level (Default: 5,5,5,5)"
     echo >&2 "   --files        files by level (Default: 5,5,5,5)"
     echo >&2 "   --versioning   enable versioning (Default: No)"
@@ -38,7 +38,7 @@ usage()
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,jobs:,dirs:,files:,detach,versioning -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,detach,versioning -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -48,7 +48,7 @@ eval set -- "$ARGV"
 
 # ------------------------------------------------------------------------------
 
-MOD="1"
+STREAMS="1"
 REMAINDER=
 DIR_BY_LEVEL="5,5,5,5"
 FILE_BY_LEVEL="5,5,5,5"
@@ -59,7 +59,7 @@ SLEEP_TIME=0.3
 while true ;
 do
     case "$1" in
-        --jobs)         MOD="$2";               shift 2;;
+        --streams)      STREAMS="$2";           shift 2;;
         --dirs)         DIR_BY_LEVEL="$2";      shift 2;;
         --files)        FILE_BY_LEVEL="$2";     shift 2;;
         --versioning)   VERSIONING="true";      shift;;
@@ -80,17 +80,30 @@ else
     PSQL_FULL_CMD_ALIGNED="$PSQL -U${DATABASE_USER} -d ${DATABASE_NAME} -h ${DATABASE_HOST}"
 fi
 
-# -- main ----------------------------------------------------------------------
+# -- checks --------------------------------------------------------------------
 
-if [ "$MOD" -gt "1" ]; then
+if [[ "$STREAMS" -gt "1" || -n "$DETACH" ]]; then
+    if [ "$NO_VOLUME_LOCK" != "yes" ]; then
+        echo 2>&1 "You filthy bastard, you're trying to do streaming on an instance"
+        echo 2>&1 "without NO_VOLUME_LOCK support. You are probably going nowhere !"
+        abort "That's what I tought !§!!"
+    fi
+fi
+
+# -- main forked ---------------------------------------------------------------
+
+declare -a PIDS
+
+if [ "$STREAMS" -gt "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user $WHERE;"); do
         $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null 2>&1 &
         PIDS["$!"]="true"
         
         echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
+        sleep $SLEEP_TIME
         
         # waiting for finished jobs if limit reached
-        while [ "${#PIDS[@]}" -ge "$MOD" ]; do
+        while [ "${#PIDS[@]}" -ge "$STREAMS" ]; do
             for pid in "${!PIDS[@]}"; do
                 if [ $(ps ax | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "stream finished: `strlpad $pid 6 ' '`"
@@ -101,26 +114,36 @@ if [ "$MOD" -gt "1" ]; then
             sleep $SLEEP_TIME
         done
     done;
-    
-    # waiting for remaining jobs
-    while [ "${#PIDS[@]}" -gt "0" ]; do
-        for pid in "${!PIDS[@]}"; do
-            if [ $(ps ax | grep "^$pid"  | wc -l) -eq "0" ]; then
-                echo "stream finished: `strlpad $pid 6 ' '`"
-                unset PIDS[$pid];
-            fi
-        done
+fi
 
-        sleep $SLEEP_TIME
-    done 
-else
+# -- main ---------------------------------------------------------------------- 
+
+if [ "$STREAMS" -eq "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user $WHERE;"); do
         if [ -z "$DETACH" ]; then
             $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);"
         else
             $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" 2> /dev/null &
+            PIDS["$!"]="true"
+            echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
         fi
     done;
 fi
+
+# -- gc ------------------------------------------------------------------------
+   
+# waiting for remaining jobs
+while [ "${#PIDS[@]}" -gt "0" ]; do
+    for pid in "${!PIDS[@]}"; do
+        if [ $(ps ax | grep "^$pid"  | wc -l) -eq "0" ]; then
+            echo "stream finished: `strlpad $pid 6 ' '`"
+            unset PIDS[$pid];
+        fi
+    done
+
+    sleep $SLEEP_TIME
+done 
+
+# -- exit ----------------------------------------------------------------------
 
 exit 0
