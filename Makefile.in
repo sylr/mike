@@ -219,7 +219,6 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
-	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO public,mike;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
@@ -255,7 +254,6 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
-	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO public,mike;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
