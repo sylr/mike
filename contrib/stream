@@ -135,7 +135,7 @@ fi
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps ax | grep "^$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps ax | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "stream finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
