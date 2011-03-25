@@ -43,7 +43,7 @@ DECLARE
 BEGIN
     IF array_length(in_dirs_by_level, 1) != array_length(in_files_by_level, 1) AND
        array_length(in_dirs_by_level, 1)  < array_length(in_files_by_level, 1) THEN
-        RAISE EXCEPTION 'dir level must be inferior or equal to file level';
+        RAISE EXCEPTION 'dir level number must be superior or equal to file level number';
     END IF;
 
     v_return.id_user        := in_id_user;
@@ -94,7 +94,7 @@ BEGIN
                             v_md5       := encode(digest(random()::text, 'md5'), 'hex');
                             v_sha1      := encode(digest(random()::text, 'sha1'), 'hex');
 
-                            SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
+                            SELECT out_id_xfile INTO v_id_xfile FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
                             PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
 
                             v_return.xfiles := v_return.xfiles + 1;
