@@ -332,6 +332,10 @@ $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' CPP $@;
 	@$(GCC) -x c -E "triggers/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
+dev-volumes:
+	@$(ECHO) '    ' IMPORTING contrib/sql/mike-volumes.sql;
+	@$(PSQL_FULL_CMD) -f contrib/sql/mike-volumes.sql > /dev/null
+
 # -- git -----------------------------------------------------------------------
 
 graph: .FORCE
