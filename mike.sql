@@ -54,7 +54,8 @@ CREATE TABLE mike.user (
     nickname                text            DEFAULT NULL,
     state                   smallint        NOT NULL DEFAULT 1,
     ctime                   timestamptz     NOT NULL DEFAULT now(),
-    mtime                   timestamptz
+    mtime                   timestamptz,
+    UNIQUE (id_user_sso)
 );
 
 COMMENT ON TABLE mike.user IS 'user informations';
