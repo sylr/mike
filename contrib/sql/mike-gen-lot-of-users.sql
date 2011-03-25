@@ -9,10 +9,10 @@ WITH last_user_seq AS (
     (
         SELECT 0::bigint AS last
     )
-    UNION
+    UNION ALL
     (
         SELECT
-            substring(id_user_sso, 5)::bigint AS last
+            substring(id_user_sso, 6)::bigint AS last
         FROM mike.user
         WHERE
             id_user_sso LIKE 'mike-%'
