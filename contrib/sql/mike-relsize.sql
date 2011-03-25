@@ -8,7 +8,7 @@ SELECT
     relname,
     relpages,
     pg_size_pretty(relpages::bigint * 8 * 1024) AS size,
-    pg_size_pretty(pg_relation_size(relname)) AS pg_size
+    pg_size_pretty(pg_relation_size(relname::text)) AS pg_size
 FROM pg_class
 JOIN pg_catalog.pg_namespace ON pg_class.relnamespace = pg_namespace.oid
 WHERE nspname = 'mike'
