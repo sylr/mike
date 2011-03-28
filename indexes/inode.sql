@@ -10,7 +10,6 @@ CREATE INDEX inode_id_inode_parent_btree_idx    ON mike.inode   USING btree (id_
 CREATE INDEX inode_id_user_btree_idx            ON mike.inode   USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX inode_id_mimetype_btree_idx        ON mike.inode   USING btree (id_mimetype)       WITH (fillfactor = 95);
 CREATE INDEX inode_name_btree_idx               ON mike.inode   USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX inode_name_natsort_btree_idx       ON mike.inode   USING btree (__natsort(name))   WITH (fillfactor = 95);
 CREATE INDEX inode_treepath_gist_idx            ON mike.inode   USING gist  (treepath)          WITH (fillfactor = 95);
 #ifdef INODE_RAND_COLUMN
 CREATE INDEX inode_rand_btree_idx               ON mike.inode   USING btree (treepath)          WITH (fillfactor = 95);
