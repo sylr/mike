@@ -36,7 +36,7 @@ DECLARE
     v_sha1              text;
     v_rand              integer;
     v_mimetype          smallint;
-    v_mimetypes         text[] := ARRAY['text/plain', 'image/jpeg', 'audio/x-flac', 'text/x-shellscript', 'video/mkv'];
+    v_mimetypes         text[] := ARRAY['text/plain', 'image/jpeg', 'audio/x-flac', 'text/x-shellscript', 'video/x-matroska'];
     v_extension         text;
     v_extensions        text[] := ARRAY['txt', 'jpg', 'flac', 'sh', 'mkv'];
     v_return            mike.__make_tree_t;
