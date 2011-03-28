@@ -10,7 +10,6 @@ CREATE INDEX file_id_inode_parent_btree_idx     ON mike.file    USING btree (id_
 CREATE INDEX file_id_user_btree_idx             ON mike.file    USING btree (id_user)           WITH (fillfactor = 95);
 CREATE INDEX file_id_mimetype_btree_idx         ON mike.file    USING btree (id_mimetype)       WITH (fillfactor = 95);
 CREATE INDEX file_name_btree_idx                ON mike.file    USING btree (name)              WITH (fillfactor = 95);
-CREATE INDEX file_name_natsort_btree_idx        ON mike.file    USING btree (__natsort(name))   WITH (fillfactor = 95);
 CREATE INDEX file_ctime_btree_idx               ON mike.file    USING btree (ctime)             WITH (fillfactor = 95);
 CREATE INDEX file_treepath_gist_idx             ON mike.file    USING gist  (treepath)          WITH (fillfactor = 95);
 #ifdef INODE_RAND_COLUMN
