@@ -51,7 +51,7 @@ BEGIN
     v_return.files          := 0;
     v_return.xfiles         := 0;
 
-    RAISE LOG '-- id_user : % -------------------------', in_id_user;
+    RAISE DEBUG '-- id_user : % -------------------------', in_id_user;
 
     SELECT id_inode INTO v_id_root_directory FROM mike.directory WHERE id_user = in_id_user AND id_inode = id_inode_parent;
 
@@ -61,10 +61,10 @@ BEGIN
     END IF;
 
     FOR v_i IN SELECT generate_series(1, array_length(in_dirs_by_level, 1)) LOOP
-        RAISE LOG 'v_i  = %', v_i;
+        RAISE DEBUG 'v_i  = %', v_i;
 
         FOR v_ij IN SELECT id_inode FROM mike.directory WHERE id_user = in_id_user AND nlevel(treepath) = v_i LOOP
-            RAISE LOG 'v_ij = %', v_ij;
+            RAISE DEBUG 'v_ij = %', v_ij;
 
             FOR v_ijk IN SELECT generate_series(0, in_dirs_by_level[v_i] - 1) LOOP
                 -- mkdir

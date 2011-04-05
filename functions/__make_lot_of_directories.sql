@@ -27,10 +27,10 @@ BEGIN
     SELECT nlevel(treepath) INTO v_start_level FROM directory WHERE id_user = in_id_user ORDER BY treepath DESC LIMIT 1;
 
     FOR v_i IN SELECT generate_series(v_start_level, in_level - 1) LOOP
-        RAISE NOTICE 'v_i = %', v_i;
+        RAISE DEBUG 'v_i = %', v_i;
 
         FOR v_ij IN SELECT id_inode FROM directory WHERE id_user = in_id_user AND nlevel(treepath) = v_i LOOP
-            RAISE NOTICE 'v_ij = %', v_ij;
+            RAISE DEBUG 'v_ij = %', v_ij;
 
             FOR v_ijk IN SELECT generate_series(0, in_nb_by_level - 1) LOOP
                 PERFORM mkdir(in_id_user, v_ij, v_ijk::text);
