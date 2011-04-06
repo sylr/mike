@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+# vim: set tabstop=4 expandtab autoindent smartindent:
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 24/03/2011
+# copyright: All rights reserved
+
+BK_REALPATH=$(realpath $0)
+CONTRIB_PATH=$(dirname $BK_REALPATH)
+MIKE_PATH=$(dirname $CONTRIB_PATH)
+
+# -- mike.conf -----------------------------------------------------------------
+
+if [ ! -f "$MIKE_PATH/mike.conf" ]; then
+    echo >&2 "$MIKE_PATH/mike.conf not found"
+    echo >&2 "You need to execute autoconf && ./configure"
+    exit 1
+fi
+
+source "$MIKE_PATH/mike.conf"
+
+# -- mike.sh -------------------------------------------------------------------
+
+source "$MIKE_PATH/lib/mike.sh"
+
+# -- usage ---------------------------------------------------------------------
+
+usage()
+{
+    cat <<EOT | cat >&2
+       ___  ___   _____  __  __ ________   __   _______
+      / _ )/ _ | / _ ) \/ / / //_/  _/ /  / /  / __/ _ \\
+     / _  / __ |/ _  |\  / / ,< _/ // /__/ /__/ _// , _/
+    /____/_/ |_/____/ /_/ /_/|_/___/____/____/___/_/|_|
+
+EOT
+    echo >&2 "  reads randomly data in mike"
+    echo >&2 ""
+    echo >&2 "   --bks          number of parallel bk"
+    echo >&2 "   --dirs         number of directories to list"
+    echo >&2 "   --loop         loop until you get bored"
+}
+
+# ------------------------------------------------------------------------------
+
+ARGV=`$GETOPT --long h,help,bks:,dirs:,loop -n "$0" -- $0 $@`
+
+if [ $? != 0 ] ; then
+    die "Terminating ...";
+fi
+
+eval set -- "$ARGV"
+
+# ------------------------------------------------------------------------------
+
+BKS="1"
+SLEEP_TIME=0.1
+DIRS=10000
+LOOP="No"
+LOG_FILE=./bk.log
+
+while true ;
+do
+    case "$1" in
+        --bks)          BKS="$2";               shift 2;;
+        --dirs)         DIRS="$2";              shift 2;;
+        --loop)         LOOP=Yes;               shift 1;;
+        --)             shift;                  break;;
+        -h|--help)      usage;                  exit 0;;
+        *)              usage;                  exit 1;;
+    esac
+done
+
+# -- config --------------------------------------------------------------------
+
+if [ -z "${DATABASE_HOST}" ]; then
+    PSQL_FULL_CMD="$PSQL -U${DATABASE_USER} -d ${DATABASE_NAME} --tuples-only --no-align"
+    PSQL_FULL_CMD_ALIGNED="$PSQL -U${DATABASE_USER} -d ${DATABASE_NAME} --tuples-only"
+else
+    PSQL_FULL_CMD="$PSQL -U${DATABASE_USER} -d ${DATABASE_NAME} -h ${DATABASE_HOST} --tuples-only --no-align"
+    PSQL_FULL_CMD_ALIGNED="$PSQL -U${DATABASE_USER} -d ${DATABASE_NAME} -h ${DATABASE_HOST}"
+fi
+
+# -- functions -----------------------------------------------------------------
+
+get_rand_ls() {
+    functions[0]="ls(%d, %d)"
+    functions[1]="ls(%d, %d, '%s')"
+    functions[2]="ls(%d, %d, %d, %d)"
+    functions[3]="ls(%d, %d, '%s', %d, %d)"
+
+    query='SELECT * FROM'
+    random=$(($RANDOM % ${#functions[@]}))
+
+    case "$random" in
+        0)  query="$query `printf \"${functions[$random]}\" $1 $2`";;
+        1)  query="$query `printf \"${functions[$random]}\" $1 $2 "$(get_rand_order_by)"`";;
+        2)  query="$query `printf \"${functions[$random]}\" $1 $2 25 $(get_rand_int 50)`";;
+        3)  query="$query `printf \"${functions[$random]}\" $1 $2 "$(get_rand_order_by)" 25 $(get_rand_int 50)`";;
+    esac
+
+    echo -n "$query"
+}
+
+get_rand_order_by() {
+    columns[0]="name"
+    columns[1]="size"
+    columns[2]="inner_size"
+    columns[3]="versioning_size"
+    columns[4]="inner_versioning_size"
+    columns[5]="path"
+    columns[6]="treepath"
+
+    random=$(($RANDOM % ${#columns[@]}))
+
+    echo -n "${columns[$random]} `get_rand_sort`"
+    columns[$random]=""
+    i=0
+
+    while [[ "$(($RANDOM % 2))" -eq "1" && "$((i++))" -lt "4" ]]; do
+        random=$(($RANDOM % ${#columns[@]}));
+
+        while [[ -z "${columns[$random]}" ]]; do
+            random=$(($RANDOM % ${#columns[@]}))
+        done
+
+        echo -n ", ${columns[$random]} `get_rand_sort`"
+        columns[$random]=""
+    done
+}
+
+get_rand_sort() {
+    sorts[0]="ASC"
+    sorts[1]="DESC"
+
+    random=$(($RANDOM % ${#sorts[@]}))
+
+    echo -n "${sorts[$random]}"
+}
+
+get_rand_int() {
+    echo -n "$(($RANDOM % $(($1 + 1))))"
+}
+
+# -- main ----------------------------------------------------------------------
+
+declare -a PIDS
+> $LOG_FILE
+
+while [[ "$LOOP" == "Yes" || "$DONE" != "Yes" ]]; do
+    DONE="Yes"
+
+    for data in $($PSQL_FULL_CMD -c "SELECT id_user, id_inode FROM mike.directory ORDER BY random() LIMIT $DIRS;"); do
+        id_user=$(echo "$data" | cut -d '|' -f1)
+        id_inode=$(echo "$data" | cut -d '|' -f2)
+
+        BK=BK${id_user}${id_inode}
+
+        eval 'coproc '$BK' { \
+            start=$(date +%s.%N); \
+            $PSQL_FULL_CMD_ALIGNED -c "`get_rand_ls $id_user $id_inode`" 1>/dev/null; \
+            end=$(date +%s.%N); \
+            duration=$(echo "$end - $start" | bc); \
+            echo "$duration" >> $LOG_FILE; \
+        }' &>/dev/null
+
+        PIDS["$!"]="true"
+        echo "bk started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
+        sleep $SLEEP_TIME
+
+        # waiting for finished jobs if limit reached
+        while [ "${#PIDS[@]}" -ge "$BKS" ]; do
+            for pid in "${!PIDS[@]}"; do
+                if [ $(ps ax | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                    echo "bk finished: `strlpad $pid 6 ' '`"
+                    unset PIDS[$pid];
+                fi
+            done
+
+            sleep $SLEEP_TIME
+        done
+    done
+done
+
+# -- gc ------------------------------------------------------------------------
+
+# waiting for remaining jobs
+while [ "${#PIDS[@]}" -gt "0" ]; do
+    for pid in "${!PIDS[@]}"; do
+        if [ $(ps ax | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+            echo "bk finished: `strlpad $pid 6 ' '`"
+            unset PIDS[$pid];
+        fi
+    done
+
+    sleep $SLEEP_TIME
+done
+
+# -- exit ----------------------------------------------------------------------
+
+exit 0
