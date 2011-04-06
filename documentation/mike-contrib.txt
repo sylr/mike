@@ -10,6 +10,7 @@ SYNOPSIS
 [verse]
 contrib/tag --[major|minor|maint|rc]
 contrib/archive --ref <refname>
+contrib/bk [--bks] [--dirs=<dirs>] [--loop]
 
 DESCRIPTION
 -----------
@@ -24,6 +25,11 @@ Make a tag.
 'contrib/archive'::
  +
 Make an archive.
+
+'contrib/bk'::
+ +
+Reads lot of data randomly in the database to perform efficiency test for reading
+operations.
 
 DIRECTORIES
 -----------
