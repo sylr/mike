@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vim: set tabstop=4 expandtab autoindent smartindent:
+# vim: set tabstop=4 expandtab:
 # author: Sylvain Rabot <sylvain@abstraction.fr>
 # date: 24/03/2011
 # copyright: All rights reserved
@@ -34,11 +34,12 @@ usage()
     echo >&2 "   --dirs         dirs by level (Default: 5,5,5,5)"
     echo >&2 "   --files        files by level (Default: 5,5,5,5)"
     echo >&2 "   --versioning   enable versioning (Default: No)"
+    echo >&2 "   --start        start with this id_user (Default: 0)"
 }
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,detach,versioning -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,detach,versioning,start: -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -49,12 +50,13 @@ eval set -- "$ARGV"
 # ------------------------------------------------------------------------------
 
 STREAMS="1"
+START="0"
 REMAINDER=
 DIR_BY_LEVEL="5,5,5,5"
 FILE_BY_LEVEL="5,5,5,5"
 VERSIONING="false"
 DETACH=
-SLEEP_TIME=0.3
+SLEEP_TIME=0.1
 
 while true ;
 do
@@ -62,6 +64,7 @@ do
         --streams)      STREAMS="$2";           shift 2;;
         --dirs)         DIR_BY_LEVEL="$2";      shift 2;;
         --files)        FILE_BY_LEVEL="$2";     shift 2;;
+        --start)        START="$2";             shift 2;;
         --versioning)   VERSIONING="true";      shift;;
         --detach)       DETACH="true";          shift;;
         --)             shift;                  break;;
@@ -95,7 +98,7 @@ fi
 declare -a PIDS
 
 if [ "$STREAMS" -gt "1" ]; then
-    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user $WHERE;"); do
+    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
         $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null 2>&1 &
         PIDS["$!"]="true"
         
@@ -105,7 +108,7 @@ if [ "$STREAMS" -gt "1" ]; then
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$STREAMS" ]; do
             for pid in "${!PIDS[@]}"; do
-                if [ $(ps ax | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                if [ $(ps aux | grep "psql" | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "stream finished: `strlpad $pid 6 ' '`"
                     unset PIDS[$pid];
                 fi
@@ -119,7 +122,7 @@ fi
 # -- main ---------------------------------------------------------------------- 
 
 if [ "$STREAMS" -eq "1" ]; then
-    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user $WHERE;"); do
+    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
         if [ -z "$DETACH" ]; then
             $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);"
         else
@@ -135,7 +138,7 @@ fi
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps ax | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps aux | grep "psql" | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "stream finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
