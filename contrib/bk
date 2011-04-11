@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vim: set tabstop=4 expandtab autoindent smartindent:
+# vim: set tabstop=4 expandtab:
 # author: Sylvain Rabot <sylvain@abstraction.fr>
 # date: 24/03/2011
 # copyright: All rights reserved
@@ -42,7 +42,7 @@ EOT
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,bks:,dirs:,loop -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,bks:,dirs:,loop,max-sleep: -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -53,7 +53,8 @@ eval set -- "$ARGV"
 # ------------------------------------------------------------------------------
 
 BKS="1"
-SLEEP_TIME=0.1
+BK_SLEEP="2"
+SLEEP_TIME=0.05
 DIRS=10000
 LOOP="No"
 LOG_FILE=./bk.log
@@ -64,6 +65,7 @@ do
         --bks)          BKS="$2";               shift 2;;
         --dirs)         DIRS="$2";              shift 2;;
         --loop)         LOOP=Yes;               shift 1;;
+        --max-sleep)    BK_SLEEP="$2";          shift 2;;
         --)             shift;                  break;;
         -h|--help)      usage;                  exit 0;;
         *)              usage;                  exit 1;;
@@ -141,6 +143,15 @@ get_rand_int() {
     echo -n "$(($RANDOM % $(($1 + 1))))"
 }
 
+bk() {
+    start=$(date +%s.%N);
+    $PSQL_FULL_CMD_ALIGNED -c "`get_rand_ls $1 $2`" 1>/dev/null;
+    end=$(date +%s.%N);
+    duration=$(echo "$end - $start" | bc);
+    echo "$duration" >> $LOG_FILE;
+    sleep `get_rand_int $BK_SLEEP`;
+}
+
 # -- main ----------------------------------------------------------------------
 
 declare -a PIDS
@@ -153,30 +164,20 @@ while [[ "$LOOP" == "Yes" || "$DONE" != "Yes" ]]; do
         id_user=$(echo "$data" | cut -d '|' -f1)
         id_inode=$(echo "$data" | cut -d '|' -f2)
 
-        BK=BK${id_user}${id_inode}
-
-        eval 'coproc '$BK' { \
-            start=$(date +%s.%N); \
-            $PSQL_FULL_CMD_ALIGNED -c "`get_rand_ls $id_user $id_inode`" 1>/dev/null; \
-            end=$(date +%s.%N); \
-            duration=$(echo "$end - $start" | bc); \
-            echo "$duration" >> $LOG_FILE; \
-        }' &>/dev/null
+        bk $id_user $id_inode &
 
         PIDS["$!"]="true"
         echo "bk started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
-        sleep $SLEEP_TIME
 
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$BKS" ]; do
             for pid in "${!PIDS[@]}"; do
-                if [ $(ps ax | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                if [ $(ps aux | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "bk finished: `strlpad $pid 6 ' '`"
                     unset PIDS[$pid];
+                    break;
                 fi
             done
-
-            sleep $SLEEP_TIME
         done
     done
 done
@@ -186,7 +187,7 @@ done
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps ax | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps aux | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "bk finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
