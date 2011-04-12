@@ -38,6 +38,8 @@ EOT
     echo >&2 "   --bks          number of parallel bk"
     echo >&2 "   --dirs         number of directories to list"
     echo >&2 "   --loop         loop until you get bored"
+    echo >&2 "   --max-sleep    max sleep value for each bk (Default: 0)"
+    echo >&2 ""
 }
 
 # ------------------------------------------------------------------------------
