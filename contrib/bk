@@ -172,7 +172,7 @@ while [[ "$LOOP" == "Yes" || "$DONE" != "Yes" ]]; do
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$BKS" ]; do
             for pid in "${!PIDS[@]}"; do
-                if [ $(ps aux | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                if [ $(ps ax | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "bk finished: `strlpad $pid 6 ' '`"
                     unset PIDS[$pid];
                     break;
@@ -187,7 +187,7 @@ done
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps aux | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps ax | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "bk finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
