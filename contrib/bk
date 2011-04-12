@@ -38,6 +38,8 @@ EOT
     echo >&2 "   --bks          number of parallel bk"
     echo >&2 "   --dirs         number of directories to list"
     echo >&2 "   --loop         loop until you get bored"
+    echo >&2 "   --max-sleep    max sleep value for each bk (Default: 0)"
+    echo >&2 ""
 }
 
 # ------------------------------------------------------------------------------
@@ -172,7 +174,7 @@ while [[ "$LOOP" == "Yes" || "$DONE" != "Yes" ]]; do
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$BKS" ]; do
             for pid in "${!PIDS[@]}"; do
-                if [ $(ps aux | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                if [ $(ps ax | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "bk finished: `strlpad $pid 6 ' '`"
                     unset PIDS[$pid];
                     break;
@@ -187,7 +189,7 @@ done
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps aux | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps ax | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "bk finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
