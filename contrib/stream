@@ -108,7 +108,7 @@ if [ "$STREAMS" -gt "1" ]; then
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$STREAMS" ]; do
             for pid in "${!PIDS[@]}"; do
-                if [ $(ps aux | grep "psql" | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
+                if [ $(ps ax | grep "psql" | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
                     echo "stream finished: `strlpad $pid 6 ' '`"
                     unset PIDS[$pid];
                 fi
@@ -138,7 +138,7 @@ fi
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
-        if [ $(ps aux | grep "psql" | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+        if [ $(ps ax | grep "psql" | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
             echo "stream finished: `strlpad $pid 6 ' '`"
             unset PIDS[$pid];
         fi
