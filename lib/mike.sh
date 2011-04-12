@@ -71,14 +71,14 @@ dieifnzero()
 
 strrpad()
 {
-    FULL_LENGTH=$(echo -n "$1" | wc -m)
-    PAD_LENGTH=$2
-    PAD_CHAR=$3
+    local FULL_LENGTH=$(echo -n "$1" | wc -m)
+    local PAD_LENGTH=$2
+    local PAD_CHAR=$3
 
     if [ "$FULL_LENGTH" -lt "$PAD_LENGTH" ]; then
-        REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
-        S_PAD=$(printf "%${REMAINDER}s")
-        PAD=${S_PAD// /$PAD_CHAR}
+        local REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
+        local S_PAD=$(printf "%${REMAINDER}s")
+        local PAD=${S_PAD// /$PAD_CHAR}
 
         if [ "$PAD_CHAR" != "" ]; then
             PAD=${S_PAD// /$PAD_CHAR}
@@ -96,13 +96,13 @@ strrpad()
 
 strlpad()
 {
-    FULL_LENGTH=$(echo -n "$1" | wc -m)
-    PAD_LENGTH=$2
-    PAD_CHAR=$3
+    local FULL_LENGTH=$(echo -n "$1" | wc -m)
+    local PAD_LENGTH=$2
+    local PAD_CHAR=$3
 
     if [ "$FULL_LENGTH" -lt "$PAD_LENGTH" ]; then
-        REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
-        S_PAD=$(printf "%${REMAINDER}s")
+        local REMAINDER=$(($PAD_LENGTH - FULL_LENGTH))
+        local S_PAD=$(printf "%${REMAINDER}s")
 
         if [ "$PAD_CHAR" != "" ]; then
             PAD=${S_PAD// /$PAD_CHAR}
