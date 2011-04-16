@@ -36,8 +36,7 @@ EOT
     echo >&2 "$0 usage:"
     echo >&2 "  stream data into mike"
     echo >&2 ""
-    echo >&2 "   --detach       lauch jobs in detach mode"
-    echo >&2 "   --streams      number of parallel stream (imply --detach)"
+    echo >&2 "   --streams      number of parallel stream"
     echo >&2 "   --dirs         dirs by level (Default: 5,5,5,5)"
     echo >&2 "   --files        files by level (Default: 5,5,5,5)"
     echo >&2 "   --versioning   enable versioning (Default: No)"
@@ -47,7 +46,7 @@ EOT
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,detach,versioning,start: -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,versioning,start: -n "$0" -- $0 $@`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
@@ -63,7 +62,6 @@ REMAINDER=
 DIR_BY_LEVEL="5,5,5,5"
 FILE_BY_LEVEL="5,5,5,5"
 VERSIONING="false"
-DETACH=
 SLEEP_TIME=0.5
 
 while true ;
@@ -74,7 +72,6 @@ do
         --files)        FILE_BY_LEVEL="$2";     shift 2;;
         --start)        START="$2";             shift 2;;
         --versioning)   VERSIONING="true";      shift;;
-        --detach)       DETACH="true";          shift;;
         --)             shift;                  break;;
         -h|--help)      usage;                  exit 0;;
         *)              usage;                  exit 1;;
