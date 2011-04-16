@@ -104,7 +104,7 @@ declare -a PIDS
 
 if [ "$STREAMS" -gt "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
-        $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null 2>&1 &
+        $PSQL_FULL_CMD -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null 2>&1 &
         PIDS["$!"]="true"
         
         echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
@@ -128,13 +128,12 @@ fi
 
 if [ "$STREAMS" -eq "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
-        if [ -z "$DETACH" ]; then
-            $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);"
-        else
-            $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" 2> /dev/null &
-            PIDS["$!"]="true"
-            echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
-        fi
+        output=$($PSQL_FULL_CMD -c "SELECT * FROM __make_tree($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);")
+        dirs=$(echo "$output" | cut -d '|' -f2);
+        files=$(echo "$output" | cut -d '|' -f3);
+        xfiles=$(echo "$output" | cut -d '|' -f4);
+
+        echo "stream finished[$id_user]: directories = $dirs; files = $files; xfiles = $xfiles";
     done;
 fi
 
