@@ -78,6 +78,7 @@ done
 # -- results -------------------------------------------------------------------
 
 strrpad "-- test results " "40" "-"
+echo
 echo "Tests OK : $TESTS_OK"
 echo "Tests Failed : $TESTS_FAILED"
 
