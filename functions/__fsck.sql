@@ -5,7 +5,8 @@
 -- copyright: All rights reserved
 
 CREATE OR REPLACE FUNCTION mike.__fsck(
-    in_id_user      integer
+    in_id_user      integer,
+    in_dry_run      boolean DEFAULT false
 ) RETURNS void AS $__$
 
 DECLARE
@@ -319,6 +320,12 @@ BEGIN
                 id_inode    = v_directory.id_inode;
         END IF;
     END LOOP;
+
+    -- dry-run -----------------------------------------------------------------
+
+    IF in_dry_run THEN
+        RAISE query_canceled USING MESSAGE = 'THIS WAS A DRY RUN !';
+    END IF;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
