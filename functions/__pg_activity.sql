@@ -19,7 +19,7 @@ DROP FUNCTION IF EXISTS mike.__pg_activity(
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.__pg_activity(
-    datname         text DEFAULT NULL
+    in_datname      text DEFAULT NULL
 ) RETURNS SETOF __pg_activity_t AS $__$
 
 SELECT
