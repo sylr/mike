@@ -26,7 +26,6 @@ DECLARE
     v_id_xfile          bigint;
     v_id_root_directory bigint;
     v_id_directory      bigint;
-    v_start_level       bigint;
     v_i                 bigint;
     v_ij                bigint;
     v_ijk               bigint;
@@ -35,11 +34,18 @@ DECLARE
     v_md5               text;
     v_sha1              text;
     v_rand              integer;
+    v_rand_f            float;
     v_mimetype          smallint;
-    v_mimetypes         text[] := ARRAY['text/plain', 'image/jpeg', 'audio/x-flac', 'text/x-shellscript', 'video/x-matroska'];
     v_extension         text;
-    v_extensions        text[] := ARRAY['txt', 'jpg', 'flac', 'sh', 'mkv'];
     v_return            mike.__make_tree_t;
+    v_mimetypes         text[] := ARRAY['text/plain', 'text/x-perl', 'text/x-shellscript'] ||
+                                  ARRAY['image/jpeg', 'image/png', 'image/tiff', 'image/svg+xml'] ||
+                                  ARRAY['audio/x-flac', 'audio/mpeg', 'audio/x-wav'] ||
+                                  ARRAY['video/x-matroska', 'video/x-flv', 'video/x-msvideo'];
+    v_extensions        text[] := ARRAY['txt', 'pl', 'sh'] ||
+                                  ARRAY['jpg', 'png', 'tiff', 'svg'] ||
+                                  ARRAY['flac', 'mp3', 'wav'] ||
+                                  ARRAY['mkv', 'flv', 'avi'];
 BEGIN
     IF array_length(in_dirs_by_level, 1) != array_length(in_files_by_level, 1) AND
        array_length(in_dirs_by_level, 1)  < array_length(in_files_by_level, 1) THEN
@@ -75,12 +81,13 @@ BEGIN
                 IF in_files_by_level[v_i] IS NOT NULL AND
                    in_files_by_level[v_i] > 0 THEN
                     FOR v_ijkl IN SELECT generate_series(0, in_files_by_level[v_i] - 1) LOOP
-                        v_rand      := (random() * 1000)::int;
-                        v_size      := (random() * 1024 * 1024 * 17)::bigint;
-                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand  % 5 + 1]);
-                        v_extension := v_extensions[v_rand  % 5 + 1];
-                        v_md5       := encode(digest(random()::text, 'md5'), 'hex');
-                        v_sha1      := encode(digest(random()::text, 'sha1'), 'hex');
+                        v_rand_f    := random();
+                        v_rand      := (v_rand_f * 1000)::int;
+                        v_size      := (v_rand_f * 1024 * 1024 * 17)::bigint;
+                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand  % array_length(v_mimetypes, 1) + 1]);
+                        v_extension := v_extensions[v_rand  % array_length(v_mimetypes, 1) + 1];
+                        v_md5       := encode(digest(v_rand_f::text, 'md5'), 'hex');
+                        v_sha1      := encode(digest(v_rand_f::text, 'sha1'), 'hex');
 
                         SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-n' || v_i::text || '-' || v_ijkl::text || '.' || v_extension);
                         SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
@@ -89,10 +96,11 @@ BEGIN
                         v_return.files  := v_return.files + 1;
                         v_return.xfiles := v_return.xfiles + 1;
 
-                        IF in_versioning AND random()::integer = 1 THEN
-                            v_size      := (random() * 1024 * 1024 * 17)::bigint;
-                            v_md5       := encode(digest(random()::text, 'md5'), 'hex');
-                            v_sha1      := encode(digest(random()::text, 'sha1'), 'hex');
+                        IF in_versioning AND v_rand_f::integer = 1 THEN
+                            v_rand_f    := random();
+                            v_size      := (v_rand_f * 1024 * 1024 * 17)::bigint;
+                            v_md5       := encode(digest(v_rand_f::text, 'md5'), 'hex');
+                            v_sha1      := encode(digest(v_rand_f::text, 'sha1'), 'hex');
 
                             SELECT out_id_xfile INTO v_id_xfile FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
                             PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
