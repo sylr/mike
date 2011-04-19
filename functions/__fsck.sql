@@ -4,10 +4,18 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
+DROP TYPE IF EXISTS mike.__fsck_t CASCADE;
+
+CREATE TYPE mike.__fsck_t AS (
+    id_user         integer,
+    doomed_dirs     bigint,
+    doomed_files    bigint
+);
+
 CREATE OR REPLACE FUNCTION mike.__fsck(
     in_id_user      integer,
     in_dry_run      boolean DEFAULT false
-) RETURNS void AS $__$
+) RETURNS mike.__fsck_t AS $__$
 
 DECLARE
     v_inode             record;
@@ -20,9 +28,17 @@ DECLARE
     v_record2           record;
     v_doomed            boolean;
     v_done              boolean;
+    a_id_inode_doomed   bigint[] := ARRAY[]::bigint[];
+    v_return            mike.__fsck_t;
 BEGIN
     RAISE NOTICE 'fscking tree of user %', in_id_user;
     RAISE NOTICE 'Be patient, this can take a while';
+
+    -- init --------------------------------------------------------------------
+
+    v_return.id_user        := in_id_user;
+    v_return.doomed_dirs    := 0;
+    v_return.doomed_files   := 0;
 
     -- locks --------------------------------------------------------------------
 
@@ -118,6 +134,17 @@ BEGIN
                 WHERE
                     id_user     = in_id_user AND
                     id_inode    = v_inode.id_inode;
+
+                -- return
+                IF (a_id_inode_doomed && ARRAY[v_inode.id_inode]) = false THEN
+                    IF v_inode.id_mimetype = 0 THEN
+                        v_return.doomed_dirs := v_return.doomed_dirs + 1;
+                    ELSE
+                        v_return.doomed_files := v_return.doomed_files + 1;
+                    END IF;
+
+                    a_id_inode_doomed := a_id_inode_doomed || v_inode.id_inode;
+                END IF;
             END IF;
         END LOOP;
 
@@ -183,6 +210,12 @@ BEGIN
             WHERE
                 id_user     = in_id_user AND
                 id_inode    = v_file.id_inode;
+
+            -- return
+            IF (a_id_inode_doomed && ARRAY[v_file.id_inode]) = false THEN
+                v_return.doomed_files   := v_return.doomed_files + 1;
+                a_id_inode_doomed       := a_id_inode_doomed || v_file.id_inode;
+            END IF;
         END IF;
     END LOOP;
 
@@ -318,6 +351,12 @@ BEGIN
             WHERE
                 id_user     = in_id_user AND
                 id_inode    = v_directory.id_inode;
+
+            -- return
+            IF (a_id_inode_doomed && ARRAY[v_directory.id_inode]) = false THEN
+                v_return.doomed_dirs    := v_return.doomed_dirs + 1;
+                a_id_inode_doomed       := a_id_inode_doomed || v_directory.id_inode;
+            END IF;
         END IF;
     END LOOP;
 
@@ -326,6 +365,8 @@ BEGIN
     IF in_dry_run THEN
         RAISE query_canceled USING MESSAGE = 'THIS WAS A DRY RUN !';
     END IF;
+
+    RETURN v_return;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
