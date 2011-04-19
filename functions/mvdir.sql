@@ -57,7 +57,7 @@ BEGIN
 
     -- update path and treepath of in_id_inode children
     UPDATE mike.inode SET
-        treepath            = replace(treepath::text, v_old_directory_parent.treepath::text, v_new_directory_parent.treepath::text)::ltree,
+        treepath            = replace(treepath::text, v_old_directory_parent.treepath::text || '.', v_new_directory_parent.treepath::text || '.')::ltree,
         path                = v_new_directory_parent.path || substr(path, length(v_old_directory_parent.path) + 1)
     WHERE
         id_user = in_id_user
