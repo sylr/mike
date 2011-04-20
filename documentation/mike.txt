@@ -20,7 +20,8 @@ SYNOPSIS
     [DATABASE_HOST=<database_host>]
     [DATABASE_PORT=<database_port>]
 'make'
-'make' [test|install|clean]
+'make' [install|test|clean]
+'make' [drop-database|drop-schema|dev-volumes]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
 

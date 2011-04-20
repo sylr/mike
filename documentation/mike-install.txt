@@ -20,7 +20,8 @@ SYNOPSIS
     [DATABASE_HOST=<database_host>]
     [DATABASE_PORT=<database_port>]
 'make'
-'make' [test|install|clean]
+'make' [install|test|clean]
+'make' [drop-database|drop-schema|dev-volumes]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
 
@@ -42,12 +43,14 @@ sylvain@kheops:~/$ cd mike.git
 Debian requirements
 -------------------
   - build-essential
+  - gcc
   - postgresql-8.4
+  - postgresql-server-dev-8.4
   - postgresql-client-8.4
   - postgresql-contrib-8.4
   - postgresql-plperl-8.4
   - libpq-dev
-  - asciidoc 
+  - asciidoc
   - apgdiff (optional)
   - git-core (optional, for development)
   - gource (optional, for development)
@@ -170,6 +173,9 @@ make targets
 ------------
 'clean'::
     Remove all file not tracked in the repository.
+
+'dev-volumes'::
+    Insert dumb volumes for tests purpose.
 
 'doc'::
     Generate both html and man documentation.

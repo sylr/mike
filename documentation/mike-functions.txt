@@ -22,11 +22,13 @@ SYNOPSIS
  __get_least_used_active_volume | OUT out_id_volume smallint
  __get_mimetype                 | in_id_mimetype smallint
  __make_lot_of_directories      | in_id_user integer, in_level integer, in_nb_by_level integer
- __make_tree                    | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[]
- __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer
+ __make_tree                    | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
+ __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
  __natsort                      | in_text text
  __perform                      | in_sql text
+ __pg_activity                  | in_datname text
+ __pg_locks                     |
  __set_conf                     | in_key text, in_value text
  adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
  ls                             | in_id_user integer, in_id_inode bigint
@@ -91,9 +93,13 @@ FUNCTIONS
  +
 (text) __natsort(in_text)::
  +
-    Rewrite input to do natural sorting.
- +
- +
+    Rewrite input to do natural sorting. It left pads any suite of numbers with 0
+    in order to be able to sort string naturally.
+-------------------
+__natsort('file-15.sql')   = 'file-000000000015.sql'
+__natsort('file-1589.sql') = 'file-000000001589.sql'
+-------------------
+
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
  +
     Add a user.
@@ -101,25 +107,25 @@ FUNCTIONS
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint)::
  +
-    List a directory.
+    List a directory with natsorting.
     See linkmike:mike-types[3].
  +
  +
-(inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_limit , in_offset)::
+(inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_limit, in_offset)::
  +
-    List a directory with paging.
+    List a directory with natsorting and paging.
     See linkmike:mike-types[3].
  +
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_order_by)::
  +
-    List a directory with sorting.
+    List a directory with custom sorting.
     See linkmike:mike-types[3].
  +
  +
-(inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_order_by, in_limit , in_offset)::
+(inode_full_t) ls(in_id_user integer, in_id_inode bigint, in_order_by, in_limit, in_offset)::
  +
-    List a directory with sorting and paging.
+    List a directory with custom sorting and paging.
     See linkmike:mike-types[3].
  +
  +
