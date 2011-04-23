@@ -26,6 +26,8 @@ SYNOPSIS
  __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
  __natsort                      | in_text text
+ __natsort_asm                  | in_text text
+ __natsort_pl                   | in_text text
  __perform                      | in_sql text
  __set_conf                     | in_key text, in_value text
  adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
@@ -91,7 +93,27 @@ FUNCTIONS
  +
 (text) __natsort(in_text)::
  +
-    Rewrite input to do natural sorting.
+    Rewrite input to do natural sorting. It left pads any suite of numbers with 0
+    in order to be able to sort string naturally.
+-------------------
+__natsort('file-15.sql')   = 'file-000000000015.sql'
+__natsort('file-1589.sql') = 'file-000000001589.sql'
+-------------------
+
+(text) __natsort_asm(in_text)::
+ +
+    natsort version written in ASM.
+ +
+ +
+(text) __natsort_pl(in_text)::
+ +
+    natsort version written in Perl.
+ +
+ +
+ +
+(text) __natsort_pl(in_text)::
+ +
+    natsort version written in Perl.
  +
  +
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
