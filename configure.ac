@@ -158,6 +158,12 @@ MIKE_PARSE_WITH(gcc)
 AC_PATH_PROG([GCC], [gcc], , [$GCC_DIR])
 MIKE_ERROR_IF_EMPTY([$GCC], [gcc not found])
 
+# looking for gcc
+MIKE_ARG_SET_PATH(nasm)
+MIKE_PARSE_WITH(nasm)
+AC_PATH_PROG([NASM], [nasm], , [$NASM_DIR])
+MIKE_ERROR_IF_EMPTY([$NASM], [nasm not found])
+
 # looking for grep
 MIKE_ARG_SET_PATH(grep)
 MIKE_PARSE_WITH(grep)
@@ -265,6 +271,14 @@ AX_COMPARE_VERSION(
 PG_SHAREDIR=$($PG_CONFIG | $GREP "SHAREDIR" | $SED "s#SHAREDIR = \(\.*\)#\1#i")
 AC_SUBST(PG_SHAREDIR)
 
+# postgresql includedir server
+PG_INCLUDEDIR_SERVER=$($PG_CONFIG --includedir-server)
+AC_SUBST(PG_INCLUDEDIR_SERVER)
+
+# postgresql includedir server
+PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
+AC_SUBST(PG_PKGLIBDIR_SERVER)
+
 AC_CHECK_FILE(
     [$PG_SHAREDIR/contrib/ltree.sql],
     [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree.sql],
@@ -351,6 +365,18 @@ AC_ARG_ENABLE(
 )
 
 AC_SUBST(NO_VOLUME_LOCK)
+
+AC_ARG_ENABLE(
+    [dev-mode],
+    AS_HELP_STRING([--enable-dev-mode], [enable development mode]),
+    [DEV_MODE=$enable_dev_mode],
+    [DEV_MODE=no]
+)
+
+AC_SUBST(DEV_MODE)
+
+AC_ARG_VAR(NATSORT_PADDING, [padding size for natsorting (default: 8)])
+MIKE_IF_EMPTY_DEFAULT([NATSORT_PADDING], [8])
 
 # -- output --------------------------------------------------------------------
 
