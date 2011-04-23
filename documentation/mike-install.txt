@@ -21,6 +21,7 @@ SYNOPSIS
     [DATABASE_PORT=<database_port>]
 'make'
 'make' [install|test|clean]
+'make' [def-functions|dev-volumes]
 'make' [drop-database|drop-schema|dev-volumes]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
@@ -94,6 +95,10 @@ configure options
     enable mike schema creation into DATABASE_NAME. If the schema already exists
     it will be dropped and re-created.
 
+--enable-dev-mode::
+    do not install mike.so in postgresql's package lib directory but let it where
+    it is built. Useful when developing.
+
 --enable-no-volume-lock::
     creating a xfile using xtouch() update the virtual size of the volume chosen.
     Using this option will prevent virtual size update which will enable 'long
@@ -138,6 +143,18 @@ configure options
 --with-docbook2pdf=<path>::
     specify docbook2pdf path.
 
+--with-dropdb=<path>::
+    specify dropdb path.
+
+--with-gcc=<path>::
+    specify gcc path.
+
+--with-make=<path>::
+    specify make path.
+
+--with-nasm=<path>::
+    specify nasm path.
+
 --with-git=<path>::
     specify git path.
 
@@ -173,6 +190,9 @@ make targets
 ------------
 'clean'::
     Remove all file not tracked in the repository.
+
+'dev-functions'::
+    Rebuild and install functions.
 
 'dev-volumes'::
     Insert dumb volumes for tests purpose.
@@ -231,6 +251,12 @@ ENABLE_CREATE_DATABASE=[Yes|No]::
 ENABLE_CREATE_SCHEMA=[Yes|No]::
     If set to 'Yes', will behave like if '--enable-create-schema' had been specified
     to 'configure'.
+
+CFLAGS::
+    Overwrite default used flags for gcc.
+
+NASMFLAGS::
+    Overwrite default used flags for nasm.
 
 Authors
 -------

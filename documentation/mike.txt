@@ -21,6 +21,7 @@ SYNOPSIS
     [DATABASE_PORT=<database_port>]
 'make'
 'make' [install|test|clean]
+'make' [def-functions|dev-volumes]
 'make' [drop-database|drop-schema|dev-volumes]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
