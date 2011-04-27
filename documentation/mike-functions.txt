@@ -11,6 +11,7 @@ SYNOPSIS
               Name              |                                                   Argument data types
 --------------------------------+-------------------------------------------------------------------------------------------------------------------------
  __check_order_by_cond          | in_order_by text, in_relname text
+ __fsck                         | in_id_user integer, in_dry_run boolean
  __get_conf                     | in_key text, in_mandatory boolean, in_default text
  __get_conf_array               | in_key text, in_mandatory boolean, in_default text[]
  __get_conf_bigint              | in_key text, in_mandatory boolean, in_default bigint
@@ -60,6 +61,11 @@ LOW LEVEL FUNCTIONS
 (void) __check_order_by_cond(in_order_by text, in_relname text)::
  +
     Check that a order clause contains columns owned by 'in_relname'.
+ +
+ +
+(record) __fsck(in_id_user integer, in_dry_run boolean)::
+ +
+    Check that inodes metadata are not doomed, otherwise rebuild it.
  +
  +
 (mixed) \__get_conf[_*](in_key text, in_mandatory boolean, in_default mixed)::
