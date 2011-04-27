@@ -4,9 +4,18 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
+DROP TYPE IF EXISTS mike.__fsck_t CASCADE;
+
+CREATE TYPE mike.__fsck_t AS (
+    id_user         integer,
+    doomed_dirs     bigint,
+    doomed_files    bigint
+);
+
 CREATE OR REPLACE FUNCTION mike.__fsck(
-    in_id_user      integer
-) RETURNS void AS $__$
+    in_id_user      integer,
+    in_dry_run      boolean DEFAULT false
+) RETURNS mike.__fsck_t AS $__$
 
 DECLARE
     v_inode             record;
@@ -19,11 +28,19 @@ DECLARE
     v_record2           record;
     v_doomed            boolean;
     v_done              boolean;
+    a_id_inode_doomed   bigint[] := ARRAY[]::bigint[];
+    v_return            mike.__fsck_t;
 BEGIN
     RAISE NOTICE 'fscking tree of user %', in_id_user;
-    RAISE NOTICE 'Be patient, this can take a while';
+    RAISE NOTICE 'be patient, this can take a while';
 
-    -- locks --------------------------------------------------------------------
+    -- init --------------------------------------------------------------------
+
+    v_return.id_user        := in_id_user;
+    v_return.doomed_dirs    := 0;
+    v_return.doomed_files   := 0;
+
+    -- locks -------------------------------------------------------------------
 
     PERFORM id_inode FROM mike.as_file_xfile WHERE id_inode IN (SELECT id_inode FROM mike.file WHERE id_user = in_id_user) FOR UPDATE;
     PERFORM id_inode FROM mike.inode WHERE id_user = in_id_user FOR UPDATE;
@@ -44,6 +61,7 @@ BEGIN
                     (v_done = true  AND id_inode_parent = ANY (a_id_inode_parent)) OR
                     (v_done = false AND id_inode_parent IS NULL)
                 )
+            ORDER BY id_inode
         LOOP
             v_doomed := false;
 
@@ -51,7 +69,7 @@ BEGIN
             IF v_inode.id_inode_parent IS NULL THEN
                 -- path
                 IF v_inode.path != ('/' || v_inode.name) THEN
-                    RAISE WARNING 'inode % path is doomed (''%'' instead of ''%'')',
+                    RAISE WARNING 'inode % path is doomed ''%'' instead of ''%''',
                         v_inode.id_inode,
                         v_inode.path,
                         '/' || v_inode.name;
@@ -62,7 +80,7 @@ BEGIN
 
                 -- treepath
                 IF v_inode.treepath != v_inode.id_inode::text::ltree THEN
-                    RAISE WARNING 'inode % treepath is doomed (''%'' instead of ''%'')',
+                    RAISE WARNING 'inode % treepath is doomed ''%'' instead of ''%''',
                         v_inode.id_inode,
                         v_inode.treepath,
                         v_inode.id_inode::text;
@@ -88,7 +106,7 @@ BEGIN
 
                 -- path
                 IF v_inode.path != v_inode2.path THEN
-                    RAISE WARNING 'inode % path is doomed (''%'' instead of ''%'')',
+                    RAISE WARNING 'inode % path is doomed ''%'' instead of ''%''',
                         v_inode.id_inode,
                         v_inode.path,
                         v_inode2.path;
@@ -99,7 +117,7 @@ BEGIN
 
                 -- treepath
                 IF v_inode.treepath != v_inode2.treepath THEN
-                    RAISE WARNING 'inode % treepath is doomed (''%'' instead of ''%'')',
+                    RAISE WARNING 'inode % treepath is doomed ''%'' instead of ''%''',
                         v_inode.id_inode,
                         v_inode.treepath,
                         v_inode2.treepath;
@@ -117,6 +135,17 @@ BEGIN
                 WHERE
                     id_user     = in_id_user AND
                     id_inode    = v_inode.id_inode;
+
+                -- return
+                IF (a_id_inode_doomed && ARRAY[v_inode.id_inode]) = false THEN
+                    IF v_inode.id_mimetype = 0 THEN
+                        v_return.doomed_dirs := v_return.doomed_dirs + 1;
+                    ELSE
+                        v_return.doomed_files := v_return.doomed_files + 1;
+                    END IF;
+
+                    a_id_inode_doomed := a_id_inode_doomed || v_inode.id_inode;
+                END IF;
             END IF;
         END LOOP;
 
@@ -151,12 +180,13 @@ BEGIN
         WHERE
             id_user = in_id_user AND
             state   = 0
+        ORDER BY id_inode
     LOOP
         v_doomed := false;
 
         -- size
         IF v_file.size != v_file.calculated_size THEN
-            RAISE WARNING 'file % size is doomed (% instead of %)',
+            RAISE WARNING 'file % size is doomed % instead of %',
                 v_file.id_inode,
                 v_file.size,
                 v_file.calculated_size;
@@ -166,7 +196,7 @@ BEGIN
 
         -- versioning size
         IF v_file.versioning_size != v_file.calculated_versioning_size THEN
-            RAISE WARNING 'file % versioning size is doomed (% instead of %)',
+            RAISE WARNING 'file % versioning size is doomed % instead of %',
                 v_file.id_inode,
                 v_file.versioning_size,
                 v_file.calculated_versioning_size;
@@ -182,6 +212,12 @@ BEGIN
             WHERE
                 id_user     = in_id_user AND
                 id_inode    = v_file.id_inode;
+
+            -- return
+            IF (a_id_inode_doomed && ARRAY[v_file.id_inode]) = false THEN
+                v_return.doomed_files   := v_return.doomed_files + 1;
+                a_id_inode_doomed       := a_id_inode_doomed || v_file.id_inode;
+            END IF;
         END IF;
     END LOOP;
 
@@ -206,7 +242,7 @@ BEGIN
         FROM mike.file
         WHERE
             id_user = in_id_user AND
-            state  = 0 AND
+            state = 0 AND
             id_inode_parent = v_directory.id_inode;
 
         -- file count
@@ -256,7 +292,7 @@ BEGIN
 
         -- inner size
         IF v_directory.inner_size != v_record2.calculated_inner_size THEN
-            RAISE WARNING 'directory % inner size is doomed (% instead of %)',
+            RAISE WARNING 'directory % inner size is doomed % instead of %',
                 v_directory.id_inode,
                 v_directory.inner_size,
                 v_record2.calculated_inner_size;
@@ -266,7 +302,7 @@ BEGIN
 
         -- inner versioning size
         IF v_directory.inner_versioning_size != v_record2.calculated_inner_versioning_size THEN
-            RAISE WARNING 'directory % inner versioning size is doomed (% instead of %)',
+            RAISE WARNING 'directory % inner versioning size is doomed % instead of %',
                 v_directory.id_inode,
                 v_directory.inner_versioning_size,
                 v_record2.calculated_inner_versioning_size;
@@ -276,7 +312,7 @@ BEGIN
 
         -- dir count
         IF v_directory.dir_count != v_record2.calculated_dir_count THEN
-            RAISE WARNING 'directory % dir count is doomed (% instead of %)',
+            RAISE WARNING 'directory % dir count is doomed % instead of %',
                 v_directory.id_inode,
                 v_directory.dir_count,
                 v_record2.calculated_dir_count;
@@ -286,7 +322,7 @@ BEGIN
 
         -- inner dir count
         IF v_directory.inner_dir_count != v_record2.calculated_inner_dir_count THEN
-            RAISE WARNING 'directory % inner dir count is doomed (% instead of %)',
+            RAISE WARNING 'directory % inner dir count is doomed % instead of %',
                 v_directory.id_inode,
                 v_directory.inner_dir_count,
                 v_record2.calculated_inner_dir_count;
@@ -296,7 +332,7 @@ BEGIN
 
         -- inner file count
         IF v_directory.inner_file_count != v_record2.calculated_inner_file_count THEN
-            RAISE WARNING 'directory % inner file count is doomed (% instead of %)',
+            RAISE WARNING 'directory % inner file count is doomed % instead of %',
                 v_directory.id_inode,
                 v_directory.inner_file_count,
                 v_record2.calculated_inner_file_count;
@@ -317,8 +353,27 @@ BEGIN
             WHERE
                 id_user     = in_id_user AND
                 id_inode    = v_directory.id_inode;
+
+            -- return
+            IF (a_id_inode_doomed && ARRAY[v_directory.id_inode]) = false THEN
+                v_return.doomed_dirs    := v_return.doomed_dirs + 1;
+                a_id_inode_doomed       := a_id_inode_doomed || v_directory.id_inode;
+            END IF;
         END IF;
     END LOOP;
+
+    -- dry-run -----------------------------------------------------------------
+
+    IF in_dry_run THEN
+        RAISE query_canceled USING MESSAGE = 'THIS WAS A DRY RUN !';
+    END IF;
+
+    RETURN v_return;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
+
+COMMENT ON FUNCTION mike.__fsck(
+    in_id_user      integer,
+    in_dry_run      boolean
+) IS 'check and rebuild inode metadata of an user tree';
