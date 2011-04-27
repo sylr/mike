@@ -35,7 +35,9 @@ GIT                     = @GIT@
 GITSTATS                = @GITSTATS@
 GOURCE                  = @GOURCE@
 GREP                    = @GREP@
+INSTALL                 = @INSTALL@
 MAKE                    = @MAKE@
+NASM                    = @NASM@
 PG_CONFIG               = @PG_CONFIG@
 PG_DUMP                 = @PG_DUMP@
 PSQL                    = @PSQL@
@@ -48,6 +50,8 @@ TEE                     = @TEE@
 TEST                    = @TEST@
 WHICH                   = @WHICH@
 
+CFLAGS                 ?= -Wall -O2
+NASMFLAGS              ?= -f elf -O2
 SLEEP_TIME              = @SLEEP_TIME@
 SLEEP_TIME             ?= 0.1
 PSQL_EXTRA              = --no-psqlrc -v ON_ERROR_STOP=on
@@ -62,13 +66,59 @@ ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
+PG_INCLUDEDIR_SERVER    = @PG_INCLUDEDIR_SERVER@
+PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
 
-# -- cpp defines ---------------------------------------------------------------
+# -- database schema -----------------------------------------------------------
+
+# include database files list
+include types/types.mak
+include functions/functions.mak
+include functions/c/c.mak
+include functions/asm/asm.mak
+include triggers/triggers.mak
+include indexes/indexes.mak
+include data/data.mak
+
+TARGET_FILE             = mike.o
+DATABASE_FILES          = mike.sql
+DATABASE_FILES         += $(patsubst %, types/%,        $(DATABASE_TYPES))
+DATABASE_FILES         += $(patsubst %, functions/%,    $(DATABASE_FUNCTIONS))
+DATABASE_FILES         += $(patsubst %, triggers/%,     $(DATABASE_TRIGGERS))
+DATABASE_FILES         += $(patsubst %, indexes/%,      $(DATABASE_INDEXES))
+DATABASE_FILES         += $(patsubst %, data/%,         $(DATABASE_DATA))
+DATABASE_C_PATTERN      = functions/c/%.c
+DATABASE_C_O_PATTERN    = functions/c/%.o
+DATABASE_ASM_PATTERN    = functions/asm/%.asm
+DATABASE_ASM_O_PATTERN  = functions/asm/%.o
+DATABASE_C_FILES        = $(patsubst %.c,   $(DATABASE_C_PATTERN),      $(DATABASE_C_FUNCTIONS))
+DATABASE_C_O            = $(patsubst %.c,   $(DATABASE_C_O_PATTERN),    $(DATABASE_C_FUNCTIONS))
+DATABASE_ASM_FILES      = $(patsubst %.asm, $(DATABASE_ASM_PATTERN),    $(DATABASE_ASM_FUNCTIONS))
+DATABASE_ASM_O          = $(patsubst %.asm, $(DATABASE_ASM_O_PATTERN),  $(DATABASE_ASM_FUNCTIONS))
+DATABASE_SO             = functions/mike.so
+
+ifeq ($(DEV_MODE),yes)
+DATABASE_INSTALLED_SO   = $(PG_PKGLIBDIR_SERVER)/mike-$(MIKE_VERSION).so
+else
+DATABASE_INSTALLED_SO   = functions/mike-$(MIKE_VERSION).so
+endif
+
+# -- custom files --------------------------------------------------------------
+
+MIKE_VERSION_FILE       = MIKE_VERSION_FILE
+MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
+MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
+DRY_RUN_LOG             = dry-run.log
+INSTALL_LOG             = install.log
+
+# -- gcc defines ---------------------------------------------------------------
 
 TREE_MAX_DEPTH      = @TREE_MAX_DEPTH@
 INODE_RAND_COLUMN   = @INODE_RAND_COLUMN@
 NO_ATIME            = @NO_ATIME@
 NO_VOLUME_LOCK      = @NO_VOLUME_LOCK@
+NATSORT_PADDING     = @NATSORT_PADDING@
+DEV_MODE            = @DEV_MODE@
 
 ifneq ($(TREE_MAX_DEPTH),no)
     ifneq ($(TREE_MAX_DEPTH),yes)
@@ -90,30 +140,12 @@ ifeq ($(NO_VOLUME_LOCK),yes)
     DEFINES += -D NO_VOLUME_LOCK
 endif
 
-# -- database schema -----------------------------------------------------------
+ifeq ($(DEV_MODE),yes)
+    DEFINES += -D DEV_MODE
+endif
 
-# include database files list
-include types/types.mak
-include functions/functions.mak
-include triggers/triggers.mak
-include indexes/indexes.mak
-include data/data.mak
-
-TARGET_FILE              = mike.o
-DATABASE_FILES           = mike.sql
-DATABASE_FILES          += $(patsubst %, types/%,       $(DATABASE_TYPES))
-DATABASE_FILES          += $(patsubst %, functions/%,   $(DATABASE_FUNCTIONS))
-DATABASE_FILES          += $(patsubst %, triggers/%,    $(DATABASE_TRIGGERS))
-DATABASE_FILES          += $(patsubst %, indexes/%,     $(DATABASE_INDEXES))
-DATABASE_FILES          += $(patsubst %, data/%,        $(DATABASE_DATA))
-
-# -- custom files --------------------------------------------------------------
-
-MIKE_VERSION_FILE       = MIKE_VERSION_FILE
-MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
-MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
-DRY_RUN_LOG             = dry-run.log
-INSTALL_LOG             = install.log
+DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
+DEFINES += -D DATABASE_INSTALLED_SO="'$(shell pwd)/$(DATABASE_INSTALLED_SO)'"
 
 # -- tests ---------------------------------------------------------------------
 
@@ -205,8 +237,31 @@ info:
 	    $(ECHO) -n "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME); \
 	fi
 
-$(DATABASE_FILES) :
-	@$(ECHO) '    ' LINK $@; $(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+$(DATABASE_FILES): $(DATABASE_INSTALLED_SO)
+	@$(ECHO) '    ' LINK $@;
+	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+
+# -- c files -------------------------------------------------------------------
+
+$(DATABASE_INSTALLED_SO) : $(DATABASE_SO)
+	@$(ECHO) '    ' INSTALL $<
+	@$(INSTALL) -T $< $@
+	@$(SLEEP) $(SLEEP_TIME)
+
+$(DATABASE_SO) : $(DATABASE_ASM_O) $(DATABASE_C_O)
+	@$(ECHO) '    ' LINK TO $@
+	@$(GCC) -shared -Wall -O2 -o $@ $^ $(DEFINES)
+	@$(SLEEP) $(SLEEP_TIME)
+
+$(DATABASE_C_O_PATTERN) : $(DATABASE_C_PATTERN)
+	@$(ECHO) '    ' GCC $<
+	@$(GCC) -fpic -Wall -O2 -c -o $@ $< -I $(PG_INCLUDEDIR_SERVER) $(DEFINES)
+	@$(SLEEP) $(SLEEP_TIME)
+
+$(DATABASE_ASM_O_PATTERN) : $(DATABASE_ASM_PATTERN)
+	@$(ECHO) '    ' NASM $<
+	@$(NASM) $(NASMFLAGS) -o $@ $<
+	@$(SLEEP) $(SLEEP_TIME)
 
 # -- dry-run -------------------------------------------------------------------
 
@@ -217,7 +272,7 @@ dry-run-sub: clean-target $(DATABASE_FILES) info
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
-	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
@@ -252,7 +307,7 @@ install-sub: clean-target $(DATABASE_FILES) info
 # create database
 ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
-	@$(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
+	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
@@ -298,38 +353,31 @@ drop-functions:
 
 # -- clean ---------------------------------------------------------------------
 
-clean:
-ifneq ($(GIT),)
-	@$(GIT) clean -fdx
-else
-	@$(MAKE) --no-print-directory clean-no-git $(MAKEFLAGS)
-endif
-
-clean-no-git: clean-doc
-	@$(ECHO) Removing $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE);
-	@$(ECHO) Removing $(MIKE_VERSION_FILE); $(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE);
-	@$(ECHO) Removing $(MIKE_TAG_DIFF_FILE); $(RM) $(RM_EXTRA) $(MIKE_TAG_DIFF_FILE);
-	@$(ECHO) Removing $(MIKE_HEAD_DIFF_FILE); $(RM) $(RM_EXTRA) $(MIKE_HEAD_DIFF_FILE);
-	@$(ECHO) Removing Makefile; $(RM) $(RM_EXTRA) Makefile;
-	@$(ECHO) Removing configure; $(RM) $(RM_EXTRA) configure;
+clean: clean-doc
 	@$(ECHO) Removing config.log; $(RM) $(RM_EXTRA) config.log;
 	@$(ECHO) Removing config.status; $(RM) $(RM_EXTRA) config.status;
 	@$(ECHO) Removing autom4te.cache; $(RM) $(RM_EXTRA) autom4te.cache;
 	@$(ECHO) Removing dry-run.log; $(RM) $(RM_EXTRA) dry-run.log;
 	@$(ECHO) Removing install.log; $(RM) $(RM_EXTRA) install.log;
+	@$(ECHO) Removing c objects; $(RM) $(RM_EXTRA) functions/c/*.o;
+	@$(ECHO) Removing asm objects; $(RM) $(RM_EXTRA) functions/asm/*.o;
+	@$(ECHO) Removing shared object; $(RM) $(RM_EXTRA) $(DATABASE_SO);
+
+clean-git: clean-doc
+	@$(GIT) clean -fdx
 
 # -- development ---------------------------------------------------------------
 
 dev-functions: $(DATABASE_FUNCTIONS)
 
-$(DATABASE_FUNCTIONS):
-	@$(ECHO) '    ' CPP $@;
+$(DATABASE_FUNCTIONS): $(DATABASE_INSTALLED_SO)
+	@$(ECHO) '    ' GCC $@;
 	@$(GCC) -x c -E "functions/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
-	@$(ECHO) '    ' CPP $@;
+	@$(ECHO) '    ' GCC $@;
 	@$(GCC) -x c -E "triggers/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
 
 dev-volumes:

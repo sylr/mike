@@ -26,6 +26,8 @@ SYNOPSIS
  __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
  __natsort                      | in_text text
+ __natsort_asm                  | in_text text
+ __natsort_pl                   | in_text text
  __perform                      | in_sql text
  __pg_activity                  | in_datname text
  __pg_locks                     |
@@ -100,6 +102,22 @@ __natsort('file-15.sql')   = 'file-000000000015.sql'
 __natsort('file-1589.sql') = 'file-000000001589.sql'
 -------------------
 
+(text) __natsort_asm(in_text)::
+ +
+    natsort version written in ASM.
+ +
+ +
+(text) __natsort_pl(in_text)::
+ +
+    natsort version written in Perl.
+ +
+ +
+ +
+(text) __natsort_pl(in_text)::
+ +
+    natsort version written in Perl.
+ +
+ +
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
  +
     Add a user.

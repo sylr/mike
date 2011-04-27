@@ -77,7 +77,11 @@ See linkmike:mike-contrib[7].
 
 Developers
 ----------
-Mike designer and main, currently unique, developer is Sylvain Rabot <sylvain@abstraction.fr>
+Mike designer, maintainer and main developer is Sylvain Rabot <sylvain@abstraction.fr>.
+
+Others developers :
+
+ - Jean-Yves Eckert <jean-yves.eckert@f-secure.com> (C, ASM)
 
 Authors
 -------
