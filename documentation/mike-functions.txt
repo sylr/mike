@@ -54,8 +54,8 @@ DESCRIPTION
 -----------
 List of all functions of Mike's SQL API.
 
-FUNCTIONS
----------
+LOW LEVEL FUNCTIONS
+-------------------
 
 (void) __check_order_by_cond(in_order_by text, in_relname text)::
  +
@@ -110,6 +110,10 @@ __natsort('file-1589.sql') = 'file-000000001589.sql'
 (text) __natsort_pl(in_text)::
  +
     natsort version written in Perl.
+
+HIGH LEVEL FUNCTIONS
+--------------------
+
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
  +
     Add a user.
