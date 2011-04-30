@@ -101,9 +101,9 @@ DATABASE_ASM_O          = $(patsubst %.asm, $(DATABASE_ASM_O_PATTERN),  $(DATABA
 DATABASE_SO             = functions/mike.so
 
 ifeq ($(DEV_MODE),yes)
-DATABASE_INSTALLED_SO   = $(PG_PKGLIBDIR_SERVER)/mike-$(MIKE_VERSION).so
-else
 DATABASE_INSTALLED_SO   = functions/mike-$(MIKE_VERSION).so
+else
+DATABASE_INSTALLED_SO   = $(PG_PKGLIBDIR_SERVER)/mike-$(MIKE_VERSION).so
 endif
 
 # -- custom files --------------------------------------------------------------
@@ -121,7 +121,6 @@ INODE_RAND_COLUMN   = @INODE_RAND_COLUMN@
 NO_ATIME            = @NO_ATIME@
 NO_VOLUME_LOCK      = @NO_VOLUME_LOCK@
 NATSORT_PADDING     = @NATSORT_PADDING@
-DEV_MODE            = @DEV_MODE@
 
 ifneq ($(TREE_MAX_DEPTH),no)
     ifneq ($(TREE_MAX_DEPTH),yes)
@@ -145,6 +144,9 @@ endif
 
 ifeq ($(DEV_MODE),yes)
     DEFINES += -D DEV_MODE
+    DEFINES += -D DATABASE_INSTALLED_SO="'$(shell pwd)/functions/mike-$(MIKE_VERSION).so'"
+else
+    DEFINES += -D DATABASE_INSTALLED_SO="'\$$libdir/mike-$(MIKE_VERSION).so'"
 endif
 
 ifeq ($(X86_64),yes)
@@ -152,7 +154,6 @@ ifeq ($(X86_64),yes)
 endif
 
 DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
-DEFINES += -D DATABASE_INSTALLED_SO="'$(shell pwd)/$(DATABASE_INSTALLED_SO)'"
 
 # -- tests ---------------------------------------------------------------------
 
