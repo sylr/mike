@@ -6,4 +6,6 @@
 
 DATABASE_C_FUNCTIONS    = mike.c
 DATABASE_C_FUNCTIONS   += __natsort.c
+ifneq ($(X86_64),yes)
 DATABASE_C_FUNCTIONS   += __natsort_asm.c
+endif

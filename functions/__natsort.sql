@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION mike.__natsort(
 #endif
 LANGUAGE C STRICT IMMUTABLE COST 1000;
 
+#ifndef X86_64
 CREATE OR REPLACE FUNCTION mike.__natsort_asm(
     in_text         text
 ) RETURNS text AS
@@ -23,3 +24,4 @@ CREATE OR REPLACE FUNCTION mike.__natsort_asm(
     DATABASE_INSTALLED_SO, '__natsort_asm'
 #endif
 LANGUAGE C STRICT IMMUTABLE COST 1000;
+#endif

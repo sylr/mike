@@ -378,6 +378,11 @@ AC_SUBST(DEV_MODE)
 AC_ARG_VAR(NATSORT_PADDING, [padding size for natsorting (default: 8)])
 MIKE_IF_EMPTY_DEFAULT([NATSORT_PADDING], [8])
 
+if test $(uname --processor) == "x86_64"; then
+    X86_64=yes
+    AC_SUBST(X86_64)
+fi
+
 # -- output --------------------------------------------------------------------
 
 AC_CONFIG_FILES([mike.conf Makefile test/Makefile documentation/Makefile])

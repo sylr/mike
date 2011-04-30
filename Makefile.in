@@ -69,6 +69,9 @@ PG_SHAREDIR             = @PG_SHAREDIR@
 PG_INCLUDEDIR_SERVER    = @PG_INCLUDEDIR_SERVER@
 PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
 
+X86_64                  = @X86_64@
+DEV_MODE                = @DEV_MODE@
+
 # -- database schema -----------------------------------------------------------
 
 # include database files list
@@ -142,6 +145,10 @@ endif
 
 ifeq ($(DEV_MODE),yes)
     DEFINES += -D DEV_MODE
+endif
+
+ifeq ($(X86_64),yes)
+    DEFINES += -D X86_64
 endif
 
 DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
