@@ -313,8 +313,8 @@ AC_ARG_VAR(DATABASE_PORT, [database port])
 AC_ARG_ENABLE(
     [create-schema],
     AS_HELP_STRING([--enable-create-schema], [create mike schema in DATABASE_NAME]),
-    [ENABLE_CREATE_SCHEMA=Yes],
-    [ENABLE_CREATE_SCHEMA=No]
+    [ENABLE_CREATE_SCHEMA=yes],
+    [ENABLE_CREATE_SCHEMA=no]
 )
 
 AC_SUBST(ENABLE_CREATE_SCHEMA)
@@ -322,8 +322,8 @@ AC_SUBST(ENABLE_CREATE_SCHEMA)
 AC_ARG_ENABLE(
     [create-database],
     AS_HELP_STRING([--enable-create-database], [create DATABASE_NAME, imply --enable-create-schema]),
-    [ENABLE_CREATE_DATABASE=Yes; ENABLE_CREATE_SCHEMA=Yes],
-    [ENABLE_CREATE_DATABASE=No]
+    [ENABLE_CREATE_DATABASE=yes; ENABLE_CREATE_SCHEMA=yes],
+    [ENABLE_CREATE_DATABASE=no]
 )
 
 AC_SUBST(ENABLE_CREATE_DATABASE)
@@ -350,7 +350,7 @@ AC_SUBST(INODE_RAND_COLUMN)
 
 AC_ARG_ENABLE(
     [no-atime],
-    AS_HELP_STRING([--enable-no-atime], [disable atime support (default: No)]),
+    AS_HELP_STRING([--enable-no-atime], [disable atime support (default: no)]),
     [NO_ATIME=$enable_no_atime],
     [NO_ATIME=no]
 )
@@ -359,7 +359,7 @@ AC_SUBST(NO_ATIME)
 
 AC_ARG_ENABLE(
     [no-volume-lock],
-    AS_HELP_STRING([--enable-no-volume-lock], [disable volume virtual size update support (default: No)]),
+    AS_HELP_STRING([--enable-no-volume-lock], [disable volume virtual size update support (default: no)]),
     [NO_VOLUME_LOCK=$enable_no_volume_lock],
     [NO_VOLUME_LOCK=no]
 )

@@ -270,7 +270,7 @@ dry-run::
 
 dry-run-sub: clean-target $(DATABASE_FILES) info
 # create database
-ifeq ($(ENABLE_CREATE_DATABASE),Yes)
+ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
@@ -285,7 +285,7 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
 endif
 # create schema
-ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
+ifeq ($(ENABLE_CREATE_SCHEMA),yes)
 	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
 	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING SCHEMA mike;
@@ -305,7 +305,7 @@ install:
 
 install-sub: clean-target $(DATABASE_FILES) info
 # create database
-ifeq ($(ENABLE_CREATE_DATABASE),Yes)
+ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
 	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
@@ -320,7 +320,7 @@ ifeq ($(ENABLE_CREATE_DATABASE),Yes)
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
 endif
 # create schema
-ifeq ($(ENABLE_CREATE_SCHEMA),Yes)
+ifeq ($(ENABLE_CREATE_SCHEMA),yes)
 	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
 	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING SCHEMA mike;
