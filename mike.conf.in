@@ -8,6 +8,10 @@
 
 prefix=@prefix@
 
+# -- misc ----------------------------------------------------------------------
+
+CONFIGURE_INVOCATION="@CONFIGURE_INVOCATION@"
+
 # -- binaries ------------------------------------------------------------------
 
 APGDIFF=@APGDIFF@

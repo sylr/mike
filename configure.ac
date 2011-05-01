@@ -9,6 +9,9 @@ AC_INIT([Mike], [v0.4.0-rc2], [sylvain@abstraction.fr], , [https://git.abstracti
 AC_COPYRIGHT([All rights reserved to Sylvain Rabot])
 AC_PREFIX_DEFAULT([$HOME])
 
+CONFIGURE_INVOCATION="$0 $*"
+AC_SUBST(CONFIGURE_INVOCATION)
+
 # -- macros --------------------------------------------------------------------
 
 AC_DEFUN([MIKE_ERROR_IF_EMPTY],
