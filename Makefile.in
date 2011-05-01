@@ -363,7 +363,7 @@ drop-database:
 	@$(ECHO) "DROP DATABASE IF EXISTS $(DATABASE_NAME);" | $(PSQL) -U $(DATABASE_USER) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT) -d postgres --quiet
 
 drop-schema:
-	@$(ECHO) '    ' DROPPING mike SCHEMA;
+	@$(ECHO) '    ' DROPPING mike SCHEMA IF EXISTS;
 	@$(ECHO) "DROP SCHEMA IF EXITS mike;" | $(PSQL_FULL_CMD)
 
 drop-functions:
