@@ -63,11 +63,14 @@ DATABASE_PORT           = @DATABASE_PORT@
 DATABASE_USER           = @DATABASE_USER@
 ENABLE_CREATE_DATABASE  = @ENABLE_CREATE_DATABASE@
 ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
+
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
 PG_SHAREDIR             = @PG_SHAREDIR@
 PG_INCLUDEDIR_SERVER    = @PG_INCLUDEDIR_SERVER@
 PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
+PG_VERSION              = @PG_VERSION@
+PG_VERSION_9            = @PG_VERSION_9@
 
 X86_64                  = @X86_64@
 DEV_MODE                = @DEV_MODE@
@@ -283,10 +286,17 @@ ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
+ifeq ($(PG_VERSION_9),yes)
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
+	@$(ECHO) "CREATE OR REPLACE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;
+	@$(ECHO) "CREATE OR REPLACE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+else
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
 	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+endif
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;
@@ -318,10 +328,17 @@ ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
+ifeq ($(PG_VERSION_9),yes)
+	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
+	@$(ECHO) "CREATE OR REPLACE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
+	@$(ECHO) '    ' CREATING LANGUAGE plperl;
+	@$(ECHO) "CREATE OR REPLACE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+else
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
 	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
+endif
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;

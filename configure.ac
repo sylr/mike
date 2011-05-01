@@ -260,12 +260,20 @@ AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
 
 # postgresql version
 PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | $SED "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
-AC_SUBST(PG_VERSION)
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [lt], [8.4.4],
     AC_MSG_ERROR([PostgreSQL version too old])
 )
+
+AC_SUBST(PG_VERSION)
+
+AX_COMPARE_VERSION(
+    [$PG_VERSION], [ge], [9.0.0],
+    [PG_VERSION_9=yes],
+    [PG_VERSION_9=no]
+)
+AC_SUBST(PG_VERSION_9)
 
 # postgresql sharedir
 PG_SHAREDIR=$($PG_CONFIG | $GREP "SHAREDIR" | $SED "s#SHAREDIR = \(\.*\)#\1#i")
