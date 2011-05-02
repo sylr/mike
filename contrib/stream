@@ -46,7 +46,7 @@ EOT
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,versioning,start: -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,streams:,dirs:,files:,versioning,start: -n "$0" -- "$0" "$@"`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";

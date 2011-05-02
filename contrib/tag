@@ -36,7 +36,7 @@ usage()
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,major,minor,maint,rc -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,major,minor,maint,rc -n "$0" -- "$0" "$@"`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";

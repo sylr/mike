@@ -32,7 +32,7 @@ usage()
 
 # ------------------------------------------------------------------------------
 
-ARGV=`getopt --long h,help,ref: -n "$0" -- $0 $@`
+ARGV=`getopt --long h,help,ref: -n "$0" -- "$0" "$@"`
 
 if [ "$?" -ne "0" ] ; then
     die "Terminating ...";

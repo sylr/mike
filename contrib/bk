@@ -44,7 +44,7 @@ EOT
 
 # ------------------------------------------------------------------------------
 
-ARGV=`$GETOPT --long h,help,bks:,dirs:,loop,max-sleep: -n "$0" -- $0 $@`
+ARGV=`$GETOPT --long h,help,bks:,dirs:,loop,max-sleep: -n "$0" -- "$0" "$@"`
 
 if [ $? != 0 ] ; then
     die "Terminating ...";
