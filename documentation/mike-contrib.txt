@@ -11,6 +11,7 @@ SYNOPSIS
 contrib/tag --[major|minor|maint|rc]
 contrib/archive --ref <refname>
 contrib/bk [--bks] [--dirs=<dirs>] [--loop]
+contrib/stream [--streams=<streams>] [--dirs=<dirs>] [--files=<files>] [--versioning] [--start=<start>]
 
 DESCRIPTION
 -----------
@@ -30,6 +31,10 @@ Make an archive.
  +
 Reads lot of data randomly in the database to perform efficiency test for reading
 operations.
+
+'contrib/stream'::
+ +
+Stream data into database.
 
 DIRECTORIES
 -----------
