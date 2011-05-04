@@ -21,4 +21,4 @@ $__$ LANGUAGE sql STABLE COST 1000;
 COMMENT ON FUNCTION mike.stat(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint
-) IS 'stat a inode';
+) IS 'stat an inode';

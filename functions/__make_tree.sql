@@ -84,11 +84,12 @@ BEGIN
                         v_rand_f    := random();
                         v_rand      := (v_rand_f * 1000)::int;
                         v_size      := (v_rand_f * 1024 * 1024 * 17)::bigint;
-                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand  % array_length(v_mimetypes, 1) + 1]);
+                        v_mimetype  := out_id_mimetype FROM mike.__get_id_mimetype(v_mimetypes[v_rand % array_length(v_mimetypes, 1) + 1]);
                         v_extension := v_extensions[v_rand  % array_length(v_mimetypes, 1) + 1];
                         v_md5       := encode(digest(v_rand_f::text, 'md5'), 'hex');
                         v_sha1      := encode(digest(v_rand_f::text, 'sha1'), 'hex');
 
+                        -- touch and xtouch
                         SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-n' || v_i::text || '-' || v_ijkl::text || '.' || v_extension);
                         SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
                         PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
@@ -96,6 +97,7 @@ BEGIN
                         v_return.files  := v_return.files + 1;
                         v_return.xfiles := v_return.xfiles + 1;
 
+                        -- versioning randomly
                         IF in_versioning AND v_rand_f::integer = 1 THEN
                             v_rand_f    := random();
                             v_size      := (v_rand_f * 1024 * 1024 * 17)::bigint;

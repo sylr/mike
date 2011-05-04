@@ -26,12 +26,15 @@ BEGIN
         RAISE EXCEPTION 'sort option can not be empty';
     END IF;
 
+    -- looping on each sort
     FOR v_cond IN SELECT regexp_split_to_table(in_order_by, E'\\s*,\\s*') LOOP
+        -- parsing sort
         SELECT regexp_split_to_array(v_cond, E'\\s+') INTO v_text_array;
 
         v_column    := v_text_array[1];
         v_sort      := v_text_array[2];
 
+        -- extract schema from relname if one provided
         IF strpos(in_relname, '.') > 0 THEN
             v_schema    := substring(in_relname, 0, strpos(in_relname, '.'));
             v_relname   := substring(in_relname, strpos(in_relname, '.') + 1);
@@ -40,6 +43,7 @@ BEGIN
             v_relname   := in_relname;
         END IF;
 
+        -- check that column exists in relname
         PERFORM
             pg_catalog.pg_class.oid,
             pg_catalog.pg_namespace.nspname,
@@ -56,6 +60,7 @@ BEGIN
 
         IF NOT FOUND THEN RAISE EXCEPTION 'column ''%'' not found in relation %', v_column, in_relname; END IF;
 
+        -- ensure that sort order is upper cased
         IF v_sort IS NOT NULL AND v_sort NOT IN ('ASC', 'DESC') THEN
             RAISE EXCEPTION '''%'' not a valid sort option', v_sort;
         END IF;

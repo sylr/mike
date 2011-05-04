@@ -21,12 +21,14 @@ CREATE OR REPLACE FUNCTION mike.adduser(
 DECLARE
     v_id_user       integer;
 BEGIN
+    -- sso unicity check
     PERFORM id_user FROM mike.user WHERE id_user_sso = in_id_user_sso;
     IF FOUND THEN RAISE EXCEPTION 'id_user_sso ''%'' already exists', in_id_user_sso; END IF;
 
     -- select id_inode
     SELECT nextval('user_id_user_seq'::regclass) INTO out_id_user;
 
+    -- insert
     INSERT INTO mike.user (
         id_user,
         id_user_sso,
