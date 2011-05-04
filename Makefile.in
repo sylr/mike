@@ -10,10 +10,6 @@
 #       /_/  /_/___/_/|_/___/  
 #
 
-# -- default target ------------------------------------------------------------
-
-dry-run::
-
 # -- variables -----------------------------------------------------------------
 
 prefix                  = @prefix@
@@ -122,7 +118,6 @@ endif
 MIKE_VERSION_FILE       = MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
-DRY_RUN_LOG             = dry-run.log
 INSTALL_LOG             = install.log
 
 # -- gcc defines ---------------------------------------------------------------
@@ -286,51 +281,9 @@ $(DATABASE_ASM_O_PATTERN) : $(DATABASE_ASM_PATTERN)
 	@$(NASM) $(NASMFLAGS) -o $@ $<
 	@$(SLEEP) $(SLEEP_TIME)
 
-# -- dry-run -------------------------------------------------------------------
-
-dry-run::
-	@$(MAKE) --no-print-directory dry-run-sub $(MAKEFLAGS)
-
-dry-run-sub: clean-target $(DATABASE_FILES) info
-# create database
-ifeq ($(ENABLE_CREATE_DATABASE),yes)
-	@$(ECHO) '    ' CREATING DATABASE $(DATABASE_NAME) ON $(DATABASE_USER)@$(DATABASE_HOST);
-	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
-	@$(ECHO) '    ' ALTERING DATABASE;
-	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
-ifeq ($(PG_VERSION_9),yes)
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
-	@$(ECHO) "CREATE OR REPLACE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;
-	@$(ECHO) "CREATE OR REPLACE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
-else
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
-	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;
-	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
-endif
-	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
-	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
-	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;
-	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
-endif
-# create schema
-ifeq ($(ENABLE_CREATE_SCHEMA),yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
-	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING SCHEMA mike;
-	@$(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' ALTERING search_path;
-	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET search_path TO mike,public;" | $(PSQL_FULL_CMD) --quiet
-endif
-	@$(ECHO) '    ' IMPORTING $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(PSQL_FULL_CMD) --single-transaction --file $(TARGET_FILE) --log-file $(DRY_RUN_LOG) > /dev/null
-	@$(ECHO) 
-	@$(ECHO) "THIS WAS A DRY RUN !!!!"
-
 # -- install -------------------------------------------------------------------
 
-install:
+install::
 	@$(MAKE) --no-print-directory install-sub $(MAKEFLAGS)
 
 install-sub: clean-target $(DATABASE_FILES) info
@@ -403,7 +356,6 @@ clean: clean-doc
 	@$(ECHO) Removing config.log; $(RM) $(RM_EXTRA) config.log;
 	@$(ECHO) Removing config.status; $(RM) $(RM_EXTRA) config.status;
 	@$(ECHO) Removing autom4te.cache; $(RM) $(RM_EXTRA) autom4te.cache;
-	@$(ECHO) Removing dry-run.log; $(RM) $(RM_EXTRA) dry-run.log;
 	@$(ECHO) Removing install.log; $(RM) $(RM_EXTRA) install.log;
 	@$(ECHO) Removing c objects; $(RM) $(RM_EXTRA) functions/c/*.o;
 	@$(ECHO) Removing asm objects; $(RM) $(RM_EXTRA) functions/asm/*.o;
