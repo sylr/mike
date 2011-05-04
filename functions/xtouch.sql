@@ -24,7 +24,7 @@ CREATE OR REPLACE FUNCTION mike.xtouch(
 
 BEGIN
     -- select id_volume
-    SELECT mike.__get_least_used_active_volume() INTO out_id_volume;
+    SELECT mike.__get_random_volume() INTO out_id_volume;
 
     -- select id_inode
     SELECT nextval('xfile_id_xfile_seq'::regclass) INTO out_id_xfile;

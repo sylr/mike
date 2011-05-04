@@ -20,7 +20,7 @@ SYNOPSIS
  __get_conf_int_array           | in_key text, in_mandatory boolean, in_default integer[]
  __get_id_mimetype              | in_mimetype text, OUT out_id_mimetype smallint
  __get_id_mimetype_stable       | in_mimetype text, OUT out_id_mimetype smallint
- __get_least_used_active_volume | OUT out_id_volume smallint
+ __get_random_volume            | OUT out_id_volume smallint
  __get_mimetype                 | in_id_mimetype smallint
  __make_lot_of_directories      | in_id_user integer, in_level integer, in_nb_by_level integer
  __make_tree                    | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
@@ -84,9 +84,9 @@ LOW LEVEL FUNCTIONS
     Return the id of a mimetype.
  +
  +
-(smallint) __get_least_used_active_volume()::
+(smallint) __get_random_volume()::
  +
-    Return the id of the least used active volume.
+    Return the id of an active and not full volume.
  +
  +
 (text) __get_mimetype(smallint)::

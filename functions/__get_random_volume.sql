@@ -4,17 +4,19 @@
 -- date: 05/02/2011
 -- copyright: All rights reserved
 
-DROP FUNCTION IF EXISTS mike.__get_least_used_active_volume(
+DROP FUNCTION IF EXISTS mike.__get_random_volume(
     OUT out_id_volume       smallint
 ) CASCADE;
 
-CREATE OR REPLACE FUNCTION mike.__get_least_used_active_volume(
+CREATE OR REPLACE FUNCTION mike.__get_random_volume(
     OUT out_id_volume       smallint
 ) AS $__$
 
--- select least used volume with an active state
--- look that max_size volume have not been reached
--- with a 5% security window
+-- select random volume with an active state and which
+-- max size has not been reached with a 5% security window
+
+-- the randomness instead of selecting the least used volume allows
+-- to spread to io load due to uploads and asynchronous treatements
 
 BEGIN
     SELECT
@@ -24,10 +26,10 @@ BEGIN
         state = 0 AND
         greatest(virtual_used_size, real_used_size) < max_size - (max_size * 5 / 100)
     ORDER BY
-        greatest(virtual_used_size, real_used_size) ASC
+        random()
     LIMIT 1;
 
-    IF NOT FOUND THEN RAISE EXCEPTION 'no volume found'; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'no active and not full volume found'; END IF;
 END;
 
 $__$ LANGUAGE plpgsql STABLE COST 10;
