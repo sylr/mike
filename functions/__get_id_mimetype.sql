@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION mike.__get_id_mimetype(
 ) AS $__$
 
 BEGIN
-    SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE lower(mimetype) = lower(in_mimetype);
+    SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE lower(mimetype) = lower(btrim(in_mimetype));
 
     IF NOT FOUND THEN
         SELECT nextval('mimetype_id_mimetype_seq'::regclass) INTO out_id_mimetype;
@@ -21,7 +21,7 @@ BEGIN
         )
         VALUES (
             out_id_mimetype,
-            lower(in_mimetype)
+            lower(btrim(in_mimetype))
         );
     END IF;
 END;
@@ -36,7 +36,7 @@ CREATE OR REPLACE FUNCTION mike.__get_id_mimetype_stable(
 ) AS $__$
 
 BEGIN
-    SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE mimetype = lower(in_mimetype);
+    SELECT id_mimetype INTO out_id_mimetype FROM mimetype WHERE mimetype = lower(btrim(in_mimetype));
 END;
 
 $__$ LANGUAGE plpgsql STABLE COST 10;
