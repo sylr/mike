@@ -7,7 +7,7 @@ mike-functions - mike's functions
 
 SYNOPSIS
 --------
-[verse]
+---------------------------
               Name              |                                                   Argument data types
 --------------------------------+-------------------------------------------------------------------------------------------------------------------------
  __check_order_by_cond          | in_order_by text, in_relname text
@@ -49,7 +49,7 @@ SYNOPSIS
  touch                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
  xlink                          | in_id_inode bigint, in_id_xfile bigint
  xtouch                         | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
-
+---------------------------
 
 DESCRIPTION
 -----------

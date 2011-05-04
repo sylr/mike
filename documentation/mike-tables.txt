@@ -7,7 +7,7 @@ mike-tables - mike's tables
 
 SYNOPSIS
 --------
-[verse]
+---------------------------
  Schema |     Name      | Type
 --------+---------------+-------
  mike   | as_file_xfile | table
@@ -24,6 +24,7 @@ SYNOPSIS
  mike   | volume        | table
  mike   | volume_state  | table
  mike   | xfile         | table
+---------------------------
 
 TABLES
 ------
