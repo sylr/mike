@@ -269,14 +269,32 @@ AX_COMPARE_VERSION(
     AC_MSG_ERROR([PostgreSQL version too old])
 )
 
-AC_SUBST(PG_VERSION)
-
 AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.0.0],
-    [PG_VERSION_9=yes],
-    [PG_VERSION_9=no]
+    [PG_VERSION_9=yes; PG_VERSION_9_0=yes; PG_VERSION_9_0_PLUS=yes],
+    [PG_VERSION_9=no; PG_VERSION_9_0=no; PG_VERSION_9_0_PLUS=no]
 )
+
+AX_COMPARE_VERSION(
+    [$PG_VERSION], [ge], [9.1.0],
+    [PG_VERSION_9_1=yes; PG_VERSION_9_0=no; PG_VERSION_9_1_PLUS=yes],
+    [PG_VERSION_9_1=no; PG_VERSION_9_1_PLUS=no]
+)
+
+AX_COMPARE_VERSION(
+    [$PG_VERSION], [ge], [9.2.0],
+    [PG_VERSION_9_2=yes; PG_VERSION_9_1=no; PG_VERSION_9_0=no; PG_VERSION_9_2_PLUS=yes],
+    [PG_VERSION_9_2=no; PG_VERSION_9_2_PLUS=no]
+)
+
+AC_SUBST(PG_VERSION)
 AC_SUBST(PG_VERSION_9)
+AC_SUBST(PG_VERSION_9_0)
+AC_SUBST(PG_VERSION_9_0_PLUS)
+AC_SUBST(PG_VERSION_9_1)
+AC_SUBST(PG_VERSION_9_1_PLUS)
+AC_SUBST(PG_VERSION_9_2)
+AC_SUBST(PG_VERSION_9_2_PLUS)
 
 # postgresql sharedir
 PG_SHAREDIR=$($PG_CONFIG --sharedir)
@@ -290,20 +308,38 @@ AC_SUBST(PG_INCLUDEDIR_SERVER)
 PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
 AC_SUBST(PG_PKGLIBDIR_SERVER)
 
-AC_CHECK_FILE(
-    [$PG_SHAREDIR/contrib/ltree.sql],
-    [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree.sql],
-    AC_MSG_ERROR([ltree contrib not found in $PG_SHAREDIR/contrib])
-)
+# contribs / extensions
+if test -n "$PG_VERSION_9_1"; then
+    # ltree
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/ltree--1.0.sql],
+        [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree--1.0.sql],
+        AC_MSG_ERROR([ltree extension not found in $PG_SHAREDIR/extension])
+    )
+
+    # pgcrypto
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        AC_MSG_ERROR([pgcrypto extension not found in $PG_SHAREDIR/extension])
+    )
+else
+    # ltree
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/contrib/ltree.sql],
+        [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree.sql],
+        AC_MSG_ERROR([ltree contrib not found in $PG_SHAREDIR/contrib])
+    )
+
+    # pgcrypto
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/contrib/pgcrypto.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/contrib/pgcrypto.sql],
+        AC_MSG_ERROR([pgcrypto contrib not found in $PG_SHAREDIR/contrib])
+    )
+fi
 
 AC_SUBST(PG_CONTRIB_LTREE)
-
-AC_CHECK_FILE(
-    [$PG_SHAREDIR/contrib/pgcrypto.sql],
-    [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/contrib/pgcrypto.sql],
-    AC_MSG_ERROR([pgcrypto contrib not found in $PG_SHAREDIR/contrib])
-)
-
 AC_SUBST(PG_CONTRIB_PGCRYPTO)
 
 # -- variables -----------------------------------------------------------------
