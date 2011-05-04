@@ -279,7 +279,7 @@ AX_COMPARE_VERSION(
 AC_SUBST(PG_VERSION_9)
 
 # postgresql sharedir
-PG_SHAREDIR=$($PG_CONFIG | $GREP "SHAREDIR" | $SED "s#SHAREDIR = \(\.*\)#\1#i")
+PG_SHAREDIR=$($PG_CONFIG --sharedir)
 AC_SUBST(PG_SHAREDIR)
 
 # postgresql includedir server
