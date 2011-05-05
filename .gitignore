@@ -8,6 +8,7 @@ configure
 **Makefile
 **.log
 **.orig
+**.rej
 **.patch
 config.log
 config.status
