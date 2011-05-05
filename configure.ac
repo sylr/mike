@@ -309,7 +309,7 @@ PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
 AC_SUBST(PG_PKGLIBDIR_SERVER)
 
 # contribs / extensions
-if test -n "$PG_VERSION_9_1"; then
+if test "$PG_VERSION_9_1_PLUS" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],
