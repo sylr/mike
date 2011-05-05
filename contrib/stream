@@ -94,7 +94,7 @@ if [[ "$STREAMS" -gt "1" || -n "$DETACH" ]]; then
     if [ "$NO_VOLUME_LOCK" != "yes" ]; then
         echo 2>&1 "You filthy bastard, you're trying to do streaming on an instance"
         echo 2>&1 "without NO_VOLUME_LOCK support. You are probably going nowhere !"
-        abort "That's what I tought !§!!"
+        abort "That's what I thought !§!!"
     fi
 fi
 
