@@ -18,8 +18,9 @@ CREATE OR REPLACE FUNCTION mike.__pg_functions(
 SELECT
     p.oid AS oid,
     p.proname AS name,
-    pg_catalog.pg_get_function_identity_arguments(p.oid) AS arguments,
-FROM pg_catalog.pg_proc p
+    pg_catalog.pg_get_function_identity_arguments(p.oid) AS arguments
+FROM
+    pg_catalog.pg_proc p
 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
 WHERE
     n.nspname ~ '^(mike)$'
