@@ -23,8 +23,6 @@ SYNOPSIS
  __get_random_volume            | OUT out_id_volume smallint
  __get_mimetype                 | in_id_mimetype smallint
  __make_lot_of_directories      | in_id_user integer, in_level integer, in_nb_by_level integer
- __make_tree                    | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
- __make_tree                    | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
  __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
  __natsort                      | in_text text
  __natsort_asm                  | in_text text
@@ -33,6 +31,8 @@ SYNOPSIS
  __pg_activity                  | in_datname text
  __pg_locks                     |
  __set_conf                     | in_key text, in_value text
+ __stream                       | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
+ __stream                       | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
  adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
  ls                             | in_id_user integer, in_id_inode bigint
  ls                             | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer

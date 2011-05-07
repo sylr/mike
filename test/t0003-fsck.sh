@@ -43,7 +43,7 @@ TRUNCATE=$($PSQL_FULL_CMD -c "TRUNCATE directory, file, xfile CASCADE;")
 # -- noise ---------------------------------------------------------------------
 
 for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user;"); do
-    $PSQL_FULL_CMD -c "SELECT * FROM mike.__make_tree($id_user, 3, 3, true);" > /dev/null
+    $PSQL_FULL_CMD -c "SELECT * FROM mike.__stream($id_user, 3, 3, true);" > /dev/null
     dieifnzero $? "something went wrong when streaming"
 done
 

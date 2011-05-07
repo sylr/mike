@@ -4,21 +4,21 @@
 -- date: 06/02/2011
 -- copyright: All rights reserved
 
-DROP TYPE IF EXISTS mike.__make_tree_t CASCADE;
+DROP TYPE IF EXISTS mike.__stream_t CASCADE;
 
-CREATE TYPE mike.__make_tree_t AS (
+CREATE TYPE mike.__stream_t AS (
     id_user         integer,
     directories     integer,
     files           integer,
     xfiles          integer
 );
 
-CREATE OR REPLACE FUNCTION mike.__make_tree(
+CREATE OR REPLACE FUNCTION mike.__stream(
     in_id_user          integer,
     in_dirs_by_level    integer[] DEFAULT ARRAY[5, 5, 5],
     in_files_by_level   integer[] DEFAULT ARRAY[5, 5, 5],
     in_versioning       boolean   DEFAULT true
-) RETURNS mike.__make_tree_t AS $__$
+) RETURNS mike.__stream_t AS $__$
 
 DECLARE
     v_id_inode_d        bigint;
@@ -37,7 +37,7 @@ DECLARE
     v_rand_f            float;
     v_mimetype          smallint;
     v_extension         text;
-    v_return            mike.__make_tree_t;
+    v_return            mike.__stream_t;
     v_mimetypes         text[] := ARRAY['text/plain', 'text/x-perl', 'text/x-shellscript'] ||
                                   ARRAY['image/jpeg', 'image/png', 'image/tiff', 'image/svg+xml'] ||
                                   ARRAY['audio/x-flac', 'audio/mpeg', 'audio/x-wav'] ||
@@ -74,7 +74,7 @@ BEGIN
 
             FOR v_ijk IN SELECT generate_series(0, in_dirs_by_level[v_i] - 1) LOOP
                 -- mkdir
-                SELECT out_id_inode INTO v_id_inode_d FROM mike.mkdir(in_id_user, v_ij, 'dir-n' || v_i::text || '-' || v_ijk::text);
+                SELECT out_id_inode INTO v_id_inode_d FROM mike.mkdir(in_id_user, v_ij, 'directory-level-' || v_i::text || '-' || v_ijk::text);
                 v_return.directories := v_return.directories + 1;
 
                 -- make dir files
@@ -90,7 +90,7 @@ BEGIN
                         v_sha1      := encode(digest(v_rand_f::text, 'sha1'), 'hex');
 
                         -- touch and xtouch
-                        SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-n' || v_i::text || '-' || v_ijkl::text || '.' || v_extension);
+                        SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-level-' || (v_i + 1)::text || '-' || v_ijkl::text || '.' || v_extension);
                         SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
                         PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
 
@@ -120,7 +120,7 @@ END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
 
-COMMENT ON FUNCTION mike.__make_tree(
+COMMENT ON FUNCTION mike.__stream(
     in_id_user          integer,
     in_dirs_by_level    int[],
     in_files_by_level   int[],
@@ -129,14 +129,14 @@ COMMENT ON FUNCTION mike.__make_tree(
 
 --------------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION mike.__make_tree(
+CREATE OR REPLACE FUNCTION mike.__stream(
     in_id_user          integer,
     in_nb_level         integer DEFAULT 2,
     in_inode_by_level   integer DEFAULT 10,
     in_versioning       boolean DEFAULT true
-) RETURNS mike.__make_tree_t AS $__$
+) RETURNS mike.__stream_t AS $__$
 
-SELECT * FROM mike.__make_tree(
+SELECT * FROM mike.__stream(
     $1,
     array_fill($3, ARRAY[$2]),
     array_fill($3, ARRAY[$2])
@@ -144,7 +144,7 @@ SELECT * FROM mike.__make_tree(
 
 $__$ LANGUAGE SQL VOLATILE;
 
-COMMENT ON FUNCTION mike.__make_tree(
+COMMENT ON FUNCTION mike.__stream(
     in_id_user          integer,
     in_dirs_by_level    int,
     in_files_by_level   int,
