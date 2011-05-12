@@ -27,7 +27,7 @@ export PWD=`pwd`
 
 if test -n "$GITSTATS"; then
     if test "$REFNAME" = "refs/heads/master"; then
-        $GITSTATS $PWD  gitstats > /dev/null 2>&1
+        $GITSTATS $PWD gitstats > /dev/null 2>&1
 
         if test "$?" != "0"; then
             echo "gitstats failed ..."
