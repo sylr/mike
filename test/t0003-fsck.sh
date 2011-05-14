@@ -38,7 +38,7 @@ export PGOPTIONS="--client-min-messages=warning"
 
 # -- truncate ------------------------------------------------------------------
 
-TRUNCATE=$($PSQL_FULL_CMD -c "TRUNCATE directory, file, xfile CASCADE;")
+TRUNCATE=$($PSQL_FULL_CMD -c "TRUNCATE inode, xfile CASCADE;")
 
 # -- noise ---------------------------------------------------------------------
 
