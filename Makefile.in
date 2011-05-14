@@ -63,6 +63,7 @@ ENABLE_CREATE_SCHEMA    = @ENABLE_CREATE_SCHEMA@
 
 PG_CONTRIB_LTREE        = @PG_CONTRIB_LTREE@
 PG_CONTRIB_PGCRYPTO     = @PG_CONTRIB_PGCRYPTO@
+PG_CONTRIB_HSTORE       = @PG_CONTRIB_HSTORE@
 PG_SHAREDIR             = @PG_SHAREDIR@
 PG_INCLUDEDIR_SERVER    = @PG_INCLUDEDIR_SERVER@
 PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
@@ -311,11 +312,15 @@ ifeq ($(PG_VERSION_9_1_PLUS),yes)
 	@$(PSQL_FULL_CMD) --single-transaction -c "CREATE EXTENSION ltree;" --quiet
 	@$(ECHO) '    ' CREATING EXTENSION pgcrypto;
 	@$(PSQL_FULL_CMD) --single-transaction -c "CREATE EXTENSION pgcrypto;" --quiet
+	@$(ECHO) '    ' CREATING EXTENSION hstore;
+	@$(PSQL_FULL_CMD) --single-transaction -c "CREATE EXTENSION hstore;" --quiet
 else
 	@$(ECHO) '    ' IMPORTING CONTRIB ltree;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_LTREE) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB pgcrypto;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
+	@$(ECHO) '    ' IMPORTING CONTRIB hstore;
+	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_HSTORE) --quiet
 endif # PG_VERSION_9_1_PLUS
 endif # ENABLE_CREATE_DATABASE
 # create schema

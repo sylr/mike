@@ -323,6 +323,13 @@ if test "$PG_VERSION_9_1_PLUS" == "yes"; then
         [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
         AC_MSG_ERROR([pgcrypto extension not found in $PG_SHAREDIR/extension])
     )
+
+    # hstore
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/hstore--1.0.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/extension/hstore--1.0.sql],
+        AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
+    )
 else
     # ltree
     AC_CHECK_FILE(
@@ -337,10 +344,18 @@ else
         [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/contrib/pgcrypto.sql],
         AC_MSG_ERROR([pgcrypto contrib not found in $PG_SHAREDIR/contrib])
     )
+
+    # hstore
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/contrib/hstore.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/contrib/hstore.sql],
+        AC_MSG_ERROR([hstore contrib not found in $PG_SHAREDIR/contrib])
+    )
 fi
 
 AC_SUBST(PG_CONTRIB_LTREE)
 AC_SUBST(PG_CONTRIB_PGCRYPTO)
+AC_SUBST(PG_CONTRIB_HSTORE)
 
 # -- variables -----------------------------------------------------------------
 
