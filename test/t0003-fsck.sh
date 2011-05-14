@@ -50,25 +50,25 @@ done
 $PSQL_FULL_CMD_ALIGNED -c "SELECT * FROM mike.file ORDER BY id_inode; SELECT * FROM mike.directory ORDER BY id_inode;" > .t0003-good
 dieifnzero $? "something went wrong when reading tables"
 
-$PSQL_FULL_CMD -c "UPDATE mike.file SET \
-    id_mimetype     = 0, \
-    path            = '/pwet', \
-    treepath        = '1.3.3.7'::ltree, \
-    size            = 3487, \
+$PSQL_FULL_CMD -c "UPDATE mike.file SET
+    id_mimetype     = 0,
+    path            = '/pwet',
+    treepath        = '1.3.3.7'::ltree,
+    size            = 3487,
     versioning_size = 26487;" > /dev/null
 dieifnzero $? "something went wrong when trashing mike.file"
 
-$PSQL_FULL_CMD -c "UPDATE mike.directory SET \
-    id_mimetype             = 0, \
-    path                    = '/pwet', \
-    treepath                = '1.3.3.7'::ltree, \
-    size                    = 3487, \
-    versioning_size         = 26487, \
-    inner_size              = 789, \
-    inner_versioning_size   = 321, \
-    dir_count               = 456, \
-    inner_dir_count         = 786, \
-    file_count              = 126, \
+$PSQL_FULL_CMD -c "UPDATE mike.directory SET
+    id_mimetype             = 0,
+    path                    = '/pwet',
+    treepath                = '1.3.3.7'::ltree,
+    size                    = 3487,
+    versioning_size         = 26487,
+    inner_size              = 789,
+    inner_versioning_size   = 321,
+    dir_count               = 456,
+    inner_dir_count         = 786,
+    file_count              = 126,
     inner_file_count        = 556;" > /dev/null
 dieifnzero $? "something went wrong when trashing mike.directory"
 
