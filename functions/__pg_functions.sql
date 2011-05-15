@@ -8,8 +8,8 @@ DROP TYPE IF EXISTS mike.__pg_functions_t CASCADE;
 
 CREATE TYPE mike.__pg_functions_t AS (
     "oid"           oid,
-    "name"          name,
-    arguments       text
+    "Name"          name,
+    "Arguments"     text
 );
 
 CREATE OR REPLACE FUNCTION mike.__pg_functions(
@@ -17,13 +17,13 @@ CREATE OR REPLACE FUNCTION mike.__pg_functions(
 
 SELECT
     p.oid AS oid,
-    p.proname AS name,
-    pg_catalog.pg_get_function_identity_arguments(p.oid) AS arguments
+    p.proname AS "Name",
+    pg_catalog.pg_get_function_identity_arguments(p.oid) AS "Arguments"
 FROM
     pg_catalog.pg_proc p
 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
 WHERE
     n.nspname ~ '^(mike)$'
-ORDER BY 1, 2;
+ORDER BY "Name", "Arguments";
 
 $__$ LANGUAGE sql;
