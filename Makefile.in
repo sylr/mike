@@ -435,7 +435,7 @@ else ifeq ($(GIT_DIR),)
 	@exit 1
 endif
 	@$(GOURCE) --title "Mike's `$(GIT) branch --no-color | $(GREP) "^*" --color=never | $(CUT) -b 3-` branch" \
-	    --key --highlight-users --highlight-dirs --loop &
+	    --key --highlight-users --highlight-dirs --file-idle-time 0 --loop &
 
 # -- documentation -------------------------------------------------------------
 
