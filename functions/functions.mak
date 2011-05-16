@@ -21,6 +21,7 @@ DATABASE_FUNCTIONS  += __pg_locks.sql
 DATABASE_FUNCTIONS  += __fsck.sql
 DATABASE_FUNCTIONS  += __stream.sql
 DATABASE_FUNCTIONS  += adduser.sql
+DATABASE_FUNCTIONS  += cpdir.sql
 DATABASE_FUNCTIONS  += ls.sql
 DATABASE_FUNCTIONS  += mkdir.sql
 DATABASE_FUNCTIONS  += mvdir.sql

@@ -34,6 +34,7 @@ SYNOPSIS
  __stream                  | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
  __stream                  | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
  adduser                   | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
+ cpdir                     | in_id_user integer, in_id_inode bigint, in_id_inode_target bigint, in_name text
  ls                        | in_id_user integer, in_id_inode bigint
  ls                        | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
  ls                        | in_id_user integer, in_id_inode bigint, in_order_by text
@@ -130,6 +131,12 @@ HIGH LEVEL FUNCTIONS
 (integer) adduser(in_id_user_sso, in_nickname, in_state)::
  +
     Add a user.
+ +
+ +
+(bigint) cpdir(in_id_user integer, in_id_inode bigint, in_id_inode_target bigint, in_name text)::
+ +
+    Copy a directory to another one. 4th optional parameter allows to rename the
+    copied directory during the process.
  +
  +
 (inode_full_t) ls(in_id_user integer, in_id_inode bigint)::
