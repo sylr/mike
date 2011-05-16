@@ -41,7 +41,7 @@ SYNOPSIS
  ls                        | in_id_user integer, in_id_inode bigint, in_order_by text, in_limit integer, in_offset integer
  mkdir                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
  mkdir                     | in_id_user integer, in_name text, OUT out_id_inode bigint
- mvdir                     | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint
+ mvdir                     | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint, in_name text
  rename                    | in_id_user integer, in_id_inode bigint, in_new_name text
  rmdir                     | in_id_user integer, in_id_inode bigint
  stat                      | in_id_user integer, in_id_inode bigint
@@ -173,9 +173,10 @@ HIGH LEVEL FUNCTIONS
     Create a directory at vfs's root.
  +
  +
-(void) mvdir(in_id_user, in_id_inode, in_new_id_inode_parent)::
+(void) mvdir(in_id_user, in_id_inode, in_new_id_inode_parent, in_name)::
  +
-    Move a directory inside another directory.
+    Move a directory inside another one. 4th optional parameter allows to rename
+    the moved directory during the process.
  +
  +
 (void) rename(in_id_user, in_id_inode, in_new_name)::

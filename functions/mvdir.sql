@@ -7,13 +7,15 @@
 DROP FUNCTION IF EXISTS mike.mvdir(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
-    IN  in_new_id_inode_parent  bigint
+    IN  in_new_id_inode_parent  bigint,
+    IN  in_name                 text
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.mvdir(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
-    IN  in_new_id_inode_parent  bigint
+    IN  in_new_id_inode_parent  bigint,
+    IN  in_name                 text DEFAULT NULL
 ) RETURNS void AS $__$
 
 DECLARE
@@ -51,16 +53,19 @@ BEGIN
 #endif /* TREE_MAX_DEPTH */
 
     -- look if folder name already exists in target
-    PERFORM id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = v_directory.name;
+    PERFORM id_inode FROM mike.directory WHERE id_inode = in_new_id_inode_parent AND id_user = in_id_user AND name = coalesce(in_name, v_directory.name);
     IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in %', v_directory.name, in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
-    UPDATE mike.directory SET id_inode_parent = in_new_id_inode_parent WHERE id_inode = in_id_inode;
+    UPDATE mike.directory SET
+       id_inode_parent  = in_new_id_inode_parent,
+       name             = coalesce(in_name, v_directory.name)
+    WHERE id_inode = in_id_inode;
 
     -- update path and treepath of in_id_inode children
     UPDATE mike.inode SET
         treepath            = replace(treepath::text, v_old_directory_parent.treepath::text || '.', v_new_directory_parent.treepath::text || '.')::ltree,
-        path                = v_new_directory_parent.path || substr(path, length(v_old_directory_parent.path) + 1)
+        path                = v_new_directory_parent.path || '/' || coalesce(in_name, v_directory.name) || substr(path, length(v_directory.path) + 1)
     WHERE
         id_user = in_id_user
         AND treepath ~ ('*.' || in_id_inode || '.*')::lquery;
@@ -119,5 +124,6 @@ $__$ LANGUAGE plpgsql VOLATILE COST 1000;
 COMMENT ON FUNCTION mike.mvdir(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint,
-    IN  in_new_id_inode_parent  bigint
+    IN  in_new_id_inode_parent  bigint,
+    IN  in_name                 text
 ) IS 'copy a directory and its content inside another one';
