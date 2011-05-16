@@ -127,7 +127,7 @@ install-html: html
 	$(INSTALL) -m 644 $(DOC_HTML) $(htmldir)
 
 install-man: man
-	$(INSTALL) -d -m 755 $(man1dir)
+	$(INSTALL) -d -m 755 $(man1dir) $(man3dir) $(man7dir)
 	$(INSTALL) -m 644 $(DOC_MAN1) $(man1dir)
 	$(INSTALL) -m 644 $(DOC_MAN3) $(man3dir)
 	$(INSTALL) -m 644 $(DOC_MAN7) $(man7dir)
