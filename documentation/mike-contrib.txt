@@ -19,10 +19,6 @@ contribs are scripts aiming to make mike's development and deployment easier.
 
 SCRIPTS
 -------
-'contrib/tag'::
- +
-Make a tag.
-
 'contrib/archive'::
  +
 Make an archive.
@@ -32,15 +28,23 @@ Make an archive.
 Reads lot of data randomly in the database to perform efficiency test for reading
 operations.
 
+'contrib/postgres-debian-init'::
+ +
+Debian PostgreSQL init script.
+
 'contrib/stream'::
  +
 Stream data into database.
+
+'contrib/tag'::
+ +
+Make a tag.
 
 DIRECTORIES
 -----------
 'contrib/sql'::
  +
-Files with sql queries.
+Files with useful sql queries.
 
 Authors
 -------

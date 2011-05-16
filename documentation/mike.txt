@@ -22,7 +22,7 @@ SYNOPSIS
 'make'
 'make' [install|test|clean]
 'make' [def-functions|dev-volumes]
-'make' [drop-database|drop-schema|dev-volumes]
+'make' [drop-database|drop-schema]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
 
@@ -30,12 +30,12 @@ DESCRIPTION
 -----------
 Mike is a 'Virtual File System' which primary goals are to be 'lightweight', 'robust'
 and 'efficient'. In a few words mike is a 'PostgreSQL database' which comes with
-a 'SQL API' in order to manage directories and files. The API provides a set of
-functions needed to manipulate the data into the database.
+a 'SQL API' in order to manage directories and files (inodes). The API provides
+a set of functions needed to manipulate the inodes into the database.
 
-The main idea when Mike has been designed was that a file system is accessed, browsed
+The main idea in Mike's design is that a file system is accessed and browsed
 most of the time, but rarely modified. Knowing that, Mike stores for each inodes
-metadata which are recalculated only when the file system is modified in order to
+metadata which are calculated only when the file system is modified in order to
 make browsing the fastest possible because all the data fetched are stored, not calculated.
 
 See linkmike:mike-design[3].

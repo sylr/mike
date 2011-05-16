@@ -22,7 +22,7 @@ SYNOPSIS
 'make'
 'make' [install|test|clean]
 'make' [def-functions|dev-volumes]
-'make' [drop-database|drop-schema|dev-volumes]
+'make' [drop-database|drop-schema]
 'make' [graph|gource|stats]
 'make' [doc|html|man|install-doc|install-html|install-man]
 
@@ -44,22 +44,60 @@ sylvain@kheops:~/$ cd mike.git
 Debian requirements
 -------------------
   - build-essential
-  - gcc
-  - postgresql-8.4
-  - postgresql-server-dev-8.4
-  - postgresql-client-8.4
-  - postgresql-contrib-8.4
-  - postgresql-plperl-8.4
+  - autoconf
+  - postgresql-<version>
+  - postgresql-server-dev-<version>
+  - postgresql-client-<version>
+  - postgresql-contrib-<version>
+  - postgresql-plperl-<version>
   - libpq-dev
   - asciidoc
+  - source-highlight (recomended, for documentation)
   - apgdiff (optional)
   - git-core (optional, for development)
   - gource (optional, for development)
   - gitstats (optional, for development)
 
+Discard 'postgresl-*' and 'libpq-dev' if you want to build PostgreSQL from sources.
+
+Building PostgreSQL from sources
+--------------------------------
+
+If you build PostgreSQL from sources you might need to install 'additional libraries'
+needed for its compilation. You will find what you need when you launch the 'configure' script.
+
+[source,shell]
+--------------------------
+sylvain@kheops:~/$ git clone git://git.postgresql.org/postgresql.git
+sylvain@kheops:~/$ cd postgresql
+sylvain@kheops:~/postgresql[master]$ git checkout REL9_0_3
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ autoconf
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ ./configure [--prefix=<prefix>] --with-perl
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ make -j3 world
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ make install-world
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ mkdir /var/pg_data
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ chmod 0700 /var/pg_data
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ sudo chown postgres:postgres /var/pg_data
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ sudo su postgres -c "<prefix>/bin/initdb -D /var/pg_data"
+sylvain@kheops:~/postgresql[(REL9_0_3)]$ sudo su postgres -c "<prefix>/bin/pg_ctl start -D /var/pg_data"
+--------------------------
+
+WARNING: If you compile PostgreSQL from a git repository you might want to execute
+  'git clean -fdx' and 'git reset HARD <tag>' et ensure that everything is cleaned
+  otherwise you could run into some troubles.
+
+You can also launch postgres using the debian init script located in 'contrib'.
+Just move it to '/etc/init.d/postgres-from-source' and edit it with the values
+you used to install PostgreSQL. Then do :
+
+[source,shell]
+--------------------------
+sylvain@kheops:~/$ sudo /etc/init.d/postgres-from-source start
+--------------------------
+
 Install
 -------
-Mike relies on 'autotools' and 'make' for automatic install.
+Mike relies on 'autotools' and 'make' for easy install.
 
 First, you have to generate the 'configure' script by running the 'autoconf' tool
 at the 'root' of Mike. Then, launch the './configure' script with the desired options,
@@ -107,9 +145,9 @@ configure options
 --enable-tree-max-depth::
     enable tree maximum depth support in mike. This feature is 'enabled by default' and
     its value is '24' which means a directory can only have '22 ancestors', it being
-    the at the 23rd level and the last level beign reserved for files. Disabling
+    the at the 1st level and the last level beign reserved for files. Disabling
     this feature can 'speed up some operations' at a 'low depth' but allows big 'deep
-    trees' which could lead to' performance issues' because a modification on a directory
+    trees' which could lead to 'performance issues' because a modification on a directory
     will update its ancestors as well.
 
 --enable-no-atime::
@@ -234,14 +272,14 @@ make targets
     Display mike's developers commit statistics (development environment required).
 
 'test'::
-    Run mike's battery test.
+    Run mike's unit test battery.
 
-ENABLE_CREATE_DATABASE=[Yes|No]::
-    If set to 'Yes', will behave like if '--enable-create-database' had been specified
+ENABLE_CREATE_DATABASE=[yes|no]::
+    If set to 'yes', will behave like if '--enable-create-database' had been specified
     to 'configure'.
 
-ENABLE_CREATE_SCHEMA=[Yes|No]::
-    If set to 'Yes', will behave like if '--enable-create-schema' had been specified
+ENABLE_CREATE_SCHEMA=[yes|no]::
+    If set to 'yes', will behave like if '--enable-create-schema' had been specified
     to 'configure'.
 
 CFLAGS::

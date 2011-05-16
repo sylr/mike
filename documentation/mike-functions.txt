@@ -201,8 +201,7 @@ HIGH LEVEL FUNCTIONS
  +
 (record) xtouch(in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text)::
  +
-    Create a xfile record.
-    'in_md5' and 'in_sha1' are optional parameters.
+    Create a xfile record. 'in_md5' and 'in_sha1' are optional parameters.
 
 Authors
 -------

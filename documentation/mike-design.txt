@@ -17,6 +17,9 @@ data that could be retrieved by read operations are calculated during those writ
 operations.
 
 In order to be scalable Mike relies on the 'replication' capabilities of PostgreSQL '9.x'.
+As of today, PostgreSQL 9.x has no Debian stable package so Mike is 'compatible'
+with Postgresql '8.4.x'. This compatiblity will probably be 'dropped' the day that '9.x'
+becomes stable in Debian repository.
 
 .Architecture
 --------------
@@ -78,12 +81,11 @@ MIKE'S LIMITS
   - The number of 'users' is limited to '2147483647'.
   - The number of 'groups' is limited to '2147483647'.
   - The number of 'inodes' created is limited to '9223372036854775807'.
-    'All the inodes', directories and files, 'share the same sequence' making their identifiers unique.
+    'All inodes', directories and files, 'share the same sequence' making their identifiers unique.
   - Each 'directory' can contain up to '32767 directories'.
   - Each 'directory' can contain up to '32767 files'.
   - Each 'root directory' can contain up to '2147483647' directories in its whole tree.
   - Each 'root directory' can contain up to '2147483647' files in its whole tree.
-  - A 'tree' can not exceed '24 levels'.
   - An 'inode name' can node exceed '255 characters'.
   - A directory can 'not' contain inodes with the 'same name'.
 
