@@ -8,47 +8,47 @@ mike-functions - mike's functions
 SYNOPSIS
 --------
 ---------------------------
-              Name              |                                                   Argument data types
---------------------------------+-------------------------------------------------------------------------------------------------------------------------
- __check_order_by_cond          | in_order_by text, in_relname text
- __fsck                         | in_id_user integer, in_dry_run boolean
- __get_conf                     | in_key text, in_mandatory boolean, in_default text
- __get_conf_array               | in_key text, in_mandatory boolean, in_default text[]
- __get_conf_bigint              | in_key text, in_mandatory boolean, in_default bigint
- __get_conf_bigint_array        | in_key text, in_mandatory boolean, in_default bigint[]
- __get_conf_int                 | in_key text, in_mandatory boolean, in_default integer
- __get_conf_int_array           | in_key text, in_mandatory boolean, in_default integer[]
- __get_id_mimetype              | in_mimetype text, OUT out_id_mimetype smallint
- __get_id_mimetype_stable       | in_mimetype text, OUT out_id_mimetype smallint
- __get_random_volume            | OUT out_id_volume smallint
- __get_mimetype                 | in_id_mimetype smallint
- __make_lot_of_directories      | in_id_user integer, in_level integer, in_nb_by_level integer
- __mod_cons_hash                | in_dividend bigint, in_divisor integer, OUT remainder integer
- __natsort                      | in_text text
- __natsort_asm                  | in_text text
- __natsort_pl                   | in_text text
- __perform                      | in_sql text
- __pg_activity                  | in_datname text
- __pg_locks                     |
- __set_conf                     | in_key text, in_value text
- __stream                       | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
- __stream                       | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
- adduser                        | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
- ls                             | in_id_user integer, in_id_inode bigint
- ls                             | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
- ls                             | in_id_user integer, in_id_inode bigint, in_order_by text
- ls                             | in_id_user integer, in_id_inode bigint, in_order_by text, in_limit integer, in_offset integer
- mkdir                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
- mkdir                          | in_id_user integer, in_name text, OUT out_id_inode bigint
- mvdir                          | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint
- rename                         | in_id_user integer, in_id_inode bigint, in_new_name text
- rmdir                          | in_id_user integer, in_id_inode bigint
- stat                           | in_id_user integer, in_id_inode bigint
- statd                          | in_id_user integer, in_id_inode bigint
- statf                          | in_id_user integer, in_id_inode bigint
- touch                          | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
- xlink                          | in_id_inode bigint, in_id_xfile bigint
- xtouch                         | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
+           Name            |                                                        Arguments
+---------------------------+-------------------------------------------------------------------------------------------------------------------------
+ __check_order_by_cond     | in_order_by text, in_relname text
+ __fsck                    | in_id_user integer, in_dry_run boolean
+ __get_conf                | in_key text, in_mandatory boolean, in_default text
+ __get_conf_array          | in_key text, in_mandatory boolean, in_default text[]
+ __get_conf_bigint         | in_key text, in_mandatory boolean, in_default bigint
+ __get_conf_bigint_array   | in_key text, in_mandatory boolean, in_default bigint[]
+ __get_conf_int            | in_key text, in_mandatory boolean, in_default integer
+ __get_conf_int_array      | in_key text, in_mandatory boolean, in_default integer[]
+ __get_id_mimetype         | in_mimetype text, OUT out_id_mimetype smallint
+ __get_id_mimetype_stable  | in_mimetype text, OUT out_id_mimetype smallint
+ __get_mimetype            | in_id_mimetype smallint
+ __get_random_volume       | OUT out_id_volume smallint
+ __make_lot_of_directories | in_id_user integer, in_level integer, in_nb_by_level integer
+ __mod_cons_hash           | in_dividend bigint, in_divisor integer, OUT remainder integer
+ __natsort                 | in_text text
+ __natsort_pl              | in_text text
+ __perform                 | in_sql text
+ __pg_activity             | in_datname text
+ __pg_functions            |
+ __pg_locks                |
+ __set_conf                | in_key text, in_value text
+ __stream                  | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
+ __stream                  | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
+ adduser                   | in_id_user_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
+ ls                        | in_id_user integer, in_id_inode bigint
+ ls                        | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
+ ls                        | in_id_user integer, in_id_inode bigint, in_order_by text
+ ls                        | in_id_user integer, in_id_inode bigint, in_order_by text, in_limit integer, in_offset integer
+ mkdir                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
+ mkdir                     | in_id_user integer, in_name text, OUT out_id_inode bigint
+ mvdir                     | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint
+ rename                    | in_id_user integer, in_id_inode bigint, in_new_name text
+ rmdir                     | in_id_user integer, in_id_inode bigint
+ stat                      | in_id_user integer, in_id_inode bigint
+ statd                     | in_id_user integer, in_id_inode bigint
+ statf                     | in_id_user integer, in_id_inode bigint
+ touch                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
+ xlink                     | in_id_inode bigint, in_id_xfile bigint
+ xtouch                    | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
 ---------------------------
 
 DESCRIPTION
@@ -65,7 +65,9 @@ LOW LEVEL FUNCTIONS
  +
 (record) __fsck(in_id_user integer, in_dry_run boolean)::
  +
-    Check that inodes metadata are not doomed, otherwise rebuild it.
+    Check that inodes metadata are not doomed, otherwise rebuild it. This function
+    is very useful for development because it ensure the coherence of that the data
+    you update or create.
  +
  +
 (mixed) \__get_conf[_*](in_key text, in_mandatory boolean, in_default mixed)::
@@ -105,6 +107,9 @@ LOW LEVEL FUNCTIONS
  +
     Rewrite input to do natural sorting. It left pads any suite of numbers with 0
     in order to be able to sort string naturally.
+ +
+    The padding length is determined when text pre-processing stored procedures by
+    the 'NATSORT_PADDING' define set when configuring.
 -------------------
 __natsort('file-15.sql')   = 'file-000000000015.sql'
 __natsort('file-1589.sql') = 'file-000000001589.sql'
@@ -112,7 +117,7 @@ __natsort('file-1589.sql') = 'file-000000001589.sql'
 
 (text) __natsort_asm(in_text)::
  +
-    natsort version written in ASM.
+    natsort version written in ASM. Only available in 32bits architecture for now.
  +
  +
 (text) __natsort_pl(in_text)::
