@@ -68,7 +68,8 @@ LOW LEVEL FUNCTIONS
  +
     Check that inodes metadata are not doomed, otherwise rebuild it. This function
     is very useful for development because it ensure the coherence of that the data
-    you update or create.
+    you update or create. It trusts the 'id_inode_parent' property of inodes to
+    rebuild paths and treepaths.
  +
  +
 (mixed) \__get_conf[_*](in_key text, in_mandatory boolean, in_default mixed)::
