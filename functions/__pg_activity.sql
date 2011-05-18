@@ -10,6 +10,7 @@ CREATE TYPE mike.__pg_activity_t AS (
     datname         name,
     procpid         integer,
     usename         name,
+    wait            boolean,
     duration        interval,
     current_query   text
 );
@@ -26,13 +27,16 @@ SELECT
     datname,
     procpid,
     usename,
+    waiting AS wait,
     now() - query_start AS duration,
     current_query
-FROM 
+FROM
     pg_stat_activity
 WHERE
     $1 IS NULL OR
-    datname = $1;
+    datname = $1
+ORDER BY
+    duration DESC;
 
 $__$ LANGUAGE sql STABLE;
 
