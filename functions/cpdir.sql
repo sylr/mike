@@ -42,7 +42,7 @@ BEGIN
 
     -- check that source directory does not already exists in target
     PERFORM * FROM mike.directory WHERE id_inode_parent = in_id_inode_target AND id_user = in_id_user AND state = 0 AND name = coalesce(in_name, v_directory_src.name);
-    IF FOUND THEN RAISE EXCEPTION 'there already is a dir named ''%'' in %', v_directory_src.name, in_id_inode_target; END IF;
+    IF FOUND THEN RAISE EXCEPTION 'there already is a dir named ''%'' in %', coalesce(in_name, v_directory_src.name), in_id_inode_target; END IF;
 
     -- select in_id_inode children directory
     FOR v_directory IN
