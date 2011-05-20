@@ -43,7 +43,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     FROM mike.directory
     WHERE
         id_user         = $1 AND
-        id_inode_parent = $2
+        id_inode_parent = $2 AND
+        state           = 0
     ORDER BY mike.__natsort(name)
 )
 UNION ALL
@@ -75,7 +76,8 @@ UNION ALL
     FROM mike.file
     WHERE
         id_user         = $1 AND
-        id_inode_parent = $2
+        id_inode_parent = $2 AND
+        state           = 0
     ORDER BY mike.__natsort(name)
 );
 
@@ -131,7 +133,8 @@ SELECT * FROM (
         FROM mike.directory
         WHERE
             id_user         = $1 AND
-            id_inode_parent = $2
+            id_inode_parent = $2 AND
+            state           = 0
         ORDER BY mike.__natsort(name)
         LIMIT $3 + $4
     )
@@ -164,7 +167,8 @@ SELECT * FROM (
         FROM mike.file
         WHERE
             id_user         = $1 AND
-            id_inode_parent = $2
+            id_inode_parent = $2 AND
+            state           = 0
         ORDER BY mike.__natsort(name)
         LIMIT $3 + $4
     )
@@ -229,7 +233,8 @@ BEGIN
                 FROM mike.directory
                 WHERE
                     id_user         = $1 AND
-                    id_inode_parent = $2
+                    id_inode_parent = $2 AND
+                    state           = 0
             )
             UNION ALL
             (
@@ -260,7 +265,8 @@ BEGIN
                 FROM mike.file
                 WHERE
                     id_user         = $1 AND
-                    id_inode_parent = $2
+                    id_inode_parent = $2 AND
+                    state           = 0
             )
         )  AS aggregate
         ORDER BY $$ || in_order_by || $$;$$
@@ -329,7 +335,8 @@ BEGIN
                 FROM mike.directory
                 WHERE
                     id_user         = $1 AND
-                    id_inode_parent = $2
+                    id_inode_parent = $2 AND
+                    state           = 0
             )
             UNION ALL
             (
@@ -360,7 +367,8 @@ BEGIN
                 FROM mike.file
                 WHERE
                     id_user         = $1 AND
-                    id_inode_parent = $2
+                    id_inode_parent = $2 AND
+                    state           = 0
             )
         )  AS aggregate
         ORDER BY    $$ || in_order_by || $$

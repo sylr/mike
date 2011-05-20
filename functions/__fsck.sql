@@ -102,7 +102,8 @@ BEGIN
                 FROM mike.directory
                 WHERE
                     id_user     = in_id_user AND
-                    id_inode    = v_inode.id_inode_parent;
+                    id_inode    = v_inode.id_inode_parent AND
+                    state       = 0;
 
                 -- path
                 IF v_inode.path != v_inode2.path THEN
@@ -211,7 +212,8 @@ BEGIN
                 versioning_size = v_file.calculated_versioning_size
             WHERE
                 id_user     = in_id_user AND
-                id_inode    = v_file.id_inode;
+                id_inode    = v_file.id_inode AND
+                state       = v_file.state;
 
             -- return
             IF (a_id_inode_doomed && ARRAY[v_file.id_inode]) = false THEN
@@ -241,8 +243,8 @@ BEGIN
             INTO v_record
         FROM mike.file
         WHERE
-            id_user = in_id_user AND
-            state = 0 AND
+            id_user         = in_id_user AND
+            state           = 0 AND
             id_inode_parent = v_directory.id_inode;
 
         -- file count
@@ -287,8 +289,8 @@ BEGIN
         FROM mike.directory
         WHERE
             id_user         = in_id_user AND
-            state           = 0 AND
-            id_inode_parent = v_directory.id_inode;
+            id_inode_parent = v_directory.id_inode AND
+            state           = v_directory.state;
 
         -- inner size
         IF v_directory.inner_size != v_record2.calculated_inner_size THEN
@@ -352,7 +354,8 @@ BEGIN
                 inner_dir_count         = v_record2.calculated_inner_dir_count
             WHERE
                 id_user     = in_id_user AND
-                id_inode    = v_directory.id_inode;
+                id_inode    = v_directory.id_inode AND
+                state       = v_directory.state;
 
             -- return
             IF (a_id_inode_doomed && ARRAY[v_directory.id_inode]) = false THEN

@@ -73,7 +73,7 @@ DECLARE
     v_treepath      ltree;
 BEGIN
     -- check name unicity
-    SELECT id_inode INTO out_id_inode FROM inode WHERE id_inode_parent = in_id_inode_parent AND name = in_name;
+    SELECT id_inode INTO out_id_inode FROM inode WHERE id_inode_parent = in_id_inode_parent AND name = in_name AND state = 0;
 
     IF FOUND THEN
         IF in_return_if_exists THEN
@@ -87,7 +87,7 @@ BEGIN
     SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
 
     -- select id_inode_parent
-    SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
+    SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent AND state = 0;
 
 #ifdef TREE_MAX_DEPTH
     -- check parent inode depth
@@ -123,15 +123,17 @@ BEGIN
         mtime               = greatest(mtime, now()),
         inner_mtime         = greatest(inner_mtime, now())
     WHERE
-        id_inode = in_id_inode_parent;
+        id_inode = in_id_inode_parent AND
+        state = 0;
 
     -- update ancestors metadata
     UPDATE mike.directory SET
         inner_dir_count     = inner_dir_count + 1,
         inner_mtime         = greatest(inner_mtime, now())
     WHERE
-        nlevel(v_treepath) > 2
-        AND treepath @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);
+        nlevel(v_treepath)  > 2 AND
+        state               = 0 AND
+        treepath           @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;

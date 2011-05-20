@@ -66,7 +66,8 @@ BEGIN
         versioning_size = v_versioning_size,
         mtime           = greatest(mtime, now())
     WHERE
-        id_inode = in_id_inode;
+        id_inode    = in_id_inode AND
+        state       = 0;
 
     -- update parent directory
     UPDATE mike.directory SET
@@ -77,7 +78,8 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        id_inode = v_file.id_inode_parent;
+        id_inode    = v_file.id_inode_parent AND
+        state       = 0;
 
     -- update great parents directories
     UPDATE mike.directory SET
@@ -86,7 +88,8 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        treepath @> subpath(v_file.treepath, 0, nlevel(v_file.treepath) - 2);
+        treepath   @> subpath(v_file.treepath, 0, nlevel(v_file.treepath) - 2) AND
+        state       = 0;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;

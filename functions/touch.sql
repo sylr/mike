@@ -24,11 +24,11 @@ DECLARE
     v_directory             mike.directory%rowtype;
 BEGIN
     -- check id_inode_parent
-    SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent;
+    SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent AND state = 0;
     IF NOT FOUND THEN RAISE EXCEPTION 'directory ''%'' not found', in_id_inode_parent; END IF;
 
     -- check name unicity
-    PERFORM id_inode FROM mike.file WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name;
+    PERFORM id_inode FROM mike.file WHERE id_user = in_id_user AND id_inode_parent = in_id_inode_parent AND name = in_name AND state = 0;
     IF FOUND THEN RAISE EXCEPTION 'inode name ''%'' already exists in directory ''%''', in_name, in_id_inode_parent; END IF;
 
     -- select id_inode
@@ -56,19 +56,21 @@ BEGIN
 
     -- update parent directory
     UPDATE mike.directory SET
-        file_count              = file_count + 1,
-        inner_file_count        = inner_file_count + 1,
-        mtime                   = greatest(mtime, now()),
-        inner_mtime             = greatest(inner_mtime, now())
+        file_count          = file_count + 1,
+        inner_file_count    = inner_file_count + 1,
+        mtime               = greatest(mtime, now()),
+        inner_mtime         = greatest(inner_mtime, now())
     WHERE
-        id_inode = in_id_inode_parent;
+        id_inode    = in_id_inode_parent AND
+        state       = 0;
 
     -- update great parents directories
     UPDATE mike.directory SET
         inner_file_count    = inner_file_count + 1,
         inner_mtime         = greatest(inner_mtime, now())
     WHERE
-        treepath @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1);
+        treepath   @> subpath(v_directory.treepath, 0, nlevel(v_directory.treepath) - 1) AND
+        state       = 0;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
