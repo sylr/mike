@@ -92,7 +92,7 @@ BEGIN
 #ifdef TREE_MAX_DEPTH
     -- check parent inode depth
     IF nlevel(v_directory.treepath) >= mike.__get_conf_int('tree_max_depth') - 1 THEN
-        RAISE 'parent inode depth too large to ';
+        RAISE 'parent directory tree depth too large';
     END IF;
 #endif /* TREE_MAX_DEPTH */
 
