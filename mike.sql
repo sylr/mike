@@ -193,7 +193,7 @@ CREATE TABLE mike.directory (
     inner_dir_count         integer         NOT NULL DEFAULT 0,
     file_count              smallint        NOT NULL DEFAULT 0::smallint,
     inner_file_count        integer         NOT NULL DEFAULT 0,
-    UNIQUE (id_inode_parent, name)
+    UNIQUE (id_inode_parent, state, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.directory IS 'table containing all the directory inodes';
@@ -227,7 +227,7 @@ CREATE TABLE mike.file (
 #ifndef NO_ATIME
     atime                   timestamptz,
 #endif /* NO_ATIME */
-    UNIQUE(id_inode_parent, name)
+    UNIQUE(id_inode_parent, state, name)
 ) INHERITS (mike.inode) WITH (fillfactor = 90);
 
 COMMENT ON TABLE mike.file IS 'table containing all the file inodes';
