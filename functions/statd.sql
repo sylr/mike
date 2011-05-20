@@ -5,6 +5,24 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.statd(
+    IN  in_id_inode             bigint
+) CASCADE;
+
+CREATE OR REPLACE FUNCTION mike.statd(
+    IN  in_id_inode             bigint
+) RETURNS mike.directory AS $__$
+
+SELECT * FROM mike.directory WHERE id_inode = $1;
+
+$__$ LANGUAGE sql STABLE COST 10;
+
+COMMENT ON FUNCTION mike.statd(
+    IN  in_id_inode             bigint
+) IS 'stat a directory';
+
+--------------------------------------------------------------------------------
+
+DROP FUNCTION IF EXISTS mike.statd(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint
 ) CASCADE;
@@ -12,11 +30,11 @@ DROP FUNCTION IF EXISTS mike.statd(
 CREATE OR REPLACE FUNCTION mike.statd(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint
-) RETURNS SETOF mike.directory AS $__$
+) RETURNS mike.directory AS $__$
 
 SELECT * FROM mike.directory WHERE id_user = $1 AND id_inode = $2;
 
-$__$ LANGUAGE sql STABLE COST 1000;
+$__$ LANGUAGE sql STABLE COST 10;
 
 COMMENT ON FUNCTION mike.statd(
     IN  in_id_user              integer,

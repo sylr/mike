@@ -5,6 +5,24 @@
 -- copyright: All rights reserved
 
 DROP FUNCTION IF EXISTS mike.stat(
+    IN  in_id_inode             bigint
+) CASCADE;
+
+CREATE OR REPLACE FUNCTION mike.stat(
+    IN  in_id_inode             bigint
+) RETURNS mike.inode AS $__$
+
+SELECT * FROM mike.inode WHERE id_inode = $1;
+
+$__$ LANGUAGE sql STABLE COST 10;
+
+COMMENT ON FUNCTION mike.stat(
+    IN  in_id_inode             bigint
+) IS 'stat an inode';
+
+--------------------------------------------------------------------------------
+
+DROP FUNCTION IF EXISTS mike.stat(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint
 ) CASCADE;
@@ -12,11 +30,11 @@ DROP FUNCTION IF EXISTS mike.stat(
 CREATE OR REPLACE FUNCTION mike.stat(
     IN  in_id_user              integer,
     IN  in_id_inode             bigint
-) RETURNS SETOF mike.inode AS $__$
+) RETURNS mike.inode AS $__$
 
 SELECT * FROM mike.inode WHERE id_user = $1 AND id_inode = $2;
 
-$__$ LANGUAGE sql STABLE COST 1000;
+$__$ LANGUAGE sql STABLE COST 10;
 
 COMMENT ON FUNCTION mike.stat(
     IN  in_id_user              integer,
