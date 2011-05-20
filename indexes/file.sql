@@ -10,7 +10,6 @@ CREATE INDEX file_id_inode_parent_alive_btree_idx   ON mike.file    USING btree 
 CREATE INDEX file_id_inode_parent_dead_btree_idx    ON mike.file    USING btree (id_inode_parent)       WITH (fillfactor = 99)  WHERE state > 0;
 CREATE INDEX file_id_user_btree_idx                 ON mike.file    USING btree (id_user)               WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX file_id_mimetype_btree_idx             ON mike.file    USING btree (id_user, id_mimetype)  WITH (fillfactor = 95)  WHERE state = 0;
-CREATE INDEX file_name_btree_idx                    ON mike.file    USING btree (id_user, name)         WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX file_ctime_btree_idx                   ON mike.file    USING btree (id_user, ctime)        WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX file_treepath_alive_gist_idx           ON mike.file    USING gist  (treepath)              WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX file_treepath_dead_gist_idx            ON mike.file    USING gist  (treepath)              WITH (fillfactor = 99)  WHERE state > 0;
