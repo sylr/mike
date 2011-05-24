@@ -33,3 +33,6 @@ DATABASE_FUNCTIONS  += xlink.sql
 DATABASE_FUNCTIONS  += stat.sql
 DATABASE_FUNCTIONS  += statd.sql
 DATABASE_FUNCTIONS  += statf.sql
+DATABASE_FUNCTIONS  += xstat.sql
+DATABASE_FUNCTIONS  += xstatd.sql
+DATABASE_FUNCTIONS  += xstatf.sql
