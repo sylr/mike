@@ -38,7 +38,7 @@ CREATE TYPE mike.inode_full_t AS (
     id_inode_parent,
     id_user,
     state,
-    mimetype,
+    mike.__get_mimetype(0::smallint) AS mimetype,
     name,
     path,
     treepath,
@@ -46,7 +46,7 @@ CREATE TYPE mike.inode_full_t AS (
     mtime,
     inner_mtime,
 #ifndef NO_ATIME
-    NULL AS atime,
+    NULL::timestamp AS atime,
 #endif
     size,
     inner_size,
@@ -65,22 +65,22 @@ CREATE TYPE mike.inode_full_t AS (
     id_inode_parent,
     id_user,
     state,
-    mimetype,
+    mike.__get_mimetype(id_mimetype) AS mimetype,
     name,
     path,
     treepath,
     ctime,
     mtime,
-    NULL AS inner_mtime,
+    NULL::timestamp AS inner_mtime,
 #ifndef NO_ATIME
     atime,
 #endif
     size,
-    NULL AS inner_size,
+    NULL::bigint AS inner_size,
     versioning_size,
-    NULL AS inner_versioning_size,
-    NULL AS dir_count,
-    NULL AS inner_dir_count,
-    NULL AS file_count,
-    NULL AS inner_file_count
+    NULL::bigint AS inner_versioning_size,
+    NULL::integer AS dir_count,
+    NULL::bigint AS inner_dir_count,
+    NULL::integer AS file_count,
+    NULL::bigint AS inner_file_count
 */

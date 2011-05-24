@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION mike.ls(
         mtime,
         inner_mtime,
 #ifndef NO_ATIME
-        NULL AS atime,
+        NULL::timestamptz AS atime,
 #endif /* NO_ATIME */
         size,
         inner_size,
@@ -61,18 +61,18 @@ UNION ALL
         treepath,
         ctime,
         mtime,
-        NULL AS inner_mtime,
+        NULL::timestamptz AS inner_mtime,
 #ifndef NO_ATIME
         atime,
 #endif /* NO_ATIME */
         size,
-        NULL AS inner_size,
+        NULL::bigint AS inner_size,
         versioning_size,
-        NULL AS inner_versioning_size,
-        NULL AS dir_count,
-        NULL AS inner_dir_count,
-        NULL AS file_count,
-        NULL AS inner_file_count
+        NULL::bigint AS inner_versioning_size,
+        NULL::smallint AS dir_count,
+        NULL::integer AS inner_dir_count,
+        NULL::smallint AS file_count,
+        NULL::integer AS inner_file_count
     FROM mike.file
     WHERE
         id_user         = $1 AND
@@ -120,7 +120,7 @@ SELECT * FROM (
             mtime,
             inner_mtime,
 #ifndef NO_ATIME
-            NULL AS atime,
+            NULL::timestamptz AS atime,
 #endif /* NO_ATIME */
             size,
             inner_size,
@@ -152,18 +152,18 @@ SELECT * FROM (
             treepath,
             ctime,
             mtime,
-            NULL AS inner_mtime,
+            NULL::timestamptz AS inner_mtime,
 #ifndef NO_ATIME
             atime,
 #endif /* NO_ATIME */
             size,
-            NULL AS inner_size,
+            NULL::bigint AS inner_size,
             versioning_size,
-            NULL AS inner_versioning_size,
-            NULL AS dir_count,
-            NULL AS inner_dir_count,
-            NULL AS file_count,
-            NULL AS inner_file_count
+            NULL::bigint AS inner_versioning_size,
+            NULL::smallint AS dir_count,
+            NULL::integer AS inner_dir_count,
+            NULL::smallint AS file_count,
+            NULL::integer AS inner_file_count
         FROM mike.file
         WHERE
             id_user         = $1 AND
@@ -220,7 +220,7 @@ BEGIN
                     mtime,
                     inner_mtime,
 #ifndef NO_ATIME
-                    NULL AS atime,
+                    NULL::timestamptz AS atime,
 #endif /* NO_ATIME */
                     size,
                     inner_size,
@@ -250,18 +250,18 @@ BEGIN
                     treepath,
                     ctime,
                     mtime,
-                    NULL AS inner_mtime,
+                    NULL::timestamptz AS inner_mtime,
 #ifndef NO_ATIME
                     atime,
 #endif /* NO_ATIME */
                     size,
-                    NULL AS inner_size,
+                    NULL::bigint AS inner_size,
                     versioning_size,
-                    NULL AS inner_versioning_size,
-                    NULL AS dir_count,
-                    NULL AS inner_dir_count,
-                    NULL AS file_count,
-                    NULL AS inner_file_count
+                    NULL::bigint AS inner_versioning_size,
+                    NULL::smallint AS dir_count,
+                    NULL::integer AS inner_dir_count,
+                    NULL::smallint AS file_count,
+                    NULL::integer AS inner_file_count
                 FROM mike.file
                 WHERE
                     id_user         = $1 AND
@@ -322,7 +322,7 @@ BEGIN
                     mtime,
                     inner_mtime,
 #ifndef NO_ATIME
-                    NULL AS atime,
+                    NULL::timestamptz AS atime,
 #endif /* NO_ATIME */
                     size,
                     inner_size,
@@ -352,18 +352,18 @@ BEGIN
                     treepath,
                     ctime,
                     mtime,
-                    NULL AS inner_mtime,
+                    NULL::timestamptz AS inner_mtime,
 #ifndef NO_ATIME
                     atime,
 #endif /* NO_ATIME */
                     size,
-                    NULL AS inner_size,
+                    NULL::bigint AS inner_size,
                     versioning_size,
-                    NULL AS inner_versioning_size,
-                    NULL AS dir_count,
-                    NULL AS inner_dir_count,
-                    NULL AS file_count,
-                    NULL AS inner_file_count
+                    NULL::bigint AS inner_versioning_size,
+                    NULL::smallint AS dir_count,
+                    NULL::integer AS inner_dir_count,
+                    NULL::smallint AS file_count,
+                    NULL::integer AS inner_file_count
                 FROM mike.file
                 WHERE
                     id_user         = $1 AND
