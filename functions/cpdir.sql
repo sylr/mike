@@ -108,10 +108,13 @@ BEGIN
                 state, id_mimetype, name,
                 v_path || '/' || name, v_treepath,
                 ctime, mtime,
-#ifndef NO_ATIME
-                atime,
-#endif /* NO_ATIME */
+#ifdef INODE_RAND_COLUMN
+                rand,
+#endif /* INODE_RAND_COLUMN */
                 size, versioning_size
+#ifndef NO_ATIME
+                , atime
+#endif /* NO_ATIME */
             FROM mike.file
             WHERE
                 id_user         = in_id_user    AND
@@ -127,20 +130,26 @@ BEGIN
                 state, id_mimetype, name,
                 path, treepath,
                 ctime, mtime,
-#ifndef NO_ATIME
-                atime,
-#endif /* NO_ATIME */
+#ifdef INODE_RAND_COLUMN
+                rand,
+#endif /* INODE_RAND_COLUMN */
                 size, versioning_size
+#ifndef NO_ATIME
+                , atime
+#endif /* NO_ATIME */
             )
             VALUES (
                 v_nextval_file, v_nextval, v_file.id_user,
                 v_file.state, v_file.id_mimetype, v_file.name,
                 v_path || '/' || v_file.name, v_treepath || v_nextval_file::text::ltree,
                 v_file.ctime, v_file.mtime,
-#ifndef NO_ATIME
-                v_file.atime,
-#endif /* NO_ATIME */
+#ifdef INODE_RAND_COLUMN
+                v_file.rand,
+#endif /* INODE_RAND_COLUMN */
                 v_file.size, v_file.versioning_size
+#ifndef NO_ATIME
+                , v_file.atime
+#endif /* NO_ATIME */
             );
 
             -- file's links
