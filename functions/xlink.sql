@@ -6,12 +6,14 @@
 
 DROP FUNCTION IF EXISTS mike.xlink(
     IN  in_id_inode     bigint,
-    IN  in_id_xfile     bigint
+    IN  in_id_xfile     bigint,
+    IN  in_ctime        bigint
 ) CASCADE;
 
 CREATE OR REPLACE FUNCTION mike.xlink(
     IN  in_id_inode     bigint,
-    IN  in_id_xfile     bigint
+    IN  in_id_xfile     bigint,
+    IN  in_ctime        timestamptz DEFAULT NULL
 ) RETURNS void AS $__$
 
 DECLARE
@@ -19,6 +21,8 @@ DECLARE
     v_xfile             mike.xfile%rowtype;
     v_as_file_xfile     mike.as_file_xfile%rowtype;
     v_versioning_size   bigint;
+    v_exist             boolean := false;
+    v_last              boolean := true;
 BEGIN
     -- file
     SELECT * INTO v_file FROM mike.file WHERE id_inode = in_id_inode AND state = 0;
@@ -28,25 +32,57 @@ BEGIN
     SELECT * INTO v_xfile FROM mike.xfile WHERE id_xfile = in_id_xfile;
     IF NOT FOUND THEN RAISE EXCEPTION 'xfile ''%'' not found', in_id_xfile; END IF;
 
-    -- as_file_xfile
+    -- selecting last link of the inode
     SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_inode = in_id_inode ORDER BY ctime DESC LIMIT 1;
 
-    -- check if last xfile linked is not already the one we are linking
     IF FOUND THEN
+        -- check if last xfile linked is not already the one we are linking
         IF v_as_file_xfile.id_xfile = in_id_xfile THEN
-            RAISE EXCEPTION 'xfile ''%'' is already the last linked to ''%''', in_id_xfile, in_id_file;
+            RAISE WARNING 'xfile ''%'' is already the last linked to ''%'', doing nothing', in_id_xfile, in_id_file;
+            RETURN;
+        END IF;
+
+        -- checking if given ctime is greater than last one
+        IF in_ctime IS NOT NULL AND in_ctime < v_as_file_xfile.ctime THEN
+            v_last := false;
+        END IF;
+
+        -- checking if id_xfile already part of the inode history
+        PERFORM * FROM mike.as_file_xfile WHERE id_xfile = in_id_xfile LIMIT 1;
+
+        IF FOUND THEN
+            v_exist := true;
+        END IF;
+
+        -- checking that in_ctime is unique
+        IF in_ctime IS NOT NULL THEN
+            SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_inode = in_id_inode AND ctime = in_ctime LIMIT 1;
+
+            IF FOUND AND v_as_file_xfile.id_xfile = in_id_xfile THEN
+                RAISE WARNING 'exact same link already exists, doing nothing';
+                RETURN;
+            ELSEIF FOUND THEN
+                RAISE EXCEPTION 'file ''%'' already has a link with given ctime', in_id_inode;
+            END IF;
         END IF;
     END IF;
 
     -- linking
     INSERT INTO mike.as_file_xfile (
         id_inode,
-        id_xfile
+        id_xfile,
+        ctime
     )
     VALUES (
         in_id_inode,
-        in_id_xfile
+        in_id_xfile,
+        coalesce(in_ctime, now())
     );
+
+    -- don't continue if xfile already part of the history and not last version
+    IF v_exist = true AND v_last = false THEN
+        RETURN;
+    END IF;
 
     -- calculating versioning size
     SELECT
