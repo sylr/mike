@@ -83,9 +83,6 @@ BEGIN
         END IF;
     END IF;
 
-    -- select id_inode
-    SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
-
     -- select id_inode_parent
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode_parent AND state = 0;
 
@@ -95,6 +92,9 @@ BEGIN
         RAISE 'parent directory tree depth too large';
     END IF;
 #endif /* TREE_MAX_DEPTH */
+
+    -- select id_inode
+    SELECT nextval('inode_id_inode_seq'::regclass) INTO out_id_inode;
 
     v_treepath := v_directory.treepath || out_id_inode::text::ltree;
 
