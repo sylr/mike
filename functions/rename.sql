@@ -21,7 +21,7 @@ DECLARE
 BEGIN
     -- select in_id_inode
     SELECT * INTO v_inode FROM mike.inode WHERE id_inode = in_id_inode AND id_user = in_id_user AND state = 0;
-    IF NOT FOUND THEN RAISE EXCEPTION 'in_id_inode #% not found', in_id_inode; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'inode ''%'' not found', in_id_inode; END IF;
 
     -- checking is name already exists
     PERFORM

@@ -20,11 +20,11 @@ DECLARE
 BEGIN
     -- select directory
     SELECT * INTO v_directory FROM mike.directory WHERE id_inode = in_id_inode AND id_user = in_id_user;
-    IF NOT FOUND THEN RAISE EXCEPTION 'directory #% owned by #% not found', in_id_inode, in_id_user; END IF;
+    IF NOT FOUND THEN RAISE EXCEPTION 'directory ''%'' owned by ''%'' not found', in_id_inode, in_id_user; END IF;
 
     -- directory already removed
     IF v_directory.state >= 2 THEN
-        RAISE EXCEPTION 'directory #% already removed', in_id_inode;
+        RAISE EXCEPTION 'directory ''%'' already removed', in_id_inode;
     END IF;
 
     -- select parent directory
