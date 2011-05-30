@@ -48,7 +48,7 @@ COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             integer,
     IN  name                text,
     OUT id_inode            bigint
-) IS 'create a directory which does not have an id_inode_parent, root folder';
+) IS 'create a root directory';
 
 --------------------------------------------------------------------------------
 
@@ -116,24 +116,28 @@ BEGIN
         v_treepath
      );
 
-    -- update id_inode parent
+    -- update parent directory
     UPDATE mike.directory SET
         dir_count           = dir_count + 1,
         inner_dir_count     = inner_dir_count + 1,
         mtime               = greatest(mtime, now()),
         inner_mtime         = greatest(inner_mtime, now())
     WHERE
-        id_inode = in_id_inode_parent AND
-        state = 0;
+        id_user     = in_id_user AND
+        id_inode    = in_id_inode_parent AND
+        state       = 0;
 
-    -- update ancestors metadata
-    UPDATE mike.directory SET
-        inner_dir_count     = inner_dir_count + 1,
-        inner_mtime         = greatest(inner_mtime, now())
-    WHERE
-        nlevel(v_treepath)  > 2 AND
-        state               = 0 AND
-        treepath           @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);
+    -- if parent is not a root directory
+    IF nlevel(v_treepath) > 2 THEN
+        -- update ancestors metadata
+        UPDATE mike.directory SET
+            inner_dir_count     = inner_dir_count + 1,
+            inner_mtime         = greatest(inner_mtime, now())
+        WHERE
+            id_user     = in_id_user AND
+            state       = 0 AND
+            treepath   @> subpath(v_treepath, 0, nlevel(v_treepath) - 2);
+    END IF;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
@@ -142,4 +146,4 @@ COMMENT ON FUNCTION mike.mkdir(
     IN  id_user             integer,
     IN  name                text,
     OUT id_inode            bigint
-) IS 'create a directory with an id_inode_parent';
+) IS 'create a directory';
