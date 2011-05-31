@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION mike.xlink(
     IN  in_ctime        timestamptz DEFAULT NULL
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_file              mike.file%rowtype;
     v_xfile             mike.xfile%rowtype;

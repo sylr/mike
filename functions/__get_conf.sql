@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf(
     IN  in_default      text    DEFAULT NULL
 ) RETURNS text AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_value     text;
 BEGIN
@@ -53,6 +55,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf_array(
     IN  in_mandatory    boolean DEFAULT true,
     IN  in_default      text[]  DEFAULT NULL
 ) RETURNS text[] AS $__$
+
+-- Version: MIKE_VERSION
 
 DECLARE
     v_value     text[];
@@ -92,6 +96,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf_int(
     IN  in_default      integer DEFAULT NULL
 ) RETURNS integer AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_value     integer;
 BEGIN
@@ -129,6 +135,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf_int_array(
     IN  in_mandatory    boolean     DEFAULT true,
     IN  in_default      integer[]   DEFAULT NULL
 ) RETURNS integer[] AS $__$
+
+-- Version: MIKE_VERSION
 
 DECLARE
     v_value     integer[];
@@ -168,6 +176,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf_bigint(
     IN  in_default      bigint  DEFAULT NULL
 ) RETURNS bigint AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_value     bigint;
 BEGIN
@@ -205,6 +215,8 @@ CREATE OR REPLACE FUNCTION mike.__get_conf_bigint_array(
     IN  in_mandatory    boolean     DEFAULT true,
     IN  in_default      bigint[]    DEFAULT NULL
 ) RETURNS bigint[] AS $__$
+
+-- Version: MIKE_VERSION
 
 DECLARE
     v_value     bigint[];

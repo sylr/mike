@@ -17,6 +17,8 @@ CREATE OR REPLACE FUNCTION mike.__fsck(
     in_dry_run      boolean DEFAULT false
 ) RETURNS mike.__fsck_t AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_inode             record;
     v_inode2            record;

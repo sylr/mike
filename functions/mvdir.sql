@@ -18,6 +18,8 @@ CREATE OR REPLACE FUNCTION mike.mvdir(
     IN  in_name                 text DEFAULT NULL
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_int                       integer;
     v_nlevel                    integer;

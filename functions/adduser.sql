@@ -18,6 +18,8 @@ CREATE OR REPLACE FUNCTION mike.adduser(
     OUT out_id_user         integer
 ) AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_id_user       integer;
 BEGIN

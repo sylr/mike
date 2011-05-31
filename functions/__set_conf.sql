@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION mike.__set_conf(
     IN  in_value    text
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 BEGIN
     PERFORM * FROM mike.conf WHERE key = in_key;
 

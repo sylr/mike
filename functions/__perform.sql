@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION mike.__perform(
     IN  in_sql          text
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 BEGIN
     PERFORM in_sql;
 END;

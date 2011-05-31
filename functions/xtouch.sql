@@ -22,6 +22,8 @@ CREATE OR REPLACE FUNCTION mike.xtouch(
     OUT out_id_volume       smallint
 ) AS $__$
 
+-- Version: MIKE_VERSION
+
 BEGIN
     -- select id_volume
     SELECT mike.__get_random_volume() INTO out_id_volume;

@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION mike.rmdir(
     IN  in_id_inode         bigint
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_directory             mike.directory%rowtype;
     v_directory_parent      mike.directory%rowtype;

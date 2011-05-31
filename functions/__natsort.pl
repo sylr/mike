@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION mike.__natsort_pl(
     in_text         text
 ) RETURNS text AS $__$
 
+# Version: MIKE_VERSION
+
 $_[0] =~ s/([0-9]+)/sprintf("%012s", $&)/eg;
 return $_[0];
 

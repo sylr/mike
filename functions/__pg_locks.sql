@@ -22,6 +22,8 @@ DROP FUNCTION IF EXISTS mike.__pg_locks(
 CREATE OR REPLACE FUNCTION mike.__pg_locks(
 ) RETURNS SETOF __pg_locks_t AS $__$
 
+-- Version: MIKE_VERSION
+
 SELECT
     pg_database.datname,
     pg_class.relname,

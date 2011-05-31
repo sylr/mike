@@ -20,6 +20,8 @@ CREATE OR REPLACE FUNCTION mike.__stream(
     in_versioning       boolean   DEFAULT true
 ) RETURNS mike.__stream_t AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_id_inode_d        bigint;
     v_id_inode_f        bigint;
@@ -135,6 +137,8 @@ CREATE OR REPLACE FUNCTION mike.__stream(
     in_inode_by_level   integer DEFAULT 10,
     in_versioning       boolean DEFAULT true
 ) RETURNS mike.__stream_t AS $__$
+
+-- Version: MIKE_VERSION
 
 SELECT * FROM mike.__stream(
     $1,

@@ -20,6 +20,8 @@ CREATE OR REPLACE FUNCTION mike.touch(
     OUT out_id_inode        bigint
 ) RETURNS bigint AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_directory             mike.directory%rowtype;
 BEGIN

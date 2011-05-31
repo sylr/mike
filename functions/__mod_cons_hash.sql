@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION mike.__mod_cons_hash(
     OUT remainder       integer
 ) AS $__$
 
+-- Version: MIKE_VERSION
+
 BEGIN
     SELECT in_dividend % in_divisor INTO remainder;
 END;

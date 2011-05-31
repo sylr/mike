@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION __make_lot_of_directories(
     in_nb_by_level  integer DEFAULT 10
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_id_root_directory bigint;
     v_id_directory      bigint;

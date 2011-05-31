@@ -15,6 +15,8 @@ CREATE TYPE mike.__pg_functions_t AS (
 CREATE OR REPLACE FUNCTION mike.__pg_functions(
 ) RETURNS SETOF __pg_functions_t AS $__$
 
+-- Version: MIKE_VERSION
+
 SELECT
     p.oid AS oid,
     p.proname AS "Name",

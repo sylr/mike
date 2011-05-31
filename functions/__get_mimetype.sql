@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION mike.__get_mimetype(
     IN  in_id_mimetype      smallint
 ) RETURNS text AS $__$
 
+-- Version: MIKE_VERSION
+
 SELECT mimetype FROM mike.mimetype WHERE id_mimetype = $1;
 
 $__$ LANGUAGE sql STABLE COST 10;

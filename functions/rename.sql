@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION mike.rename(
     IN  in_new_name             text
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_inode                     mike.inode%rowtype;
 BEGIN

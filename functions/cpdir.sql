@@ -17,6 +17,8 @@ CREATE OR REPLACE FUNCTION mike.cpdir(
     IN  in_name             text DEFAULT NULL
 ) RETURNS bigint AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_file                              mike.file%rowtype;
     v_directory                         mike.directory%rowtype;

@@ -34,6 +34,8 @@ CREATE OR REPLACE FUNCTION mike.statd(
     IN  in_id_inode         bigint
 ) RETURNS mike.statd_t AS $__$
 
+-- Version: MIKE_VERSION
+
 SELECT
     id_inode,
     id_inode_parent,
@@ -69,6 +71,8 @@ CREATE OR REPLACE FUNCTION mike.statd(
     IN  in_id_user          integer,
     IN  in_id_inode         bigint
 ) RETURNS mike.statd_t AS $__$
+
+-- Version: MIKE_VERSION
 
 SELECT
     id_inode,

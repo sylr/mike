@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION mike.__get_random_volume(
     OUT out_id_volume       smallint
 ) AS $__$
 
+-- Version: MIKE_VERSION
+
 -- select random volume with an active state and which
 -- max size has not been reached with a security window.
 

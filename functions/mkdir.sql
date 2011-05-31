@@ -16,6 +16,8 @@ CREATE OR REPLACE FUNCTION mike.mkdir(
     OUT out_id_inode        bigint
 ) AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_directory             mike.directory%rowtype;
     v_parent_treepath       ltree;
@@ -67,6 +69,8 @@ CREATE OR REPLACE FUNCTION mike.mkdir(
     IN  in_return_if_exists     boolean DEFAULT false,
     OUT out_id_inode            bigint
 ) AS $__$
+
+-- Version: MIKE_VERSION
 
 DECLARE
     v_directory     mike.directory%rowtype;

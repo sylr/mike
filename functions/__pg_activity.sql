@@ -23,6 +23,8 @@ CREATE OR REPLACE FUNCTION mike.__pg_activity(
     in_datname      text DEFAULT NULL
 ) RETURNS SETOF __pg_activity_t AS $__$
 
+-- Version: MIKE_VERSION
+
 SELECT
     datname,
     procpid,

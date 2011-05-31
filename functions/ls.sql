@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_inode             bigint
 ) RETURNS SETOF mike.inode_full_t AS $__$
 
+-- Version: MIKE_VERSION
+
 -- PREPARE ls(int, bigint) AS
 (
     -- directories
@@ -103,6 +105,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_limit                integer,
     IN  in_offset               integer DEFAULT 0
 ) RETURNS SETOF mike.inode_full_t AS $__$
+
+-- Version: MIKE_VERSION
 
 SELECT * FROM (
     (
@@ -198,6 +202,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_id_inode             bigint,
     IN  in_order_by             text
 ) RETURNS SETOF mike.inode_full_t AS $__$
+
+-- Version: MIKE_VERSION
 
 BEGIN
     -- sanity check
@@ -300,6 +306,8 @@ CREATE OR REPLACE FUNCTION mike.ls(
     IN  in_limit                integer,
     IN  in_offset               integer DEFAULT 0
 ) RETURNS SETOF mike.inode_full_t AS $__$
+
+-- Version: MIKE_VERSION
 
 BEGIN
     -- sanity check

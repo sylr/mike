@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION mike.__check_order_by_cond(
     in_relname          text
 ) RETURNS void AS $__$
 
+-- Version: MIKE_VERSION
+
 DECLARE
     v_cond          text;
     v_text_array    text[];
