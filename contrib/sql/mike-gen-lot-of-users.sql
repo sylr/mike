@@ -4,7 +4,7 @@
 -- date: 09/03/2011
 -- copyright: All rights reserved
 
-INSERT INTO mike.user (id_user_sso, nickname)
+INSERT INTO mike.user (id_sso, nickname)
 WITH last_user_seq AS (
     (
         SELECT 0::bigint AS last
@@ -12,11 +12,11 @@ WITH last_user_seq AS (
     UNION ALL
     (
         SELECT
-            substring(id_user_sso, 6)::bigint AS last
+            substring(id_sso, 6)::bigint AS last
         FROM mike.user
         WHERE
-            id_user_sso LIKE 'mike-%'
-        ORDER BY __natsort(id_user_sso) DESC
+            id_sso LIKE 'mike-%'
+        ORDER BY __natsort(id_sso) DESC
         LIMIT 1
     )
     ORDER BY last DESC

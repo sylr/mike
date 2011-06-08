@@ -223,23 +223,23 @@ info:
 	@$(ECHO) '    ' LINK MIKE_CPP_DEFINES "'$(DEFINES)'";
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', E'$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_DEFAULT_USERS;
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('sylvain', 'srab');"                >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('paul', 'cheval');"                 >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('alexandre', 'qLex');"              >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('robert', 'robish');"               >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('vincent', 'maugette');"            >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('gauthier', 'goth');"               >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('rémi', 'buisre');"                 >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('marie', 'marie');"                 >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('christophe', 'ché');"              >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('jean-christophe', 'jean-claude');" >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('emmanuel', 'manu');"               >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('yannick', 'jefferson');"           >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('yan', 'jurax');"                   >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('arnaud', 'arn');"                  >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('mathilde', 'mathilde');"           >> $(TARGET_FILE);
-	@$(ECHO) "INSERT INTO mike.user (id_user_sso, nickname) VALUES ('khaled', 'Mr. K');"                >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('mike', 'mike');"                   >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('sylvain', 'srab');"                >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('paul', 'cheval');"                 >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('alexandre', 'qLex');"              >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('robert', 'robish');"               >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('vincent', 'maugette');"            >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('gauthier', 'goth');"               >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('rémi', 'buisre');"                 >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('marie', 'marie');"                 >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('christophe', 'ché');"              >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('jean-christophe', 'jean-claude');" >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('emmanuel', 'manu');"               >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('yannick', 'jefferson');"           >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('yan', 'jurax');"                   >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('arnaud', 'arn');"                  >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('mathilde', 'mathilde');"           >> $(TARGET_FILE);
+	@$(ECHO) "INSERT INTO mike.user (id_sso, nickname) VALUES ('khaled', 'Mr. K');"                >> $(TARGET_FILE);
 	@$(SLEEP) $(SLEEP_TIME)
 	
 	@# MIKE_TAG_DIFF_FILE

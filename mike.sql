@@ -50,17 +50,17 @@ DROP TABLE IF EXISTS mike.user CASCADE;
 
 CREATE TABLE mike.user (
     id_user                 serial          NOT NULL PRIMARY KEY,
-    id_user_sso             text            DEFAULT NULL,
+    id_sso                  text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
     state                   smallint        NOT NULL DEFAULT 1,
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
-    UNIQUE (id_user_sso)
+    UNIQUE (id_sso)
 );
 
 COMMENT ON TABLE mike.user IS 'user informations';
 COMMENT ON COLUMN mike.user.id_user IS 'user unique identifier';
-COMMENT ON COLUMN mike.user.id_user_sso IS 'user unique external identifier';
+COMMENT ON COLUMN mike.user.id_sso IS 'user unique external identifier';
 COMMENT ON COLUMN mike.user.nickname IS 'user nickname';
 COMMENT ON COLUMN mike.user.state IS 'user state';
 COMMENT ON COLUMN mike.user.ctime IS 'user creation date';
