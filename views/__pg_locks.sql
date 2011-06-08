@@ -1,29 +1,12 @@
--- Mike's Function
+-- Mike's View
 -- vim: set tabstop=4 expandtab autoindent smartindent:
 -- author: Sylvain Rabot <sylvain@abstraction.fr>
 -- date: 23/03/2011
 -- copyright: All rights reserved
 
-DROP TYPE IF EXISTS mike.__pg_locks_t CASCADE;
+DROP VIEW IF EXISTS mike.__pg_locks CASCADE;
 
-CREATE TYPE mike.__pg_locks_t AS (
-    datname         name,
-    relname         name,
-    locktype        text,
-    mode            text,
-    granted         boolean,
-    pid             integer,
-    transactionid   xid
-);
-
-DROP FUNCTION IF EXISTS mike.__pg_locks(
-) CASCADE;
-
-CREATE OR REPLACE FUNCTION mike.__pg_locks(
-) RETURNS SETOF __pg_locks_t AS $__$
-
--- Version: MIKE_VERSION
-
+CREATE OR REPLACE VIEW mike.__pg_locks AS
 SELECT
     pg_database.datname,
     pg_class.relname,
@@ -46,8 +29,3 @@ ORDER BY
     mode,
     relname,
     pid;
-
-$__$ LANGUAGE sql STABLE;
-
-COMMENT ON FUNCTION mike.__pg_locks(
-) IS 'show databases locks';

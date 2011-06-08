@@ -1,22 +1,12 @@
--- Mike's Function
+-- Mike's View
 -- vim: set tabstop=4 expandtab autoindent smartindent:
 -- author: Sylvain Rabot <sylvain@abstraction.fr>
 -- date: 04/03/2011
 -- copyright: All rights reserved
 
-DROP TYPE IF EXISTS mike.__pg_functions_t CASCADE;
+DROP VIEW IF EXISTS mike.__pg_functions CASCADE;
 
-CREATE TYPE mike.__pg_functions_t AS (
-    "oid"           oid,
-    "Name"          name,
-    "Arguments"     text
-);
-
-CREATE OR REPLACE FUNCTION mike.__pg_functions(
-) RETURNS SETOF __pg_functions_t AS $__$
-
--- Version: MIKE_VERSION
-
+CREATE OR REPLACE VIEW mike.__pg_functions AS
 SELECT
     p.oid AS oid,
     p.proname AS "Name",
@@ -27,5 +17,3 @@ LEFT JOIN pg_catalog.pg_namespace n ON n.oid = p.pronamespace
 WHERE
     n.nspname ~ '^(mike)$'
 ORDER BY "Name", "Arguments";
-
-$__$ LANGUAGE sql;

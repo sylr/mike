@@ -27,9 +27,6 @@ SYNOPSIS
  __natsort                 | in_text text
  __natsort_pl              | in_text text
  __perform                 | in_sql text
- __pg_activity             | in_datname text
- __pg_functions            |
- __pg_locks                |
  __set_conf                | in_key text, in_value text
  __stream                  | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
  __stream                  | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
