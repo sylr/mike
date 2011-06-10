@@ -157,6 +157,7 @@ BEGIN
             -- file's links
             INSERT INTO mike.as_file_xfile
             SELECT
+                id_user,
                 v_nextval_file,
                 id_xfile,
                 ctime

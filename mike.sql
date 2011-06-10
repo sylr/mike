@@ -332,10 +332,10 @@ COMMENT ON TABLE mike.xfile IS 'xfile represents files on the file system';
 DROP TABLE IF EXISTS mike.as_file_xfile CASCADE;
 
 CREATE TABLE mike.as_file_xfile (
-    id_inode                bigint          NOT NULL REFERENCES mike.file (id_inode) ON DELETE RESTRICT,
+    id_user                 integer         NOT NULL REFERENCES mike.user (id_user) ON DELETE CASCADE,
+    id_inode                bigint          NOT NULL REFERENCES mike.file (id_inode) ON DELETE CASCADE,
     id_xfile                bigint          NOT NULL REFERENCES mike.xfile (id_xfile) ON DELETE CASCADE,
     ctime                   timestamptz     NOT NULL DEFAULT now()
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
-
