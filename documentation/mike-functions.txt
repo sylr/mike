@@ -8,45 +8,60 @@ mike-functions - mike's functions
 SYNOPSIS
 --------
 ---------------------------
-           Name            |                                                        Arguments
----------------------------+-------------------------------------------------------------------------------------------------------------------------
- __check_order_by_cond     | in_order_by text, in_relname text
- __fsck                    | in_id_user integer, in_dry_run boolean
- __get_conf                | in_key text, in_mandatory boolean, in_default text
- __get_conf_array          | in_key text, in_mandatory boolean, in_default text[]
- __get_conf_bigint         | in_key text, in_mandatory boolean, in_default bigint
- __get_conf_bigint_array   | in_key text, in_mandatory boolean, in_default bigint[]
- __get_conf_int            | in_key text, in_mandatory boolean, in_default integer
- __get_conf_int_array      | in_key text, in_mandatory boolean, in_default integer[]
- __get_id_mimetype         | in_mimetype text, OUT out_id_mimetype smallint
- __get_id_mimetype_stable  | in_mimetype text, OUT out_id_mimetype smallint
- __get_mimetype            | in_id_mimetype smallint
- __get_random_volume       | OUT out_id_volume smallint
- __make_lot_of_directories | in_id_user integer, in_level integer, in_nb_by_level integer
- __mod_cons_hash           | in_dividend bigint, in_divisor integer, OUT remainder integer
- __natsort                 | in_text text
- __natsort_pl              | in_text text
- __perform                 | in_sql text
- __set_conf                | in_key text, in_value text
- __stream                  | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
- __stream                  | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
- adduser                   | in_id_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
- cpdir                     | in_id_user integer, in_id_inode bigint, in_id_inode_target bigint, in_name text
- ls                        | in_id_user integer, in_id_inode bigint
- ls                        | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
- ls                        | in_id_user integer, in_id_inode bigint, in_order_by text
- ls                        | in_id_user integer, in_id_inode bigint, in_order_by text, in_limit integer, in_offset integer
- mkdir                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
- mkdir                     | in_id_user integer, in_name text, OUT out_id_inode bigint
- mvdir                     | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint, in_name text
- rename                    | in_id_user integer, in_id_inode bigint, in_new_name text
- rmdir                     | in_id_user integer, in_id_inode bigint
- stat                      | in_id_user integer, in_id_inode bigint
- statd                     | in_id_user integer, in_id_inode bigint
- statf                     | in_id_user integer, in_id_inode bigint
- touch                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
- xlink                     | in_id_inode bigint, in_id_xfile bigint
- xtouch                    | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
+                 Name                  |                                                        Arguments
+---------------------------------------+------------------------------------------------------------------------------------------------------------------------
+ __check_order_by_cond                 | in_order_by text, in_relname text
+ __fsck                                | in_id_user integer, in_dry_run boolean
+ __get_conf                            | in_key text, in_mandatory boolean, in_default text
+ __get_conf_array                      | in_key text, in_mandatory boolean, in_default text[]
+ __get_conf_bigint                     | in_key text, in_mandatory boolean, in_default bigint
+ __get_conf_bigint_array               | in_key text, in_mandatory boolean, in_default bigint[]
+ __get_conf_int                        | in_key text, in_mandatory boolean, in_default integer
+ __get_conf_int_array                  | in_key text, in_mandatory boolean, in_default integer[]
+ __get_id_mimetype                     | in_mimetype text, OUT out_id_mimetype smallint
+ __get_id_mimetype_stable              | in_mimetype text, OUT out_id_mimetype smallint
+ __get_least_used_lv                   |
+ __get_mimetype                        | in_id_mimetype smallint
+ __get_random_volume                   | OUT out_id_volume smallint
+ __lvcreate                            | in_lv_name text
+ __lvusers                             | in_lv_name text
+ __make_lot_of_directories             | in_id_user integer, in_level integer, in_nb_by_level integer
+ __mod_cons_hash                       | in_dividend bigint, in_divisor integer, OUT remainder integer
+ __natsort                             | in_text text
+ __natsort_pl                          | in_text text
+ __perform                             | in_sql text
+ __set_conf                            | in_key text, in_value text
+ __stream                              | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
+ __stream                              | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
+ __trigger_as_file_xfile_before_insert |
+ __trigger_directory_before_insert     |
+ __trigger_file_before_insert          |
+ adduser                               | in_id_sso text, in_nickname text, in_state smallint, OUT out_id_user integer
+ cpdir                                 | in_id_user integer, in_id_inode bigint, in_id_inode_target bigint, in_name text
+ ls                                    | in_id_user integer, in_id_inode bigint
+ ls                                    | in_id_user integer, in_id_inode bigint, in_limit integer, in_offset integer
+ ls                                    | in_id_user integer, in_id_inode bigint, in_order_by text
+ ls                                    | in_id_user integer, in_id_inode bigint, in_order_by text, in_limit integer, in_offset integer
+ mkdir                                 | in_id_user integer, in_id_inode_parent bigint, in_name text, in_return_if_exists boolean, OUT out_id_inode bigint
+ mkdir                                 | in_id_user integer, in_name text, OUT out_id_inode bigint
+ mvdir                                 | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint, in_name text
+ rename                                | in_id_user integer, in_id_inode bigint, in_new_name text
+ rmdir                                 | in_id_user integer, in_id_inode bigint
+ stat                                  | in_id_inode bigint
+ stat                                  | in_id_user integer, in_id_inode bigint
+ statd                                 | in_id_inode bigint
+ statd                                 | in_id_user integer, in_id_inode bigint
+ statf                                 | in_id_inode bigint
+ statf                                 | in_id_user integer, in_id_inode bigint
+ touch                                 | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
+ xlink                                 | in_id_user integer, in_id_inode bigint, in_id_xfile bigint, in_ctime timestamp with time zone
+ xstat                                 | in_id_inode bigint
+ xstat                                 | in_id_user integer, in_id_inode bigint
+ xstatd                                | in_id_inode bigint
+ xstatd                                | in_id_user integer, in_id_inode bigint
+ xstatf                                | in_id_inode bigint
+ xstatf                                | in_id_user integer, in_id_inode bigint
+ xtouch                                | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
 ---------------------------
 
 DESCRIPTION
@@ -85,6 +100,11 @@ LOW LEVEL FUNCTIONS
     Return the id of a mimetype.
  +
  +
+(text) __get_least_used_lv()::
+ +
+    Return the name of the least used lv.
+ +
+ +
 (text) __get_mimetype(smallint)::
  +
     Return mimetype label.
@@ -95,6 +115,21 @@ LOW LEVEL FUNCTIONS
     Return the id of an active and not full volume. You can override the volume
     security windows defaulted to 10% by setting the 'volume_security_window'
     configuration. See mike linkmike:mike-configurations[7].
+ +
+ +
+(void) __lvcreate(in_lv_name)::
+ +
+    Create a logical volume. This function creates all children tables composing
+    a logical volume (directory, file, as_file_xfile).
+ +
+ +
+(integer[]) __lvusers(in_lv_name)::
+ +
+    Return an array with the list of id_user which are linked to the logical volume
+    given as input. This function is declared as 'immutable' but it is not as its
+    output can change with the same input. This immutable property is used in the
+    check conditions used by constraint exclusions, so it must be insured that users
+    data are always in the correct lv.
  +
  +
 (integer) __mod_cons_hash(in_dividend bigint, in_divisor integer)::
@@ -122,6 +157,26 @@ __natsort('file-1589.sql') = 'file-000000001589.sql'
 (text) __natsort_pl(in_text)::
  +
     natsort version written in Perl.
+ +
+ +
+(trigger) __trigger_as_file_xfile_before_insert()
+ +
+    Trigger used on 'as_file_xfile' to insert users directory data into the correct
+    logical volume.
+ +
+ +
+(trigger) __trigger_directory_before_insert()
+ +
+    Trigger used on 'directory' to insert users directory data into the correct
+    logical volume.
+ +
+ +
+(trigger) __trigger_file_before_insert()
+ +
+    Trigger used on 'file' to insert users directory data into the correct
+    logical volume.
+ +
+ +
 
 HIGH LEVEL FUNCTIONS
 --------------------
@@ -192,7 +247,7 @@ HIGH LEVEL FUNCTIONS
     Create a file record.
  +
  +
-(void) xlink(in_id_inode bigint, in_id_xfile bigint)::
+(void) xlink(in_id_user, in_id_inode bigint, in_id_xfile bigint)::
  +
     Link a xfile record to a file one. It basically creates a record in the table
     'as_file_xfile' and updates the file record with the data of the xfile record.
