@@ -437,6 +437,15 @@ AC_ARG_ENABLE(
 
 AC_SUBST(DEV_MODE)
 
+AC_ARG_ENABLE(
+    [lvm-support],
+    AS_HELP_STRING([--enable-lvm], [enable lvm support]),
+    [LVM_SUPPORT=$enable_lvm_support],
+    [LVM_SUPPORT=yes]
+)
+
+AC_SUBST(LVM_SUPPORT)
+
 AC_ARG_VAR(NATSORT_PADDING, [padding size for natsorting (default: 8)])
 MIKE_IF_EMPTY_DEFAULT([NATSORT_PADDING], [8])
 

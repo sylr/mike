@@ -79,6 +79,12 @@ PG_VERSION_9_2_PLUS     = @PG_VERSION_9_2_PLUS@
 
 X86_64                  = @X86_64@
 DEV_MODE                = @DEV_MODE@
+TREE_MAX_DEPTH          = @TREE_MAX_DEPTH@
+INODE_RAND_COLUMN       = @INODE_RAND_COLUMN@
+NO_ATIME                = @NO_ATIME@
+NO_VOLUME_LOCK          = @NO_VOLUME_LOCK@
+NATSORT_PADDING         = @NATSORT_PADDING@
+LVM_SUPPORT             = @LVM_SUPPORT@
 
 # -- database schema -----------------------------------------------------------
 
@@ -125,12 +131,6 @@ INSTALL_LOG             = install.log
 
 # -- gcc defines ---------------------------------------------------------------
 
-TREE_MAX_DEPTH      = @TREE_MAX_DEPTH@
-INODE_RAND_COLUMN   = @INODE_RAND_COLUMN@
-NO_ATIME            = @NO_ATIME@
-NO_VOLUME_LOCK      = @NO_VOLUME_LOCK@
-NATSORT_PADDING     = @NATSORT_PADDING@
-
 DEFINES     = -D MIKE_VERSION="$(MIKE_VERSION)"
 
 ifneq ($(TREE_MAX_DEPTH),no)
@@ -151,6 +151,10 @@ endif
 
 ifeq ($(NO_VOLUME_LOCK),yes)
     DEFINES += -D NO_VOLUME_LOCK
+endif
+
+ifeq ($(LVM_SUPPORT),yes)
+    DEFINES += -D LVM_SUPPORT
 endif
 
 ifeq ($(DEV_MODE),yes)
