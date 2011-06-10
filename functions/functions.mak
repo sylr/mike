@@ -18,6 +18,9 @@ DATABASE_FUNCTIONS  += __perform.sql
 DATABASE_FUNCTIONS  += __fsck.sql
 DATABASE_FUNCTIONS  += __stream.sql
 ifeq ($(LVM_SUPPORT),yes)
+DATABASE_FUNCTIONS  += __get_least_used_lv.sql
+DATABASE_FUNCTIONS  += __lvcreate.sql
+DATABASE_FUNCTIONS  += __lvusers.sql
 DATABASE_FUNCTIONS  += __trigger_as_file_xfile_before_insert.sql
 DATABASE_FUNCTIONS  += __trigger_directory_before_insert.sql
 DATABASE_FUNCTIONS  += __trigger_file_before_insert.sql
