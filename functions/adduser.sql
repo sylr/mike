@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION mike.adduser(
 
 DECLARE
     v_id_user       integer;
+    v_lv_name       text;
 BEGIN
     -- sso unicity check
     PERFORM id_user FROM mike.user WHERE id_sso = in_id_sso;
@@ -30,19 +31,39 @@ BEGIN
     -- select id_inode
     SELECT nextval('user_id_user_seq'::regclass) INTO out_id_user;
 
+#ifdef LVM_SUPPORT
+    -- select lv
+    SELECT mike.__get_least_used_lv() INTO v_lv_name;
+#endif /* LVM_SUPPORT */
+
     -- insert
     INSERT INTO mike.user (
         id_user,
         id_sso,
         nickname,
+#ifdef LVM_SUPPORT
+        lv,
+#endif /* LVM_SUPPORT */
         state
     )
     VALUES (
         out_id_user,
         in_id_sso,
         in_nickname,
+#ifdef LVM_SUPPORT
+        v_lv_name,
+#endif /* LVM_SUPPORT */
         in_state
     );
+
+#ifdef LVM_SUPPORT
+    -- add user to lv
+    UPDATE mike.lv SET
+        users = array_append(users, out_id_user)::integer[],
+        mtime = now()
+    WHERE
+        name = v_lv_name;
+#endif /* LVM_SUPPORT */
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE;
