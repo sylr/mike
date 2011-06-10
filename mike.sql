@@ -53,6 +53,9 @@ CREATE TABLE mike.user (
     id_sso                  text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
     state                   smallint        NOT NULL DEFAULT 1,
+#ifdef LVM_SUPPORT
+    lv                      text            NOT NULL DEFAULT 'lv_1',
+#endif
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
     UNIQUE (id_sso)
@@ -63,6 +66,9 @@ COMMENT ON COLUMN mike.user.id_user IS 'user unique identifier';
 COMMENT ON COLUMN mike.user.id_sso IS 'user unique external identifier';
 COMMENT ON COLUMN mike.user.nickname IS 'user nickname';
 COMMENT ON COLUMN mike.user.state IS 'user state';
+#ifdef LVM_SUPPORT
+COMMENT ON COLUMN mike.user.lv IS 'user''s logical volume name';
+#endif
 COMMENT ON COLUMN mike.user.ctime IS 'user creation date';
 COMMENT ON COLUMN mike.user.ctime IS 'user modification date';
 
@@ -246,6 +252,17 @@ COMMENT ON COLUMN mike.file.atime IS 'last access timestamp with timezone of the
 #endif /* NO_ATIME */
 COMMENT ON COLUMN mike.file.size IS 'size of the inode';
 COMMENT ON COLUMN mike.file.versioning_size IS 'versioning size of the inode';
+
+-- mike.lv ---------------------------------------------------------------------
+
+#ifdef LVM_SUPPORT
+CREATE TABLE mike.lv (
+    name                    text            NOT NULL PRIMARY KEY,
+    ctime                   timestamptz     NOT NULL DEFAULT now(),
+    mtime                   timestamptz     NOT NULL DEFAULT now(),
+    users                   integer[]       NOT NULL DEFAULT ARRAY[]::integer[]
+);
+#endif /* LVM_SUPPORT */
 
 -- mike.volume_state -----------------------------------------------------------
 
