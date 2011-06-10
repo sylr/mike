@@ -17,6 +17,11 @@ DATABASE_FUNCTIONS  += __natsort.sql
 DATABASE_FUNCTIONS  += __perform.sql
 DATABASE_FUNCTIONS  += __fsck.sql
 DATABASE_FUNCTIONS  += __stream.sql
+ifeq ($(LVM_SUPPORT),yes)
+DATABASE_FUNCTIONS  += __trigger_as_file_xfile_before_insert.sql
+DATABASE_FUNCTIONS  += __trigger_directory_before_insert.sql
+DATABASE_FUNCTIONS  += __trigger_file_before_insert.sql
+endif
 DATABASE_FUNCTIONS  += adduser.sql
 DATABASE_FUNCTIONS  += cpdir.sql
 DATABASE_FUNCTIONS  += ls.sql
