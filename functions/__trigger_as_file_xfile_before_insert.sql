@@ -15,7 +15,7 @@ BEGIN
     SELECT lv INTO v_lv FROM mike.user WHERE id_user = NEW.id_user;
 
     EXECUTE $$
-        INSERT INTO as_file_xfile_$$ || v_lv || $$ VALUES (
+        INSERT INTO $$ || ('mike.as_file_xfile_' || v_lv)::regclass || $$ VALUES (
             $1, $2, $3, $4
         )
     $$ USING

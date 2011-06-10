@@ -15,7 +15,7 @@ BEGIN
     SELECT lv INTO v_lv FROM mike.user WHERE id_user = NEW.id_user;
 
     EXECUTE $$
-        INSERT INTO directory_$$ || v_lv || $$ VALUES (
+        INSERT INTO $$ || ('mike.directory_' || v_lv)::regclass || $$ VALUES (
             $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
 #ifndef INODE_RAND_COLUMN
             $12, $13, $14, $15, $16, $17, $18, $19
