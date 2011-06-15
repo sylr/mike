@@ -9,3 +9,7 @@ SELECT * FROM mike.__set_conf('tree_max_depth', TREE_MAX_DEPTH::text);
 ALTER TABLE mike.inode DROP CONSTRAINT inode_treepath_check;
 ALTER TABLE mike.inode ADD  CONSTRAINT inode_treepath_check CHECK (nlevel(treepath) <= mike.__get_conf_int('tree_max_depth'));
 #endif
+
+#ifdef LVM_SUPPORT
+SELECT * FROM mike.__set_conf('lv_repartition_mode', 'user_count');
+#endif

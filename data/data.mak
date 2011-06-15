@@ -6,3 +6,4 @@
 
 DATABASE_DATA   = mimetypes.sql
 DATABASE_DATA  += conf.sql
+DATABASE_DATA  += lv.sql

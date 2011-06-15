@@ -446,6 +446,9 @@ AC_ARG_ENABLE(
 
 AC_SUBST(LVM_SUPPORT)
 
+AC_ARG_VAR(LVM_DEFAULT_LV_NUMBER, [number of lv create when installing (default: 2)])
+MIKE_IF_EMPTY_DEFAULT([LVM_DEFAULT_LV_NUMBER], [2])
+
 AC_ARG_VAR(NATSORT_PADDING, [padding size for natsorting (default: 8)])
 MIKE_IF_EMPTY_DEFAULT([NATSORT_PADDING], [8])
 

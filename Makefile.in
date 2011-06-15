@@ -85,6 +85,7 @@ NO_ATIME                = @NO_ATIME@
 NO_VOLUME_LOCK          = @NO_VOLUME_LOCK@
 NATSORT_PADDING         = @NATSORT_PADDING@
 LVM_SUPPORT             = @LVM_SUPPORT@
+LVM_DEFAULT_LV_NUMBER   = @LVM_DEFAULT_LV_NUMBER@
 
 # -- database schema -----------------------------------------------------------
 
@@ -155,6 +156,7 @@ endif
 
 ifeq ($(LVM_SUPPORT),yes)
     DEFINES += -D LVM_SUPPORT
+    DEFINES += -D LVM_DEFAULT_LV_NUMBER=$(LVM_DEFAULT_LV_NUMBER)
 endif
 
 ifeq ($(DEV_MODE),yes)
@@ -210,11 +212,6 @@ clean-target:
 	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 
 info:
-ifeq ($(LVM_SUPPORT),yes)
-	@$(ECHO) '    ' ADD DEFAULT LVs;
-	@$(ECHO) "SELECT mike.__lvcreate('lv_1');" >> $(TARGET_FILE);
-	@$(ECHO) "SELECT mike.__lvcreate('lv_2');" >> $(TARGET_FILE);
-endif
 	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_VERSION', '$(MIKE_VERSION)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_COMMIT $(MIKE_COMMIT);
