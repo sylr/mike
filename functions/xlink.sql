@@ -37,7 +37,14 @@ BEGIN
     IF NOT FOUND THEN RAISE EXCEPTION 'xfile ''%'' not found', in_id_xfile; END IF;
 
     -- selecting last link of the inode
-    SELECT * INTO v_as_file_xfile FROM mike.as_file_xfile WHERE id_user = in_id_user AND id_inode = in_id_inode ORDER BY ctime DESC LIMIT 1;
+    SELECT
+        * INTO v_as_file_xfile
+    FROM
+        mike.as_file_xfile
+    WHERE
+        id_user     = in_id_user AND
+        id_inode    = in_id_inode
+    ORDER BY ctime DESC LIMIT 1;
 
     IF FOUND THEN
         -- check if last xfile linked is not already the one we are linking
@@ -52,7 +59,13 @@ BEGIN
         END IF;
 
         -- checking if id_xfile already part of the inode history
-        PERFORM * FROM mike.as_file_xfile WHERE id_xfile = in_id_xfile LIMIT 1;
+        PERFORM *
+        FROM
+            mike.as_file_xfile
+        WHERE
+            id_user     = in_id_user AND
+            id_inode    = in_id_inode AND
+            id_xfile    = in_id_xfile LIMIT 1;
 
         IF FOUND THEN
             v_exist := true;
@@ -98,7 +111,9 @@ BEGIN
         SELECT DISTINCT
             id_xfile
         FROM as_file_xfile
-        WHERE as_file_xfile.id_inode = in_id_inode
+        WHERE
+            id_user                 = in_id_user AND
+            as_file_xfile.id_inode  = in_id_inode
     );
 
     -- updating file record
@@ -108,6 +123,7 @@ BEGIN
         versioning_size = v_versioning_size,
         mtime           = greatest(mtime, now())
     WHERE
+        id_user     = in_id_user AND
         id_inode    = in_id_inode AND
         state       = 0;
 
@@ -120,6 +136,7 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
+        id_user     = in_id_user AND
         id_inode    = v_file.id_inode_parent AND
         state       = 0;
 
@@ -130,6 +147,7 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
+        id_user     = in_id_user AND
         treepath   @> subpath(v_file.treepath, 0, nlevel(v_file.treepath) - 2) AND
         state       = 0;
 END;
