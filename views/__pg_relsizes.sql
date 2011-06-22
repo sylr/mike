@@ -9,6 +9,7 @@ DROP VIEW IF EXISTS mike.__pg_relsizes CASCADE;
 CREATE OR REPLACE VIEW mike.__pg_relsizes AS
 SELECT
     relname,
+    mike.__pg_relkind_pretty(relkind) AS relkind,
     relpages,
     pg_size_pretty(relpages::bigint * 8 * 1024) AS size,
     pg_size_pretty(pg_relation_size(relname::text)) AS pg_size
