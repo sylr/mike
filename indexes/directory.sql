@@ -8,6 +8,7 @@ ALTER INDEX mike.directory_pkey SET (fillfactor = 95);
 
 CREATE INDEX directory_id_inode_parent_alive_btree_idx  ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX directory_id_inode_parent_dead_btree_idx   ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 99)  WHERE state > 0;
+CREATE INDEX directory_id_inode_parent_null_btree_idx   ON mike.directory   USING btree (id_inode_parent)   WITH (fillfactor = 99)  WHERE id_inode_parent IS NULL;
 CREATE INDEX directory_id_user_alive_btree_idx          ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95)  WHERE state = 0;
 CREATE INDEX directory_id_user_dead_btree_idx           ON mike.directory   USING btree (id_user)           WITH (fillfactor = 95)  WHERE state > 0;
 CREATE INDEX directory_ctime_btree_idx                  ON mike.directory   USING btree (ctime)             WITH (fillfactor = 95)  WHERE state = 0;
