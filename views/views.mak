@@ -9,3 +9,4 @@ DATABASE_VIEWS  += __pg_functions.sql
 DATABASE_VIEWS  += __pg_locks.sql
 DATABASE_VIEWS  += __pg_relbloat.sql
 DATABASE_VIEWS  += __pg_relsizes.sql
+DATABASE_VIEWS  += __pg_tables.sql
