@@ -10,7 +10,18 @@ CREATE OR REPLACE VIEW mike.__pg_tables AS
 SELECT
     pg_stat_all_tables.relid,
     pg_stat_all_tables.relname,
-    pg_class.relpages AS relpages,
+    CASE
+        WHEN pg_class.relpages = 0 THEN
+            1
+        ELSE
+            pg_class.relpages
+    END AS relpages,
+    CASE
+        WHEN pg_class.relpages = 0 THEN
+            pg_stat_all_tables.n_live_tup::numeric
+        ELSE
+            round((pg_stat_all_tables.n_live_tup::float / pg_class.relpages)::numeric, 2)
+    END AS relpages_ratio,
     pg_relation_size(pg_stat_all_tables.relname::text) AS relsize,
     pg_stat_all_tables.seq_scan,
     pg_stat_all_tables.seq_tup_read,
