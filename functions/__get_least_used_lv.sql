@@ -13,7 +13,7 @@ DECLARE
     v_user_count    integer;
     v_return        text;
 BEGIN
-    IF 'user_count' = mike.__get_conf('lv_repartition_mode', false) THEN
+    IF 'user_count' = mike.__get_conf('lvm_repartition_mode', false) THEN
         SELECT
             lv.name INTO v_return
         FROM
@@ -24,12 +24,13 @@ BEGIN
         LIMIT 1;
 
         RETURN v_return;
-    ELSIF 'liv_tup' = mike.__get_conf('lv_repartition_mode', false) THEN
+    ELSIF 'live_tup' = mike.__get_conf('lvm_repartition_mode', false) THEN
        SELECT
             lv.name INTO v_return
         FROM
             mike.lv
-        JOIN pg_stat_user_tables ON (relname = 'file_' || lv.name OR relname = 'directory_' || lv.name)
+        JOIN
+            pg_stat_user_tables ON (relname = 'file_' || lv.name OR relname = 'directory_' || lv.name)
         GROUP BY
             lv.name
         ORDER BY
@@ -60,7 +61,8 @@ BEGIN
             lv.name INTO v_return
         FROM
             mike.lv
-        JOIN pg_stat_user_tables ON (relname = 'file_' || lv.name OR relname = 'directory_' || lv.name)
+        JOIN
+            pg_stat_user_tables ON (relname = 'file_' || lv.name OR relname = 'directory_' || lv.name)
         GROUP BY
             lv.name
         ORDER BY

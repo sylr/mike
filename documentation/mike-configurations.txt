@@ -25,6 +25,21 @@ Percentage of volume space kept free. When 'volume_used_size > volume_max_size -
 (volume_max_size * volume_security_window / 100)' then the volume will not be
 selectable when creating a xfile. If not set the default security window is 10%.
 
+'lvm_repartition_mode (text)'::
+Define which type of algorithm to use for lv repartition. There is currently two
+possible values :
+
+ * 'user_count' : use the lv with the less users
+ * 'live_tuples' : use the lv with the less data
+
+When creating a database and populating users without data it is prefered to use
+the 'user_count' mode otherwise all the users will end up in the same lv. The 'live_tuples'
+mode should only be considered after a certain period of production to balance the
+amount of data.
+
+By default the application will use the 'user_count' mode until the number of user
+reach 100, after, it will use the 'live_tuples' mode.
+
 Authors
 -------
 Written by Sylvain Rabot <sylvain@abstraction.fr>
