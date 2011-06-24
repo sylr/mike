@@ -56,7 +56,7 @@ eval set -- "$ARGV"
 
 BKS="1"
 BK_SLEEP="2"
-SLEEP_TIME=0.05
+SLEEP_TIME=1
 DIRS=10000
 LOOP="No"
 LOG_FILE=./bk.log
@@ -146,12 +146,18 @@ get_rand_int() {
 }
 
 bk() {
-    start=$(date +%s.%N);
-    $PSQL_FULL_CMD_ALIGNED -c "`get_rand_ls $1 $2`" 1>/dev/null;
-    end=$(date +%s.%N);
-    duration=$(echo "$end - $start" | bc);
-    echo "$duration" >> $LOG_FILE;
-    sleep `get_rand_int $BK_SLEEP`;
+    for data in $($PSQL_FULL_CMD -c "SELECT id_user, id_inode FROM mike.directory WHERE state = 0 ORDER BY random() LIMIT $DIRS;"); do
+        id_user=$(echo "$data" | cut -d '|' -f1)
+        id_inode=$(echo "$data" | cut -d '|' -f2)
+
+        start=$(date +%s.%N);
+        $PSQL_FULL_CMD_ALIGNED -c "`get_rand_ls $id_user $id_inode`" 1>/dev/null;
+        end=$(date +%s.%N);
+
+        duration=$(echo "$end - $start" | bc);
+        echo "$duration" >> $LOG_FILE;
+        sleep `get_rand_int $BK_SLEEP`;
+    done
 }
 
 # -- main ----------------------------------------------------------------------
@@ -162,25 +168,23 @@ declare -a PIDS
 while [[ "$LOOP" == "Yes" || "$DONE" != "Yes" ]]; do
     DONE="Yes"
 
-    for data in $($PSQL_FULL_CMD -c "SELECT id_user, id_inode FROM mike.directory ORDER BY random() LIMIT $DIRS;"); do
-        id_user=$(echo "$data" | cut -d '|' -f1)
-        id_inode=$(echo "$data" | cut -d '|' -f2)
-
-        bk $id_user $id_inode &
+    while [ "${#PIDS[@]}" -lt "$BKS" ]; do
+        bk &
 
         PIDS["$!"]="true"
         echo "bk started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
+    done
 
-        # waiting for finished jobs if limit reached
-        while [ "${#PIDS[@]}" -ge "$BKS" ]; do
-            for pid in "${!PIDS[@]}"; do
-                if [ $(ps ax | grep bk | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
-                    echo "bk finished: `strlpad $pid 6 ' '`"
-                    unset PIDS[$pid];
-                    break;
-                fi
-            done
+    # waiting for remaining jobs
+    while [ "${#PIDS[@]}" -gt "0" ]; do
+        for pid in "${!PIDS[@]}"; do
+            if [ $(ps ax | grep bk | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
+                echo "bk finished: `strlpad $pid 6 ' '`"
+                unset PIDS[$pid];
+            fi
         done
+
+        sleep $SLEEP_TIME
     done
 done
 
