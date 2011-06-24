@@ -38,6 +38,7 @@ if [ -d "$MIKE_PATH/.git" ]; then
     export GIT_DIR
 
     MIKE_COMMIT=$(git rev-parse HEAD)
+    MIKE_COMMIT_DATE=$(git log --pretty=format:"%ci" -1)
     MIKE_BRANCH=$(git symbolic-ref -q HEAD | sed -e 's#refs/heads/##')
 
     if [ -z "$MIKE_BRANCH" ]; then
@@ -81,6 +82,7 @@ fi
 echo "MIKE_GIT_URL=$MIKE_GIT_URL" >> $MIKE_VERSION_FILE
 echo "MIKE_VERSION=$MIKE_VERSION" >> $MIKE_VERSION_FILE
 echo "MIKE_COMMIT=$MIKE_COMMIT" >> $MIKE_VERSION_FILE
+echo "MIKE_COMMIT_DATE=$MIKE_COMMIT_DATE" >> $MIKE_VERSION_FILE
 echo "MIKE_BRANCH=$MIKE_BRANCH" >> $MIKE_VERSION_FILE
 echo 'MIKE_WHO_INSTALLED=$(shell whoami)@$(shell hostname)' >> $MIKE_VERSION_FILE
 

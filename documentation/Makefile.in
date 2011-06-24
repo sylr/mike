@@ -93,12 +93,16 @@ pdf-sub: $(DOC_XML) $(DOC_PDF)
 
 %.html : %.txt
 	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
+	                                    -a revision="$(MIKE_VERSION)" \
+	                                    -a date="$(MIKE_COMMIT_DATE)" \
 	                                    -a mike_version="$(MIKE_VERSION)" \
 	                                    -a mike_git_url="$(MIKE_GIT_URL)" \
 	                                    -b xhtml11 -o $@ $<
 
 %.xml : %.txt
 	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
+	                                    -a revision="$(MIKE_VERSION)" \
+	                                    -a date="$(MIKE_COMMIT_DATE)" \
 	                                    -a mike_version="$(MIKE_VERSION)" \
 	                                    -a mike_git_url="$(MIKE_GIT_URL)" \
 	                                    -b docbook -d manpage -o $@ $<
