@@ -16,14 +16,14 @@ List of mike's different configurations.
 CONFIGURATIONS
 --------------
 'tree_max_depth (integer)'::
- +
+
 Maximum depth of a tree.
 
 'volume_security_window (integer)'::
- +
+
 Percentage of volume space kept free. When 'volume_used_size > volume_max_size -
 (volume_max_size * volume_security_window / 100)' then the volume will not be
-selectable when creating a xfile. If not set the default security window is 10%.
+selectable when creating a new xfile. If not set the 'default' security window is '10%'.
 
 Authors
 -------
