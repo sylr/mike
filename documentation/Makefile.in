@@ -17,6 +17,7 @@ all::
 
 ECHO                    = @ECHO@
 RM                      = @RM@ -f
+GIT                     = @GIT@
 GREP                    = @GREP@ --color=never
 ASCIIDOC                = @ASCIIDOC@
 ASCIIDOC_EXTRA          = -a data-uri -a icons -a iconsdir=/usr/share/asciidoc/icons --unsafe -f asciidoc.conf
@@ -53,11 +54,24 @@ man1dir                 =  $(mandir)/man1
 man3dir                 =  $(mandir)/man3
 man7dir                 =  $(mandir)/man7
 
+# -- tests ---------------------------------------------------------------------
+
+ifneq ($(GIT),)
+	GIT_DIR=$(realpath $(shell $(GIT) rev-parse --git-dir 2>/dev/null))
+	ifneq ($(GIT_DIR),)
+		IS_BARE_REPOSITORY=`$(GIT) rev-parse --is-bare-repository 2>/dev/null`
+		IS_INSIDE_WORK_TREE=`$(GIT) rev-parse --is-inside-work-tree 2>/dev/null`
+	endif
+endif
+
 # -- version -------------------------------------------------------------------
 
 $(MIKE_VERSION_FILE):
-	@$(RM) $(MIKE_VERSION_FILE)
+ifneq ($(GIT_DIR),)
+	@$(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE)
 	@$(SHELL) ../MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
+endif
+
 -include $(MIKE_VERSION_FILE)
 
 # -- targets -------------------------------------------------------------------
@@ -148,4 +162,4 @@ clean:
 
 # -- phony ---------------------------------------------------------------------
 
-.PHONY: $(MIKE_VERSION_FILE)
+.PHONY: $(MIKE_VERSION_FILE) .FORCE
