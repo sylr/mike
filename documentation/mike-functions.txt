@@ -27,6 +27,7 @@ SYNOPSIS
  __natsort                 | in_text text
  __natsort_pl              | in_text text
  __perform                 | in_sql text
+ __pg_relkind_pretty       | in_char "char"
  __set_conf                | in_key text, in_value text
  __stream                  | in_id_user integer, in_dirs_by_level integer[], in_files_by_level integer[], in_versioning boolean
  __stream                  | in_id_user integer, in_nb_level integer, in_inode_by_level integer, in_versioning boolean
@@ -41,11 +42,20 @@ SYNOPSIS
  mvdir                     | in_id_user integer, in_id_inode bigint, in_new_id_inode_parent bigint, in_name text
  rename                    | in_id_user integer, in_id_inode bigint, in_new_name text
  rmdir                     | in_id_user integer, in_id_inode bigint
+ stat                      | in_id_inode bigint
  stat                      | in_id_user integer, in_id_inode bigint
+ statd                     | in_id_inode bigint
  statd                     | in_id_user integer, in_id_inode bigint
+ statf                     | in_id_inode bigint
  statf                     | in_id_user integer, in_id_inode bigint
  touch                     | in_id_user integer, in_id_inode_parent bigint, in_name text, in_ctime timestamp with time zone, OUT out_id_inode bigint
- xlink                     | in_id_inode bigint, in_id_xfile bigint
+ xlink                     | in_id_inode bigint, in_id_xfile bigint, in_ctime timestamp with time zone
+ xstat                     | in_id_inode bigint
+ xstat                     | in_id_user integer, in_id_inode bigint
+ xstatd                    | in_id_inode bigint
+ xstatd                    | in_id_user integer, in_id_inode bigint
+ xstatf                    | in_id_inode bigint
+ xstatf                    | in_id_user integer, in_id_inode bigint
  xtouch                    | in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text, OUT out_id_xfile bigint, OUT out_id_volume smallint
 ---------------------------
 
@@ -187,15 +197,48 @@ HIGH LEVEL FUNCTIONS
     Flag a directory and its children for removal.
  +
  +
+(stat_t) stat(in_id_user, in_id_inode)::
+ +
+    Return inode's properties.
+ +
+ +
+(statd_t) statd(in_id_user, in_id_inode)::
+ +
+    Return directory's properties.
+ +
+ +
+(statf_t) statf(in_id_user, in_id_inode)::
+ +
+    Return file's properties.
+ +
+ +
 (bigint) touch(in_id_user bigint, in_id_inode_parent bigint, in_name text, in_ctime timestamptz)::
  +
     Create a file record.
  +
  +
-(void) xlink(in_id_inode bigint, in_id_xfile bigint)::
+(void) xlink(in_id_inode bigint, in_id_xfile bigint, in_ctime timestamptz)::
  +
     Link a xfile record to a file one. It basically creates a record in the table
     'as_file_xfile' and updates the file record with the data of the xfile record.
+ +
+ +
+(inode_full_t) xstat(in_id_user, in_id_inode)::
+ +
+    Return inode's properties in a extended structure that can be used in a union
+    statement with the result of all xstat functions.
+ +
+ +
+(inode_full_t) xstatd(in_id_user, in_id_inode)::
+ +
+    Return directory's properties in a extended structure that can be used in a union
+    statement with the result of all xstat functions.
+ +
+ +
+(inode_full_t) xstatf(in_id_user, in_id_inode)::
+ +
+    Return file's properties in a extended structure that can be used in a union
+    statement with the result of all xstat functions.
  +
  +
 (record) xtouch(in_size bigint, in_id_mimetype integer, in_md5 text, in_sha1 text)::

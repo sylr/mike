@@ -7,14 +7,43 @@ mike-types - mike's types
 
 SYNOPSIS
 --------
-[verse]
+----------------
  Schema |     Name
 --------+--------------
+ mike   | __fsck_t
+ mike   | __stream_t
  mike   | inode_full_t
+ mike   | statd_t
+ mike   | statf_t
+ mike   | stat_t
+----------------
+
+TYPES
+-----
+__fsck_t
+~~~~~~~~
+----------------
+    Column    |  Type
+--------------+---------
+ id_user      | integer
+ doomed_dirs  | bigint
+ doomed_files | bigint
+----------------
+
+stream_t
+~~~~~~~~
+----------------
+   Column    |  Type
+-------------+---------
+ id_user     | integer
+ directories | integer
+ files       | integer
+ xfiles      | integer
+----------------
 
 inode_full_t
-------------
-[verse]
+~~~~~~~~~~~~
+----------------
         Column         |           Type
 -----------------------+--------------------------
  id_inode              | bigint
@@ -37,6 +66,72 @@ inode_full_t
  inner_dir_count       | integer
  file_count            | smallint
  inner_file_count      | integer
+----------------
+
+statd_t
+~~~~~~~
+----------------
+        Column         |           Type
+-----------------------+--------------------------
+ id_inode              | bigint
+ id_inode_parent       | bigint
+ id_user               | integer
+ state                 | smallint
+ mimetype              | text
+ name                  | text
+ path                  | text
+ treepath              | ltree
+ ctime                 | timestamp with time zone
+ mtime                 | timestamp with time zone
+ inner_mtime           | timestamp with time zone
+ size                  | bigint
+ inner_size            | bigint
+ versioning_size       | bigint
+ inner_versioning_size | bigint
+ dir_count             | smallint
+ inner_dir_count       | integer
+ file_count            | smallint
+ inner_file_count      | integer
+----------------
+
+statf_t
+~~~~~~~
+----------------
+     Column      |           Type
+-----------------+--------------------------
+ id_inode        | bigint
+ id_inode_parent | bigint
+ id_user         | integer
+ state           | smallint
+ mimetype        | text
+ name            | text
+ path            | text
+ treepath        | ltree
+ atime           | timestamp with time zone
+ ctime           | timestamp with time zone
+ mtime           | timestamp with time zone
+ size            | bigint
+ versioning_size | bigint
+----------------
+
+stat_t
+~~~~~~
+----------------
+     Column      |           Type
+-----------------+--------------------------
+ id_inode        | bigint
+ id_inode_parent | bigint
+ id_user         | integer
+ state           | smallint
+ mimetype        | text
+ name            | text
+ path            | text
+ treepath        | ltree
+ ctime           | timestamp with time zone
+ mtime           | timestamp with time zone
+ size            | bigint
+ versioning_size | bigint
+----------------
 
 Authors
 -------
