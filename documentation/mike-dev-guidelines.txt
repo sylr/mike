@@ -1,0 +1,113 @@
+mike-dev-guidelines(7)
+======================
+
+NAME
+----
+mike-dev-guidelines - mike's development guidelines
+
+DESCRIPTION
+-----------
+Mike's development guidelines.
+
+Workflow
+--------
+Mike use 'git' for 'source code management' because of its distributed design and
+its numerous features. In order to fully benefit of the ditributed design mike development
+uses a simplified version of the 'Dictator and Lieutenants Workflow'. (See :
+http://progit.org/book/ch5-1.html#dictator_and_lieutenants_workflow) 
+This way of working allows to spread general knowledge of the project across developpers.
+
+Here a sequence diagram of the workflow :
+
+--------------------
+    +-------------+                     +--------------+               +------------------+            +------------+               +------------+
+    | developer A |                     | Mailing List |               | developers B/C/D |            | Maintainer |               |   ORIGIN   |
+    +-------------+                     +--------------+               +------------------+            +------------+               +------------+
+           |                                    |                               |                             |                            |
+           |                                    |                    clone origin repository                  |                            |
+           |<------------------------------------------------------------------------------------------------------------------------------|
+           |                                    |                               |                             |                            |
+   +------>|----+                               |                               |                             |                            |
+   |       |    | Hack, Hack, Hack ...          |                               |                             |                            |
+   |       |<---+                               |                               |                             |                            |
+   |       |                                    |                               |                             |                            |
+   |       |    send/resend a patch series      |                               |                             |                            |
+   |  +--->|----------------------------------->|      take/pull patches        |                             |                            |
+   |  |    |                                    |------------------------------>|                             |                            |
+   |  |    |                                    |                               |----+                        |                            |
+   |  |    |                                    |                               |    | do code review         |                            |
+   |  |    |                                    |   send Nack/remarks/patches   |<---+                        |                            |
+   |  |    |     process remarks/patches        |<------------------------------|                             |                            |
+   |  |    |<-----------------------------------|                               |                             |                            |
+   |  |    |                                    |                               |                             |                            |
+   |  |    |----+                               |                               |                             |                            |
+   |  |    |    | Hack, Hack, Hack ...          |                               |                             |                            |
+   |  +----|<---+                               |                               |                             |                            |
+   |       | or                                 |                            or |                             |                            |
+   |       |----> /dev/null ---+                |                               |                             |                            |
+   |       |                   |                |                               |                             |                            |
+   |<------+-------------------+                |                               |                             |                            |
+   |       | or                                 |                               |                             |                            |
+   |       |----> hang himself                  |                               |                             |                            |
+   |       |                                    |     send Acked/Reviewed by    |                             |                            |
+   |       |                                    |<------------------------------|                             |                            |
+   |       |                                    |                               |                             |                            |
+   |       |                                    |                          take patches                       |                            |
+   |       |                                    |------------------------------------------------------------>|   push patches to origin   |
+   |       |                                    |                               |                             |--------------------------->|
+   |       |                                    |                               |                             |                            |
+   |       |                                    |                               |              pull changes from origin                    |
+   |       |                                    |                               |<---------------------------------------------------------|
+   |       |                                    |                               |                             |                            |
+   |       |                                    |                 pull changes from origin                    |                            |
+   +-------|<-----------------------------------+------------------------------------------------------------------------------------------|
+           |                                    |                               |                             |                            |
+--------------------
+
+ * *Hack*   : Work, commit
+ * *Acked*  : Acknowledged, means that developer signs with his blood that he has
+              reviewed the code and he is ok with it
+ * *Nack*   : Not Acknowledged, means that the developer is not ok with the work
+              sent and would like some modifications to be done
+ * *push*   : Send / propagate a local branch to a remote repository
+ * *pull*   : Retrieve locally the content of a remote branch
+ * *origin* : The project maintainer public repository
+
+Sending Patches
+~~~~~~~~~~~~~~~
+
+[source,shell]
+--------------------------
+sylvain@kheops:~/git/mike[master]$ rm -rf *.patch
+sylvain@kheops:~/git/mike[master]$ git format-patch --cover-letter HEAD~2
+0000-cover-letter.patch
+0001-views-add-__pg_tables-view.patch
+0002-contrib-change-bk-behavior.patch
+sylvain@kheops:~/git/mike[master]$ vim 0000-cover-letter.patch
+... edit cover letter
+sylvain@kheops:~/git/mike[master]$ git send-email --to <mailing-list@abstraction.fr> *.patch
+--------------------------
+
+Coding Rules
+------------
+Mike's coding rules are pretty obvious when reading code but here the main list of
+rules that should be respected:
+
+ * '4 spaces' indentation (except for Makefiles which require tabs)
+ * All lines 'right trimed'
+ * Assignation block vertically aligned
+ * 'PLPGSQL' over 'PLPerl' over 'PLPython'
+ * 'Perl' over 'Python'
+ * All commits must be 'signed off'
+ * '\n' only, no '\r\n'
+ * No space before and one space after commas, e.g.: 'foo(bar, baz)' , not 'foo(bar , baz)'
+ * No space after / before parenthesis / brackets, e.g.: 'foo(bar)' not 'foo( bar )'
+ * Successive empty lines must be squashed as one
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[3] suite.

@@ -60,6 +60,10 @@ Install
 -------
 See linkmike:mike-install[1].
 
+Development Guidelines
+----------------------
+See linkmike:mike-dev-guidelines[7].
+
 Structure
 ---------
 
