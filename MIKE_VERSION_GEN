@@ -35,7 +35,8 @@ fi
 if [ -d "$MIKE_PATH/.git" ]; then
     # exporting git dit
     GIT_DIR="$MIKE_PATH/.git"
-    export GIT_DIR
+    GIT_WORK_TREE="$MIKE_PATH"
+    export GIT_DIR GIT_WORK_TREE
 
     MIKE_COMMIT=$(git rev-parse HEAD)
     MIKE_COMMIT_DATE=$(git log --pretty=format:"%ci" -1)
