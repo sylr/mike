@@ -105,6 +105,9 @@ it will check for external programs needed for Mike's install and prepare the 'M
 with 'configuration' values passed as arguments. Proceed by lauching 'make' with
 the desired target, the default one being 'install'.
 
+WARNING: The 'PostgreSQL user' used to install Mike must be 'superuser' because mike
+  comes with C functions which can not be installed with a basic user.
+
 [source,shell]
 -------------------------
 sylvain@kheops:~/mike.git/$ autoconf
@@ -166,7 +169,7 @@ configure options
     creating a xfile using xtouch() update the virtual size of the volume chosen.
     Using this option will prevent virtual size update which will enable 'long
     transactions' creating xfiles to run simultaneously because 'no lock' on the
-    volume table records are used. This option is for 'test use only'.
+    volume table records are used. This option is for 'development use only'.
 
 --enable-tree-max-depth::
     enable tree maximum depth support in mike. This feature is 'enabled by default' and
@@ -174,7 +177,7 @@ configure options
     the at the 1st level and the last level beign reserved for files. Disabling
     this feature can 'speed up some operations' at a 'low depth' but allows big 'deep
     trees' which could lead to 'performance issues' because a modification on a directory
-    will update its ancestors as well.
+    will update all its ancestors as well.
 
 --enable-no-atime::
     disable atime support in order to improve performances.
@@ -309,10 +312,10 @@ ENABLE_CREATE_SCHEMA=[yes|no]::
     to 'configure'.
 
 CFLAGS::
-    Overwrite default used flags for gcc.
+    Overwrite default flags used for gcc.
 
 NASMFLAGS::
-    Overwrite default used flags for nasm.
+    Overwrite default flags used for nasm.
 
 Authors
 -------
