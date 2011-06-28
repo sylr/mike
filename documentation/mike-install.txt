@@ -122,6 +122,32 @@ sylvain@kheops:~/mike.git/$ ./configure DATABASE_USERNAME=sylvain
 sylvain@kheops:~/mike.git/$ make install DATABASE_USERNAME=mike DATABASE_NAME=my_vfs
 -------------------------
 
+Example of production install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[source,shell]
+-------------------------
+sylvain@kheops:~/mike.git/$ autoconf
+sylvain@kheops:~/mike.git/$ ./configure \
+    --enable-create-database \
+    DATABASE_USERNAME=mike \
+    SLEEP_TIME=0
+sylvain@kheops:~/mike.git/$ make drop-database install
+-------------------------
+
+Example of development install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[source,shell]
+-------------------------
+sylvain@kheops:~/mike.git/$ autoconf
+sylvain@kheops:~/mike.git/$ ./configure \
+    --enable-create-database \
+    --enable-no-volume-lock \
+    --enable-dev-mode \
+    DATABASE_USERNAME=mike \
+    SLEEP_TIME=0
+sylvain@kheops:~/mike.git/$ make drop-database install dev-volumes
+-------------------------
+
 configure options
 -----------------
 --enable-create-database::
