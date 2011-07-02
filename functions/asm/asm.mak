@@ -5,5 +5,5 @@
 # copyright: All rights reserved
 
 ifneq ($(X86_64),yes)
-DATABASE_ASM_FUNCTIONS  = __natsort_pad.asm
+DATABASE_ASM_FUNCTIONS  = __natsort_asm.asm
 endif

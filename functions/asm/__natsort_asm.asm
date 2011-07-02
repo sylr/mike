@@ -13,16 +13,16 @@
 NATSORT_PADDING     equ     8
 
 ; ------------------------------------------------------------------------------
-; int __natsort_pad_size(int size, char* str)
+; int __natsort_asm_pad_size(int size, char* str)
 
 align   16
 
 %ifidn __OUTPUT_FORMAT__, coff
-    global ___natsort_pad_size
-___natsort_pad_size:
+    global ___natsort_asm_pad_size
+___natsort_asm_pad_size:
 %elifidn __OUTPUT_FORMAT__, elf
-    global __natsort_pad_size
-__natsort_pad_size:
+    global __natsort_asm_pad_size
+__natsort_asm_pad_size:
 %endif
         push    ebp
         mov     ebp,esp
@@ -123,16 +123,16 @@ padsize_end:
         ret
 
 ;-------------------------------------------------------------------------------
-; void __natsort_pad(int size, char* str, char* output)
+; void __natsort_asm_pad(int size, char* str, char* output)
 
 align   16
 
 %ifidn __OUTPUT_FORMAT__, coff
-    global ___natsort_pad
-___natsort_pad:
+    global ___natsort_asm_pad
+___natsort_asm_pad:
 %elifidn __OUTPUT_FORMAT__, elf
-    global __natsort_pad
-__natsort_pad:
+    global __natsort_asm_pad
+__natsort_asm_pad:
 %endif
         push    ebp
         mov     ebp,esp

@@ -15,8 +15,8 @@
 #endif
 
 /* declaration */
-int     __natsort_pad_size(int size, char* str);
-void    __natsort_pad(int size, char* str, char* output);
+int     __natsort_asm_pad_size(int size, char* str);
+void    __natsort_asm_pad(int size, char* str, char* output);
 Datum   __natsort_asm(PG_FUNCTION_ARGS);
 
 /* exportation */
@@ -41,7 +41,7 @@ Datum __natsort_asm(PG_FUNCTION_ARGS)
     /*
      * compute size of output
      */
-    result_size = VARHDRSZ + __natsort_pad_size(size, input);
+    result_size = VARHDRSZ + __natsort_asm_pad_size(size, input);
     result = (text *) palloc(result_size);
     SET_VARSIZE(result, result_size);
     output = VARDATA(result);
@@ -49,7 +49,7 @@ Datum __natsort_asm(PG_FUNCTION_ARGS)
     /*
      * compute output result
      */
-    __natsort_pad(size, input, output);
+    __natsort_asm_pad(size, input, output);
 
     PG_RETURN_TEXT_P(result);
 }
