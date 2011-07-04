@@ -67,4 +67,5 @@ $(TEST_SCRIPTS) :
 	@$(ECHO) -n "$@ ... "
 	@./$@ > /dev/null && $(ECHO) OK
 
-.PHONY : $(TEST_SCRIPTS)
+.NOTPARALLEL: $(TEST_SCRIPTS)
+.PHONY: $(TEST_SCRIPTS)
