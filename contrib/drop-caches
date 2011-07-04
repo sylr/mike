@@ -4,4 +4,12 @@
 # date: 25/03/2011
 # copyright: All rights reserved
 
-sudo su -c "echo 3 > /proc/sys/vm/drop_caches"
+if [ $(id -u) == "0" ]; then
+    echo 3 > /proc/sys/vm/drop_caches
+else
+    if [ ! -z $(which sudo) ]; then
+        sudo su -c "echo 3 > /proc/sys/vm/drop_caches"
+    else
+        su -c "echo 3 > /proc/sys/vm/drop_caches"
+    fi
+fi
