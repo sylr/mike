@@ -1,0 +1,40 @@
+mike-tools-of-the-trade(7)
+==========================
+
+NAME
+----
+mike-tools-of-the-trade - mike's tools of the trade
+
+DESCRIPTION
+-----------
+What's behind mike.
+
+ * Autoconf (http://www.gnu.org/software/autoconf/)
+ * Debian (http://www.debian.org/)
+ * Bash (http://www.gnu.org/software/bash/)
+ * Iotop (http://guichaz.free.fr/iotop/)
+ * Gedit (http://projects.gnome.org/gedit/)
+ * Git (http://www.git-scm.com/)
+ * Gmane (http://news.gmane.org/)
+ * Htop (http://htop.sourceforge.net/)
+ * Make (http://www.gnu.org/software/make/)
+ * Meld (http://meld.sourceforge.net/)
+ * PostgreSQL (http://www.postgresql.org/)
+ * Spotify (http://www.spotify.com)
+   - DJ Doboy
+   - Fluke
+   - Kaskade
+   - Late Night Alumni
+   - Melody Gardot
+   - Paul Oakenfold
+   - The Crystal Method
+   - Tiësto
+   - Tricky
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[3] suite.

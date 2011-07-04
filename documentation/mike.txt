@@ -68,7 +68,7 @@ Structure
 ---------
 
 Tables
-~~~~~~ 
+~~~~~~
 See linkmike:mike-tables[3].
 
 Functions
@@ -86,6 +86,10 @@ Mike designer, maintainer and main developer is Sylvain Rabot <sylvain@abstracti
 Others developers :
 
  - Jean-Yves Eckert <jean-yves.eckert@f-secure.com> (C, ASM)
+
+Tools of the trade
+------------------
+See linkmike:mike-tools-of-the-trade[3].
 
 Authors
 -------
