@@ -6,3 +6,6 @@
 
 DATABASE_DATA   = mimetypes.sql
 DATABASE_DATA  += conf.sql
+ifeq ($(DEFAULT_USERS),yes)
+DATABASE_DATA  += users.sql
+endif

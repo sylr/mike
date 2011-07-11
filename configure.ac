@@ -437,6 +437,15 @@ AC_ARG_ENABLE(
 
 AC_SUBST(DEV_MODE)
 
+AC_ARG_ENABLE(
+    [default-users],
+    AS_HELP_STRING([--enable-default-users], [enable default users creation]),
+    [DEFAULT_USERS=$enable_default_users],
+    [DEFAULT_USERS=yes]
+)
+
+AC_SUBST(DEFAULT_USERS)
+
 AC_ARG_VAR(NATSORT_PADDING, [padding size for natsorting (default: 8)])
 MIKE_IF_EMPTY_DEFAULT([NATSORT_PADDING], [8])
 
