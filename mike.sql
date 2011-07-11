@@ -44,6 +44,24 @@ COMMENT ON TABLE mike.conf IS 'configurations table';
 COMMENT ON COLUMN mike.conf.key IS 'configuration identifier';
 COMMENT ON COLUMN mike.conf.value IS 'configuration value';
 
+-- mike.user_state -------------------------------------------------------------
+
+DROP TABLE IF EXISTS mike.user_state CASCADE;
+
+CREATE TABLE mike.user_state (
+    state                   smallint        NOT NULL PRIMARY KEY,
+    label                   text            NOT NULL CHECK (label ~ '^[A-Z0-9_]{2,}$'),
+    description             text            NOT NULL CHECK (description != '')
+);
+
+COMMENT ON TABLE mike.user_state IS 'list of user states';
+COMMENT ON COLUMN mike.user_state.state IS 'state identifier';
+COMMENT ON COLUMN mike.user_state.label IS 'state label';
+COMMENT ON COLUMN mike.user_state.description IS 'state description';
+
+INSERT INTO mike.user_state (state, label, description) VALUES (0, 'ALIVE', 'user alive');
+INSERT INTO mike.user_state (state, label, description) VALUES (1, 'LOCKED', 'user locked');
+
 -- mike.user -------------------------------------------------------------------
 
 DROP TABLE IF EXISTS mike.user CASCADE;
@@ -52,7 +70,7 @@ CREATE TABLE mike.user (
     id_user                 serial          NOT NULL PRIMARY KEY,
     id_sso                  text            DEFAULT NULL,
     nickname                text            DEFAULT NULL,
-    state                   smallint        NOT NULL DEFAULT 1,
+    state                   smallint        NOT NULL DEFAULT 1 REFERENCES mike.user_state (state),
     ctime                   timestamptz     NOT NULL DEFAULT now(),
     mtime                   timestamptz,
     UNIQUE (id_sso)
