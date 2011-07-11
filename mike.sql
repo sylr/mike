@@ -163,7 +163,13 @@ CREATE TABLE mike.inode (
     id_user                 integer         NOT NULL REFERENCES mike.user (id_user),
     state                   smallint        NOT NULL DEFAULT 0::smallint REFERENCES mike.inode_state (state),
     id_mimetype             smallint        REFERENCES mike.mimetype (id_mimetype),
-    name                    text            NOT NULL CHECK (name != '' AND strpos(name, '/') = 0 AND length(name) <= 255),
+    name                    text            NOT NULL CHECK (
+                                                name                       != ''    AND
+                                                length(name)               <= 255   AND
+                                                strpos(name, '/')           = 0     AND
+                                                strpos(name, E'\u000d')     = 0     AND -- no CR
+                                                strpos(name, E'\u000a')     = 0         -- no LF
+                                            ),
     path                    text            NOT NULL CHECK (substr(path, 1, 1) = '/'),
 #ifdef TREE_MAX_DEPTH
     treepath                ltree           NOT NULL CHECK (nlevel(treepath) <= TREE_MAX_DEPTH),
