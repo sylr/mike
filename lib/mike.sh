@@ -54,6 +54,19 @@ parse_tag()
     sed -e "s/^ *//" -e "s/ *$//"
 }
 
+# -- die if zero function ------------------------------------------------------
+
+dieifzero()
+{
+    if [ "$1" -eq "0" ]; then
+        die "$2" $1
+    fi
+
+    if [ -n "$3" ]; then
+        echo "$3"
+    fi
+}
+
 # -- die if non zero function --------------------------------------------------
 
 dieifnzero()
