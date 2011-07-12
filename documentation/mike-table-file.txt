@@ -8,7 +8,7 @@ mike-table-file - mike's file table
 SYNOPSIS
 --------
 
-      Column      |           Type           |                        Modifiers                         |                      Description                       
+      Column      |           Type           |                        Modifiers                         |                      Description
  -----------------+--------------------------+----------------------------------------------------------+--------------------------------------------------------
   id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | inode unique identifier
   id_inode_parent | bigint                   | not null                                                 | identifier of parent inode
@@ -47,7 +47,7 @@ SYNOPSIS
  Referenced by:
     TABLE "as_file_xfile" CONSTRAINT "as_file_xfile_id_inode_fkey" FOREIGN KEY (id_inode) REFERENCES file(id_inode) ON DELETE RESTRICT
 
- Inherits: 
+ Inherits:
     inode
 
  Options:

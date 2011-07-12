@@ -106,10 +106,10 @@ if [ "$STREAMS" -gt "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
         $PSQL_FULL_CMD -c "SELECT * FROM __stream($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null &
         PIDS["$!"]="true"
-        
+
         echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
         sleep $SLEEP_TIME
-        
+
         # waiting for finished jobs if limit reached
         while [ "${#PIDS[@]}" -ge "$STREAMS" ]; do
             for pid in "${!PIDS[@]}"; do
@@ -118,13 +118,13 @@ if [ "$STREAMS" -gt "1" ]; then
                     unset PIDS[$pid];
                 fi
             done
-            
+
             sleep $SLEEP_TIME
         done
     done;
 fi
 
-# -- main ---------------------------------------------------------------------- 
+# -- main ----------------------------------------------------------------------
 
 if [ "$STREAMS" -eq "1" ]; then
     for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
@@ -138,7 +138,7 @@ if [ "$STREAMS" -eq "1" ]; then
 fi
 
 # -- gc ------------------------------------------------------------------------
-   
+
 # waiting for remaining jobs
 while [ "${#PIDS[@]}" -gt "0" ]; do
     for pid in "${!PIDS[@]}"; do
@@ -149,7 +149,7 @@ while [ "${#PIDS[@]}" -gt "0" ]; do
     done
 
     sleep $SLEEP_TIME
-done 
+done
 
 # -- exit ----------------------------------------------------------------------
 

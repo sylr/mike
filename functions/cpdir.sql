@@ -71,7 +71,7 @@ BEGIN
             v_path_target_hstore            := (v_nextval::text             => v_path::text)::hstore;
             v_treepath_target_hstore        := (v_nextval::text             => v_treepath::text)::hstore;
             v_id_inode_parent_target_hstore := (v_directory.id_inode::text  => v_nextval::text)::hstore;
-            
+
             v_return    := v_nextval;
         ELSE
             v_path              := (v_path_target_hstore       -> (v_id_inode_parent_target_hstore -> v_directory.id_inode_parent::text)) || '/' || v_directory.name;

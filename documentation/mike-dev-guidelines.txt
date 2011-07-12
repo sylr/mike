@@ -13,9 +13,9 @@ Workflow
 --------
 Mike use 'git' for 'source code management' because of its distributed design and
 its numerous features. In order to fully benefit of the ditributed design mike development
-uses a simplified version of the 'Dictator and Lieutenants Workflow'. (See :
-http://progit.org/book/ch5-1.html#dictator_and_lieutenants_workflow) 
-This way of working allows to spread general knowledge of the project across developpers.
+uses a simplified version of the 'Dictator and Lieutenants Workflow'.
+(See : http://progit.org/book/ch5-1.html#dictator_and_lieutenants_workflow) This
+way of working allows to spread general knowledge of the project across developpers.
 
 Here a sequence diagram of the workflow :
 

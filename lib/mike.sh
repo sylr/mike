@@ -9,7 +9,7 @@
 die()
 {
     echo >&2 $1;
-    
+
     if [ -z "$2" ]; then
         exit 1
     else

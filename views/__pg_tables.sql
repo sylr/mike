@@ -41,6 +41,6 @@ FROM
     pg_stat_all_tables
 JOIN
     pg_class ON (pg_stat_all_tables.relid = pg_class.oid)
-WHERE 
-    pg_stat_all_tables.schemaname = 'mike'::name AND 
+WHERE
+    pg_stat_all_tables.schemaname = 'mike'::name AND
     pg_stat_all_tables.schemaname !~ '^pg_toast'::text;
