@@ -54,7 +54,7 @@ $PSQL_FULL_CMD -c "SELECT * FROM mkdir(
 
 dieifnzero $? "something went wrong when creating target directory"
 
-$PSQL_FULL_CMD -c "SELECT * FROM cpdir( \
+$PSQL_FULL_CMD -c "SELECT * FROM cpdir(
     1,
     (SELECT id_inode FROM directory WHERE id_user = 1 AND treepath ~ '*{2}' AND name != 'target'),
     (SELECT id_inode FROM directory WHERE id_user = 1 AND treepath ~ '*{2}' AND name = 'target')
@@ -62,7 +62,7 @@ $PSQL_FULL_CMD -c "SELECT * FROM cpdir( \
 
 dieifnzero $? "something went wrong when copying"
 
-$PSQL_FULL_CMD -c "SELECT * FROM cpdir( \
+$PSQL_FULL_CMD -c "SELECT * FROM cpdir(
     1,
     (SELECT id_inode FROM directory WHERE id_user = 1 AND treepath ~ '*{2}' AND name != 'target'),
     (SELECT id_inode FROM directory WHERE id_user = 1 AND treepath ~ '*{2}' AND name = 'target'),
