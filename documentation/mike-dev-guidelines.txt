@@ -102,7 +102,11 @@ TIP: The 'contrib/git-hooks/pre-commit' hooks allows to detect spaces at EOL. Co
  * Assignation block vertically aligned
  * 'PLPGSQL' over 'PLPerl' over 'PLPython'
  * 'Perl' over 'Python'
- * All commits must be 'signed off'
+ * All commits must be 'Signed-off'
+
+TIP: The 'contrib/git-hooks/commit-msg' hook will warn you if you forgot to add
+     the Signed-off-by line. Copy it inside your '.git/hooks' directory.
+
  * '\n' only, no '\r\n'
  * No space before and one space after commas, e.g.: 'foo(bar, baz)' , not 'foo(bar , baz)'
  * No space after / before parenthesis / brackets, e.g.: 'foo(bar)' not 'foo( bar )'
