@@ -95,6 +95,10 @@ rules that should be respected:
 
  * '4 spaces' indentation (except for Makefiles which require tabs)
  * All lines 'right trimed'
+
+TIP: The 'contrib/git-hooks/pre-commit' hooks allows to detect spaces at EOL. Copy
+     it inside your '.git/hooks' directory.
+
  * Assignation block vertically aligned
  * 'PLPGSQL' over 'PLPerl' over 'PLPython'
  * 'Perl' over 'Python'
