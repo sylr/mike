@@ -55,7 +55,14 @@ BEGIN
 #endif /* TREE_MAX_DEPTH */
 
     -- look if directory name already exists in target
-    PERFORM id_inode FROM mike.directory WHERE id_inode_parent = in_new_id_inode_parent AND id_user = in_id_user AND name = coalesce(in_name, v_directory.name);
+    PERFORM id_inode
+    FROM mike.directory
+    WHERE
+        id_inode_parent = in_new_id_inode_parent AND
+        id_user         = in_id_user AND
+        name            = coalesce(in_name, v_directory.name) AND
+        state           = 0;
+
     IF FOUND THEN RAISE EXCEPTION 'directory ''%'' already exists in ''%''', coalesce(in_name, v_directory.name), in_new_id_inode_parent; END IF;
 
     -- update id_inode_parent of in_id_inode
@@ -69,8 +76,9 @@ BEGIN
         treepath            = replace(treepath::text, v_old_directory_parent.treepath::text || '.', v_new_directory_parent.treepath::text || '.')::ltree,
         path                = v_new_directory_parent.path || '/' || coalesce(in_name, v_directory.name) || substr(path, length(v_directory.path) + 1)
     WHERE
-        id_user = in_id_user
-        AND treepath ~ ('*.' || in_id_inode || '.*')::lquery;
+        id_user     = in_id_user AND
+        treepath    ~ ('*.' || in_id_inode || '.*')::lquery AND
+        state       = 0;
 
     -- update v_directory.id_inode_parent metadata
     UPDATE mike.directory SET
@@ -82,7 +90,9 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        id_inode = v_directory.id_inode_parent;
+        id_user     = in_id_user AND
+        id_inode    = v_directory.id_inode_parent AND
+        state       = 0;
 
     -- update v_directory.id_inode_parent ancestors metadata
     UPDATE mike.directory SET
@@ -93,8 +103,10 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        nlevel(v_old_directory_parent.treepath) > 1
-        AND treepath @> subpath(v_old_directory_parent.treepath, 0, nlevel(v_old_directory_parent.treepath) - 1);
+        id_user     = in_id_user AND
+        treepath   @> subpath(v_old_directory_parent.treepath, 0, nlevel(v_old_directory_parent.treepath) - 1) AND
+        state       = 0 AND
+        nlevel(v_old_directory_parent.treepath) > 1;
 
      -- update v_new_directory_parent.id_inode metadata
      UPDATE mike.directory SET
@@ -106,7 +118,9 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        id_inode = v_new_directory_parent.id_inode;
+        id_user     = in_id_user AND
+        id_inode    = v_new_directory_parent.id_inode AND
+        state       = 0;
 
     -- update v_directory.id_inode_parent ancestors metadata
     UPDATE mike.directory SET
@@ -117,8 +131,9 @@ BEGIN
         mtime                   = greatest(mtime, now()),
         inner_mtime             = greatest(inner_mtime, now())
     WHERE
-        nlevel(v_new_directory_parent.treepath) > 1
-        AND treepath @> subpath(v_new_directory_parent.treepath, 0, nlevel(v_new_directory_parent.treepath) - 1);
+        treepath   @> subpath(v_new_directory_parent.treepath, 0, nlevel(v_new_directory_parent.treepath) - 1) AND
+        state       = 0 AND
+        nlevel(v_new_directory_parent.treepath) > 1;
 END;
 
 $__$ LANGUAGE plpgsql VOLATILE COST 1000;
