@@ -201,6 +201,20 @@ endif
 
 -include $(MIKE_VERSION_FILE)
 
+# -- compiler flags ------------------------------------------------------------
+
+# this target is used to recompile files when flags changed since last
+# execution. To enable a set of files to be rebuild on flags change
+# MIKE_COMPILER_FLAGS must be referenced as prerequisite
+MIKE_COMPILER_FLAGS : .FORCE
+	@($(ECHO) CFLAGS=$(CFLAGS); \
+	  $(ECHO) NASMFLAGS=$(NASMFLAGS); \
+	  $(ECHO) DEFINES=$(DEFINES)) \
+	    | cmp -s - $@ \
+	        || ($(ECHO) CFLAGS=$(CFLAGS); \
+	            $(ECHO) NASMFLAGS=$(NASMFLAGS); \
+	            $(ECHO) DEFINES=$(DEFINES)) > $@
+
 # -- mike.o --------------------------------------------------------------------
 
 clean-target:
@@ -258,12 +272,12 @@ $(DATABASE_SO) : $(DATABASE_ASM_O) $(DATABASE_C_O)
 	@$(GCC) -shared -Wall -O2 -o $@ $^ $(DEFINES)
 	@$(SLEEP) $(SLEEP_TIME)
 
-$(DATABASE_C_O_PATTERN) : $(DATABASE_C_PATTERN)
+$(DATABASE_C_O_PATTERN) : $(DATABASE_C_PATTERN) MIKE_COMPILER_FLAGS
 	@$(ECHO) '    ' GCC $<
 	@$(GCC) -fpic -Wall -O2 -c -o $@ $< -I $(PG_INCLUDEDIR_SERVER) $(DEFINES)
 	@$(SLEEP) $(SLEEP_TIME)
 
-$(DATABASE_ASM_O_PATTERN) : $(DATABASE_ASM_PATTERN)
+$(DATABASE_ASM_O_PATTERN) : $(DATABASE_ASM_PATTERN) MIKE_COMPILER_FLAGS
 	@$(ECHO) '    ' NASM $<
 	@$(NASM) $(NASMFLAGS) -o $@ $<
 	@$(SLEEP) $(SLEEP_TIME)
