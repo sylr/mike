@@ -23,6 +23,7 @@ documentation/*.3
 documentation/*.7
 documentation/*.odf
 documentation/*.pdf
+documentation/relnotes/*.html
 stats
 mike-v*.tar.gz
 mike.conf

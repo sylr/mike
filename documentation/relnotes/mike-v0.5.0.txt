@@ -1,0 +1,71 @@
+Mike v0.5.0 Release Notes
+=========================
+
+Updates since v0.4.0
+--------------------
+ * Add 'cpdir' function to copy a tree inside another one.
+ * Teach 'mvdir' to optionally 'rename' when moving.
+ * Add 'views' for database administration.
+  ** mike.__pg_activity
+  ** mike.__pg_functions
+  ** mike.__pg_locks
+  ** mike.__pg_relbloat
+  ** mike.__pg_relsizes
+  ** mike.__pg_tables
+ * Inodes 'indexes' have been split by inode state in order to improve performances
+   when looking for inodes which have been marked as logicaly deleted. This change
+   imply that every requests on inodes tables must now have a condition on the state
+   column to use index even if the results you want does not depend on the inode state,
+   e.g. :
+
+[source,sql]
+------------
+mike=# EXPLAIN ANALYZE SELECT * FROM inode WHERE id_user = 1;
+                                                        QUERY PLAN
+ ---------------------------------------------------------------------------------------------------------------------------
+ Result  (cost=0.00..1118.44 rows=237 width=187) (actual time=0.019..1.895 rows=235 loops=1)
+   ->  Append  (cost=0.00..1118.44 rows=237 width=187) (actual time=0.019..1.836 rows=235 loops=1)
+         ->  Seq Scan on inode  (cost=0.00..15.50 rows=2 width=152) (actual time=0.001..0.001 rows=0 loops=1)
+               Filter: (id_user = 1)
+         ->  Seq Scan on directory inode  (cost=0.00..803.50 rows=40 width=165) (actual time=0.017..0.883 rows=40 loops=1)
+               Filter: (id_user = 1)
+         ->  Seq Scan on file inode  (cost=0.00..299.44 rows=195 width=192) (actual time=0.004..0.899 rows=195 loops=1)
+               Filter: (id_user = 1)
+ Total runtime: 1.956 ms
+(9 rows)
+
+mike=# EXPLAIN ANALYZE SELECT * FROM inode WHERE id_user = 1 AND (state = 0 OR state > 0);
+                                                                          QUERY PLAN
+ --------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Result  (cost=0.00..254.69 rows=69 width=152) (actual time=0.070..0.426 rows=235 loops=1)
+   ->  Append  (cost=0.00..254.69 rows=69 width=152) (actual time=0.069..0.372 rows=235 loops=1)
+         ->  Seq Scan on inode  (cost=0.00..17.70 rows=1 width=152) (actual time=0.001..0.001 rows=0 loops=1)
+               Filter: ((id_user = 1) AND ((state = 0) OR (state > 0)))
+         ->  Bitmap Heap Scan on directory inode  (cost=9.64..170.02 rows=50 width=152) (actual time=0.068..0.137 rows=40 loops=1)
+               Recheck Cond: (((id_user = 1) AND (state = 0)) OR ((id_user = 1) AND (state > 0)))
+               ->  BitmapOr  (cost=9.64..9.64 rows=50 width=0) (actual time=0.043..0.043 rows=0 loops=1)
+                     ->  Bitmap Index Scan on directory_id_user_alive_btree_idx  (cost=0.00..5.35 rows=1 width=0) (actual time=0.040..0.040 rows=221 loops=1)
+                           Index Cond: (id_user = 1)
+                     ->  Bitmap Index Scan on directory_id_user_dead_btree_idx  (cost=0.00..4.26 rows=49 width=0) (actual time=0.003..0.003 rows=0 loops=1)
+                           Index Cond: (id_user = 1)
+         ->  Bitmap Heap Scan on file inode  (cost=8.92..66.97 rows=18 width=152) (actual time=0.059..0.192 rows=195 loops=1)
+               Recheck Cond: (((id_user = 1) AND (state = 0)) OR ((id_user = 1) AND (state > 0)))
+               ->  BitmapOr  (cost=8.92..8.92 rows=18 width=0) (actual time=0.048..0.048 rows=0 loops=1)
+                     ->  Bitmap Index Scan on file_id_user_alive_btree_idx  (cost=0.00..4.66 rows=1 width=0) (actual time=0.047..0.047 rows=390 loops=1)
+                           Index Cond: (id_user = 1)
+                     ->  Bitmap Index Scan on file_id_user_dead_btree_idx  (cost=0.00..4.26 rows=18 width=0) (actual time=0.001..0.001 rows=0 loops=1)
+                           Index Cond: (id_user = 1)
+ Total runtime: 0.521 ms
+(19 rows)
+------------
+
+ * Add set of 'stat' functions to get inodes properties.
+ * 'BK' behavior has been changed, now the the father launch the desired number of
+   children which sequentially spawn SQL requests through psql.
+
+Fix since v0.4.0
+----------------
+ * The 'mvdir' check ensuring that no directory with the same name exists in the
+   target directory was 'doomed', instead of doing what if was expecting to do it
+   was checking that the new parent directory did not have the same name that the
+   moved directory. Fixed by commit 0cd306db.

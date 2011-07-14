@@ -57,6 +57,12 @@ Mike 'will not be supported' until 'v1.0.0' release. Until then, Minor and Maint
 releases are only development milestones meant to mark important changes made to
 the source code.
 
+ifdef::backend-xhtml11[]
+Releases Notes
+~~~~~~~~~~~~~~
+ * link:relnotes/mike-v0.5.0.html[Mike-v0.5.0]
+endif::backend-xhtml11[]
+
 Install
 -------
 See linkmike:mike-install[1].

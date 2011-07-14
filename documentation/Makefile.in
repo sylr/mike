@@ -41,6 +41,9 @@ DOC_MAN1                = $(patsubst %.txt, %.1,    $(shell $(GREP) -lE '^mike[a
 DOC_MAN3                = $(patsubst %.txt, %.3,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(3\)$$' $(DOC_TXT)))
 DOC_MAN7                = $(patsubst %.txt, %.7,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(7\)$$' $(DOC_TXT)))
 
+RELNOTES_TXT            = $(wildcard relnotes/*.txt)
+RELNOTES_HTML           = $(patsubst %.txt, %.html, $(RELNOTES_TXT))
+
 MIKE_VERSION_FILE       = ../MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE      = ../MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = ../MIKE_HEAD_DIFF_FILE
@@ -107,7 +110,7 @@ odt:
 pdf:
 	@$(MAKE) --no-print-directory pdf-sub $(MAKEFLAGS)
 
-html-sub: $(DOC_HTML)
+html-sub: $(DOC_HTML) $(RELNOTES_HTML)
 
 xml-sub: $(DOC_XML)
 
