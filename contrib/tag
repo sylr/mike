@@ -152,7 +152,7 @@ if [ "$VERSION_IN_AC" != "$NEXT_TAG_FULL" ]; then
     echo "About to write configure.ac"
     abort
 
-    if [ ! -z "$(git diff configure.ac)" ]; then
+    if [ ! -z "$($GIT diff configure.ac)" ]; then
         die "configure.ac is in dirty state ..."
     fi
 
