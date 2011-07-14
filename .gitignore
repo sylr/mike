@@ -1,6 +1,7 @@
 *~
 **.o
 **.so
+**.swp
 MIKE_VERSION_FILE
 MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE
