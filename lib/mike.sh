@@ -6,6 +6,7 @@
 
 # -- die function --------------------------------------------------------------
 
+# die "epitaph" ["exit code"]
 die()
 {
     echo >&2 $1;
@@ -19,6 +20,7 @@ die()
 
 # -- abort function ------------------------------------------------------------
 
+# abort ["outpout if aborting"]
 abort()
 {
     echo -n "Do you want to continue [Y/n]? "
@@ -56,6 +58,7 @@ parse_tag()
 
 # -- die if zero function ------------------------------------------------------
 
+# dieifzero $var "error message" "success message"
 dieifzero()
 {
     if [ "$1" -eq "0" ]; then
@@ -69,6 +72,7 @@ dieifzero()
 
 # -- die if non zero function --------------------------------------------------
 
+# dieifnzero $var "error message" "success message"
 dieifnzero()
 {
     if [ "$1" -ne "0" ]; then
@@ -82,6 +86,7 @@ dieifnzero()
 
 # -- strrpad -------------------------------------------------------------------
 
+# nstrrpad "string" "output string length" ["padding char"]
 nstrrpad()
 {
     local FULL_LENGTH=$(echo -n "$1" | wc -m)
@@ -105,6 +110,7 @@ nstrrpad()
     fi
 }
 
+# strrpad "string" "output string length" ["padding char"]
 strrpad()
 {
     nstrrpad "$1" "$2" "$3"
@@ -113,6 +119,7 @@ strrpad()
 
 # -- strlpad -------------------------------------------------------------------
 
+# nstrlpad "string" "output string length" ["padding char"]
 nstrlpad()
 {
     local FULL_LENGTH=$(echo -n "$1" | wc -m)
@@ -135,6 +142,7 @@ nstrlpad()
     fi
 }
 
+# strlpad "string" "output string length" ["padding char"]
 strlpad()
 {
     nstrlpad "$1" "$2" "$3"
