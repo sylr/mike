@@ -232,8 +232,8 @@ info:
 	@$(ECHO) '    ' LINK INSTALL_DATE `$(DATE)`;
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_INSTALL_DATE', now()::text);" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_CONFIGURE_INVOCATION "$(CONFIGURE_INVOCATION)";
-	@($(ECHO) -n "INSERT INTO mike.info (key, value) VALUES ('MIKE_CONFIGURE_INVOCATION', E'";  \
-	 ($(ECHO) -n "$(CONFIGURE_INVOCATION)" | $(SED) "s/\(['\\]\)/\1\1/g");                 \
+	@($(ECHO) -n "INSERT INTO mike.info (key, value) VALUES ('MIKE_CONFIGURE_INVOCATION', E'"; \
+	 ($(ECHO) -n "$(CONFIGURE_INVOCATION)" | $(SED) "s/\(['\\]\)/\1\1/g"); \
 	  $(ECHO) "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	@$(ECHO) '    ' LINK MIKE_CPP_DEFINES "'$(DEFINES)'";
 	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', E'$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
