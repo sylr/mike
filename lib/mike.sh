@@ -82,7 +82,7 @@ dieifnzero()
 
 # -- strrpad -------------------------------------------------------------------
 
-strrpad()
+nstrrpad()
 {
     local FULL_LENGTH=$(echo -n "$1" | wc -m)
     local PAD_LENGTH=$2
@@ -105,9 +105,15 @@ strrpad()
     fi
 }
 
+strrpad()
+{
+    nstrrpad "$1" "$2" "$3"
+    echo
+}
+
 # -- strlpad -------------------------------------------------------------------
 
-strlpad()
+nstrlpad()
 {
     local FULL_LENGTH=$(echo -n "$1" | wc -m)
     local PAD_LENGTH=$2
@@ -127,4 +133,46 @@ strlpad()
     else
         echo -n "${1}"
     fi
+}
+
+strlpad()
+{
+    nstrlpad "$1" "$2" "$3"
+    echo
+}
+
+# -- red -----------------------------------------------------------------------
+
+red()
+{
+    echo -e "\e[0;31m$1\e[0m"
+}
+
+nred()
+{
+    echo -ne "\e[0;31m$1\e[0m"
+}
+
+# -- green ---------------------------------------------------------------------
+
+green()
+{
+    echo -e "\e[0;32m$1\e[0m"
+}
+
+ngreen()
+{
+    echo -ne "\e[0;32m$1\e[0m"
+}
+
+# -- yellow -----------------------------------------------------------------------
+
+yellow()
+{
+    echo -e "\e[0;33m$1\e[0m"
+}
+
+nyellow()
+{
+    echo -ne "\e[0;33m$1\e[0m"
 }
