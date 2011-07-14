@@ -20,7 +20,7 @@ What's behind mike.
  * Make (http://www.gnu.org/software/make/)
  * Meld (http://meld.sourceforge.net/)
  * PostgreSQL (http://www.postgresql.org/)
- * Spotify (http://www.spotify.com)
+ * Spotify (http://www.spotify.com/)
    - DJ Doboy
    - Fluke
    - Kaskade
