@@ -86,7 +86,7 @@ endif
 MIKE_ASCIIDOC_FLAGS : .FORCE
 	@$(ECHO) ASCIIDOC_FLAGS=$(ASCIIDOC_FLAGS) \
 	    | cmp -s - $@ \
-	        || $(ECHO) ASCIIDOCFLAGS=$(ASCIIDOC_FLAGS) > $@
+	        || $(ECHO) ASCIIDOC_FLAGS=$(ASCIIDOC_FLAGS) > $@
 
 # -- targets -------------------------------------------------------------------
 
@@ -121,11 +121,11 @@ pdf-sub: $(DOC_XML) $(DOC_PDF)
 
 %.html : %.txt MIKE_ASCIIDOC_FLAGS
 	@$(ECHO) '    ' ASCIIDOC HTML $@
-	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOCFLAGS) -b xhtml11 -o $@ $<
+	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOC_FLAGS) -b xhtml11 -o $@ $<
 
 %.xml : %.txt MIKE_ASCIIDOC_FLAGS
 	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@
-	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOCFLAGS) -b docbook -d manpage -o $@ $<
+	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOC_FLAGS) -b docbook -d manpage -o $@ $<
 
 %.1 : %.xml
 	@$(ECHO) '    ' XMLTO MAN $@
