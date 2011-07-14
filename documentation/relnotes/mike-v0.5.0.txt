@@ -63,8 +63,8 @@ mike=# EXPLAIN ANALYZE SELECT * FROM inode WHERE id_user = 1 AND (state = 0 OR s
  * 'BK' behavior has been changed, now the the father launch the desired number of
    children which sequentially spawn SQL requests through psql.
 
-Fix since v0.4.0
-----------------
+Fixes since v0.4.0
+------------------
  * The 'mvdir' check ensuring that no directory with the same name exists in the
    target directory was 'doomed', instead of doing what if was expecting to do it
    was checking that the new parent directory did not have the same name that the
