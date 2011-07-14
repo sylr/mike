@@ -5,7 +5,7 @@ Updates since v0.4.0
 --------------------
  * Add 'cpdir' function to copy a tree inside another one.
  * Teach 'mvdir' to optionally 'rename' when moving.
- * Add 'views' for database administration.
+ * Add 'views' for database administration:
   ** mike.__pg_activity
   ** mike.__pg_functions
   ** mike.__pg_locks
@@ -62,6 +62,7 @@ mike=# EXPLAIN ANALYZE SELECT * FROM inode WHERE id_user = 1 AND (state = 0 OR s
  * Add set of 'stat' functions to get inodes properties.
  * 'BK' behavior has been changed, now the the father launch the desired number of
    children which sequentially spawn SQL requests through psql.
+ * Add 'Release Notes' and made it mandatory for any non rc release.
 
 Fixes since v0.4.0
 ------------------
