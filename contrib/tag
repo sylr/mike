@@ -132,6 +132,17 @@ NEXT_TAG_FULL="v$NEXT_TAG_MAJOR.$NEXT_TAG_MINOR.$NEXT_TAG_MAINT$NEXT_TAG_RC"
 echo "About to tag Mike $NEXT_TAG_FULL"
 abort
 
+# check the presence of a relnote
+if [ -z "$NEXT_TAG_RC" ]; then
+    if [ -z "$($GIT ls-tree HEAD "documentation/relnotes/mike-$NEXT_TAG_FULL.txt")" ]; then
+        die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt not found"
+    elif [ -z "$($GIT grep "Mike $NEXT_TAG_FULL Release Notes" HEAD -- "documentation/relnotes/mike-$NEXT_TAG_FULL.txt")" ]; then
+        die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt header does not match tag version"
+    elif [ -n "$($GIT grep "Mike $NEXT_TAG_FULL Release Notes (draft)" HEAD -- "documentation/relnotes/mike-$NEXT_TAG_FULL.txt")" ]; then
+        die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt is still a draft"
+    fi
+fi
+
 # checking configure.ac
 VERSION_IN_AC=$(grep "AC_INIT" $MIKE_PATH/configure.ac | \
     sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\2#")
