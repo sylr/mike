@@ -173,7 +173,7 @@ ngreen()
     echo -ne "\e[0;32m$1\e[0m"
 }
 
-# -- yellow -----------------------------------------------------------------------
+# -- yellow --------------------------------------------------------------------
 
 yellow()
 {
@@ -183,4 +183,22 @@ yellow()
 nyellow()
 {
     echo -ne "\e[0;33m$1\e[0m"
+}
+
+# -- git_describe_no_rc --------------------------------------------------------
+
+git_describe_no_rc()
+{
+    unset before;
+
+    while true; do
+        tag=$(git describe --no-abbrev --match 'v[0-9]*.[0-9]*.[0-9]*' $before);
+
+        if [ -z $(echo $tag | grep -v '\-rc') ]; then
+            before="$tag^";
+        else
+            echo $tag;
+            break;
+        fi;
+    done
 }
