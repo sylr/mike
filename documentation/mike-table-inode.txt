@@ -8,34 +8,37 @@ mike-table-inode - mike's inode table
 SYNOPSIS
 --------
 
-      Column      |           Type           |                        Modifiers                         |                      Description
- -----------------+--------------------------+----------------------------------------------------------+--------------------------------------------------------
-  id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | inode unique identifier
-  id_inode_parent | bigint                   |                                                          | identifier of parent inode
-  id_user         | integer                  | not null                                                 | owner of the inode
-  state           | smallint                 | not null default (0)::smallint                           | state of the inode, references mike.inode_state
-  id_mimetype     | smallint                 | not null                                                 | mimetype of the inode
-  name            | text                     | not null                                                 | name of the inode, limited to 255 characters
-  path            | text                     | not null                                                 | path of the inode
-  treepath        | ltree                    | not null                                                 | treepath of the inode
-  ctime           | timestamp with time zone | not null default now()                                   | creation timestamp with timezone of the inode
-  mtime           | timestamp with time zone |                                                          | last modification timestamp with timezone of the inode
-  size            | bigint                   | not null default 0                                       | size of the inode
-  versioning_size | bigint                   | not null default 0                                       | versioning size of the inode
+      Column      |           Type           |                        Modifiers                         | Storage  |                      Description
+ -----------------+--------------------------+----------------------------------------------------------+----------+--------------------------------------------------------
+  id_inode        | bigint                   | not null default nextval('inode_id_inode_seq'::regclass) | plain    | inode unique identifier
+  id_inode_parent | bigint                   |                                                          | plain    | identifier of parent inode
+  id_user         | integer                  | not null                                                 | plain    | owner of the inode
+  state           | smallint                 | not null default (0)::smallint                           | plain    | state of the inode, references mike.inode_state
+  id_mimetype     | smallint                 |                                                          | plain    | mimetype of the inode
+  name            | text                     | not null                                                 | extended | name of the inode, limited to 255 characters
+  path            | text                     | not null                                                 | extended | path of the inode
+  treepath        | ltree                    | not null                                                 | extended | treepath of the inode
+  ctime           | timestamp with time zone | not null default now()                                   | plain    | creation timestamp with timezone of the inode
+  mtime           | timestamp with time zone |                                                          | plain    | last modification timestamp with timezone of the inode
+  size            | bigint                   | not null default 0                                       | plain    | size of the inode
+  versioning_size | bigint                   | not null default 0                                       | plain    | versioning size of the inode
 
  Indexes:
-    "inode_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
-    "inode_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
-    "inode_id_mimetype_btree_idx" btree (id_mimetype) WITH (fillfactor=95)
-    "inode_id_user_btree_idx" btree (id_user) WITH (fillfactor=95) CLUSTER
-    "inode_name_btree_idx" btree (name) WITH (fillfactor=95)
-    "inode_name_natsort_btree_idx" btree (__natsort(name)) WITH (fillfactor=95)
-    "inode_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
+    "directory_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
+    "directory_id_inode_parent_state_name_key" UNIQUE CONSTRAINT, btree (id_inode_parent, state, name)
+    "directory_ctime_btree_idx" btree (ctime) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_inode_parent_alive_btree_idx" btree (id_inode_parent) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_inode_parent_dead_btree_idx" btree (id_inode_parent) WITH (fillfactor=99) WHERE state > 0
+    "directory_id_inode_parent_null_btree_idx" btree (id_inode_parent) WITH (fillfactor=99) WHERE id_inode_parent IS NULL
+    "directory_id_user_alive_btree_idx" btree (id_user) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_user_dead_btree_idx" btree (id_user) WITH (fillfactor=95) WHERE state > 0
+    "directory_treepath_alive_gist_idx" gist (treepath) WITH (fillfactor=95) WHERE state = 0
+    "directory_treepath_dead_gist_idx" gist (treepath) WITH (fillfactor=95) WHERE state > 0
 
  Check constraints:
-    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255)
+    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255 AND strpos(name, '/'::text) = 0 AND strpos(name, '\r'::text) = 0 AND strpos(name, '\n'::text) = 0)
     "inode_path_check" CHECK (substr(path, 1, 1) = '/'::text)
-    "inode_treepath_check" CHECK (nlevel(treepath) <= 24)
+    "inode_treepath_check" CHECK (nlevel(treepath) <= __get_conf_int('tree_max_depth'::text))
 
  Foreign-key constraints:
     "inode_id_inode_parent_fkey" FOREIGN KEY (id_inode_parent) REFERENCES inode(id_inode) ON DELETE CASCADE

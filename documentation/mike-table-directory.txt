@@ -32,16 +32,18 @@ SYNOPSIS
 
  Indexes:
     "directory_pkey" PRIMARY KEY, btree (id_inode) WITH (fillfactor=95)
-    "directory_id_inode_parent_key" UNIQUE, btree (id_inode_parent, name)
-    "directory_ctime_btree_idx" btree (ctime) WITH (fillfactor=95)
-    "directory_id_inode_parent_btree_idx" btree (id_inode_parent) WITH (fillfactor=95)
-    "directory_id_user_btree_idx" btree (id_user) WITH (fillfactor=95) CLUSTER
-    "directory_name_btree_idx" btree (name) WITH (fillfactor=95)
-    "directory_name_natsort_btree_idx" btree (__natsort(name)) WITH (fillfactor=95)
-    "directory_treepath_gist_idx" gist (treepath) WITH (fillfactor=95)
+    "directory_id_inode_parent_state_name_key" UNIQUE CONSTRAINT, btree (id_inode_parent, state, name)
+    "directory_ctime_btree_idx" btree (ctime) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_inode_parent_alive_btree_idx" btree (id_inode_parent) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_inode_parent_dead_btree_idx" btree (id_inode_parent) WITH (fillfactor=99) WHERE state > 0
+    "directory_id_inode_parent_null_btree_idx" btree (id_inode_parent) WITH (fillfactor=99) WHERE id_inode_parent IS NULL
+    "directory_id_user_alive_btree_idx" btree (id_user) WITH (fillfactor=95) WHERE state = 0
+    "directory_id_user_dead_btree_idx" btree (id_user) WITH (fillfactor=95) WHERE state > 0
+    "directory_treepath_alive_gist_idx" gist (treepath) WITH (fillfactor=95) WHERE state = 0
+    "directory_treepath_dead_gist_idx" gist (treepath) WITH (fillfactor=95) WHERE state > 0
 
  Check constraints:
-    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255)
+    "inode_name_check" CHECK (name <> ''::text AND length(name) <= 255 AND strpos(name, '/'::text) = 0 AND strpos(name, '\r'::text) = 0 AND strpos(name, '\n'::text) = 0)
     "inode_path_check" CHECK (substr(path, 1, 1) = '/'::text)
     "inode_treepath_check" CHECK (nlevel(treepath) <= 24)
 
