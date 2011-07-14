@@ -132,7 +132,9 @@ NO_ATIME            = @NO_ATIME@
 NO_VOLUME_LOCK      = @NO_VOLUME_LOCK@
 NATSORT_PADDING     = @NATSORT_PADDING@
 
-DEFINES = -D MIKE_VERSION="$(MIKE_VERSION)"
+DEFINES  = -D MIKE_VERSION="$(MIKE_VERSION)"
+DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
+DEFINES += -D PG_VERSION=$(PG_VERSION)
 
 ifneq ($(TREE_MAX_DEPTH),no)
     ifneq ($(TREE_MAX_DEPTH),yes)
@@ -165,7 +167,33 @@ ifeq ($(X86_64),yes)
     DEFINES += -D X86_64
 endif
 
-DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
+ifeq ($(PG_VERSION_9),yes)
+    DEFINES += -D PG_VERSION_9
+endif
+
+ifeq ($(PG_VERSION_9_0),yes)
+    DEFINES += -D PG_VERSION_9_0
+endif
+
+ifeq ($(PG_VERSION_9_0_PLUS),yes)
+    DEFINES += -D PG_VERSION_9_0_PLUS
+endif
+
+ifeq ($(PG_VERSION_9_1),yes)
+    DEFINES += -D PG_VERSION_9_1
+endif
+
+ifeq ($(PG_VERSION_9_1_PLUS),yes)
+    DEFINES += -D PG_VERSION_9_1_PLUS
+endif
+
+ifeq ($(PG_VERSION_9_2),yes)
+    DEFINES += -D PG_VERSION_9_2
+endif
+
+ifeq ($(PG_VERSION_9_2_PLUS),yes)
+    DEFINES += -D PG_VERSION_9_2_PLUS
+endif
 
 # -- tests ---------------------------------------------------------------------
 

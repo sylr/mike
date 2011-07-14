@@ -37,7 +37,6 @@ DOC_HTML                = $(patsubst %.txt, %.html, $(DOC_TXT))
 DOC_XML                 = $(patsubst %.txt, %.xml,  $(DOC_TXT))
 DOC_ODT                 = $(patsubst %.txt, %.odt,  $(DOC_TXT))
 DOC_PDF                 = $(patsubst %.txt, %.pdf,  $(DOC_TXT))
-
 DOC_MAN1                = $(patsubst %.txt, %.1,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(1\)$$' $(DOC_TXT)))
 DOC_MAN3                = $(patsubst %.txt, %.3,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(3\)$$' $(DOC_TXT)))
 DOC_MAN7                = $(patsubst %.txt, %.7,    $(shell $(GREP) -lE '^mike[a-z0-9-]*\(7\)$$' $(DOC_TXT)))
@@ -47,12 +46,17 @@ MIKE_TAG_DIFF_FILE      = ../MIKE_TAG_DIFF_FILE
 MIKE_HEAD_DIFF_FILE     = ../MIKE_HEAD_DIFF_FILE
 
 prefix                  = @prefix@
-htmldir                 ?= $(prefix)/share/doc/mike
-pdfdir                  ?= $(prefix)/share/doc/mike
-mandir                  ?= $(prefix)/share/man
+htmldir                ?= $(prefix)/share/doc/mike
+pdfdir                 ?= $(prefix)/share/doc/mike
+mandir                 ?= $(prefix)/share/man
 man1dir                 =  $(mandir)/man1
 man3dir                 =  $(mandir)/man3
 man7dir                 =  $(mandir)/man7
+
+ASCIIDOC_FLAGS          = -a revision="$(MIKE_VERSION)"
+ASCIIDOC_FLAGS         += -a date="$(MIKE_COMMIT_DATE)"
+ASCIIDOC_FLAGS         += -a mike_version="$(MIKE_VERSION)"
+ASCIIDOC_FLAGS         += -a mike_git_url="$(MIKE_GIT_URL)"
 
 # -- tests ---------------------------------------------------------------------
 
@@ -73,6 +77,16 @@ ifneq ($(GIT_DIR),)
 endif
 
 -include $(MIKE_VERSION_FILE)
+
+# -- asciidoc flags ------------------------------------------------------------
+
+# this target is used to regenerate files when flags changed since last
+# execution. To enable a set of files to be rebuild on flags change
+# MIKE_ASCIIDOC_FLAGS must be referenced as prerequisite
+MIKE_ASCIIDOC_FLAGS : .FORCE
+	@$(ECHO) ASCIIDOC_FLAGS=$(ASCIIDOC_FLAGS) \
+	    | cmp -s - $@ \
+	        || $(ECHO) ASCIIDOCFLAGS=$(ASCIIDOC_FLAGS) > $@
 
 # -- targets -------------------------------------------------------------------
 
@@ -105,36 +119,33 @@ pdf-sub: $(DOC_XML) $(DOC_PDF)
 
 # -- files ---------------------------------------------------------------------
 
-%.html : %.txt
-	@$(ECHO) '    ' ASCIIDOC HTML $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
-	                                    -a revision="$(MIKE_VERSION)" \
-	                                    -a date="$(MIKE_COMMIT_DATE)" \
-	                                    -a mike_version="$(MIKE_VERSION)" \
-	                                    -a mike_git_url="$(MIKE_GIT_URL)" \
-	                                    -b xhtml11 -o $@ $<
+%.html : %.txt MIKE_ASCIIDOC_FLAGS
+	@$(ECHO) '    ' ASCIIDOC HTML $@
+	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOCFLAGS) -b xhtml11 -o $@ $<
 
-%.xml : %.txt
-	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@; $(ASCIIDOC) $(ASCIIDOC_EXTRA) \
-	                                    -a revision="$(MIKE_VERSION)" \
-	                                    -a date="$(MIKE_COMMIT_DATE)" \
-	                                    -a mike_version="$(MIKE_VERSION)" \
-	                                    -a mike_git_url="$(MIKE_GIT_URL)" \
-	                                    -b docbook -d manpage -o $@ $<
+%.xml : %.txt MIKE_ASCIIDOC_FLAGS
+	@$(ECHO) '    ' ASCIIDOC DOCBOOK $@
+	@$(ASCIIDOC) $(ASCIIDOC_EXTRA) $(ASCIIDOCFLAGS) -b docbook -d manpage -o $@ $<
 
 %.1 : %.xml
-	@$(ECHO) '    ' XMLTO MAN $@; $(XMLTO) -o ./ man $< 2> /dev/null
+	@$(ECHO) '    ' XMLTO MAN $@
+	@$(XMLTO) -o ./ man $< 2> /dev/null
 
 %.3 : %.xml
-	@$(ECHO) '    ' XMLTO MAN $@; $(XMLTO) -o ./ man $< 2> /dev/null
+	@$(ECHO) '    ' XMLTO MAN $@
+	@$(XMLTO) -o ./ man $< 2> /dev/null
 
 %.7 : %.xml
-	@$(ECHO) '    ' XMLTO MAN $@; $(XMLTO) -o ./ man $< 2> /dev/null
+	@$(ECHO) '    ' XMLTO MAN $@
+	@$(XMLTO) -o ./ man $< 2> /dev/null
 
 %.pdf : %.xml
-	@$(ECHO) '    ' DOCBOOK2PDF $@; $(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
+	@$(ECHO) '    ' DOCBOOK2PDF $@
+	@$(DOCBOOK2PDF) $(DOCBOOK2PDF_EXTRA) -o ./ $<
 
 %.odt : %.xml
-	@$(ECHO) '    ' DOCBOOK2ODF $@; $(DOCBOOK2ODF) $(DOCBOOK2ODF_EXTRA) --output-file $@ $<
+	@$(ECHO) '    ' DOCBOOK2ODF $@
+	@$(DOCBOOK2ODF) $(DOCBOOK2ODF_EXTRA) --output-file $@ $<
 
 # -- install -------------------------------------------------------------------
 

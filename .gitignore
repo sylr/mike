@@ -14,6 +14,7 @@ configure
 config.log
 config.status
 autom4te.cache
+documentation/MIKE_ASCIIDOC_FLAGS
 documentation/**.html
 documentation/**.xml
 documentation/**.1
