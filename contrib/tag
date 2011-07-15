@@ -87,33 +87,36 @@ fi
 
 # generating major version
 if [ "$TAG_TYPE" == "MAJOR" ]; then
-    NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1));
-    NEXT_TAG_MINOR=0;
-    NEXT_TAG_MAINT=0;
+    NEXT_TAG_MAJOR=$(($LAST_TAG_MAJOR + 1))
+    NEXT_TAG_MINOR=0
+    NEXT_TAG_MAINT=0
+
     if [ "$TAG_RC" == "RC" ]; then
         NEXT_TAG_RC="-rc1"
     elif [ "$LAST_TAG_RC" -ne "0" ]; then
-        NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
+        NEXT_TAG_MAJOR=$LAST_TAG_MAJOR
     fi
 # generating minor version
 elif [ "$TAG_TYPE" == "MINOR" ]; then
-    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
-    NEXT_TAG_MINOR=$(($LAST_TAG_MINOR + 1));
-    NEXT_TAG_MAINT=0;
+    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR
+    NEXT_TAG_MINOR=$(($LAST_TAG_MINOR + 1))
+    NEXT_TAG_MAINT=0
+
     if [ "$TAG_RC" == "RC" ]; then
         NEXT_TAG_RC="-rc1"
     elif [ "$LAST_TAG_RC" -ne "0" ]; then
-        NEXT_TAG_MINOR=$LAST_TAG_MINOR;
+        NEXT_TAG_MINOR=$LAST_TAG_MINOR
     fi
 # generating maint version
 elif [ "$TAG_TYPE" == "MAINT" ]; then
-    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
-    NEXT_TAG_MINOR=$LAST_TAG_MINOR;
-    NEXT_TAG_MAINT=$(($LAST_TAG_MAINT + 1));
+    NEXT_TAG_MAJOR=$LAST_TAG_MAJOR
+    NEXT_TAG_MINOR=$LAST_TAG_MINOR
+    NEXT_TAG_MAINT=$(($LAST_TAG_MAINT + 1))
+
     if [ "$TAG_RC" == "RC" ]; then
         NEXT_TAG_RC="-rc1"
     elif [ "$LAST_TAG_RC" -ne "0" ]; then
-        NEXT_TAG_MAINT=$LAST_TAG_MAINT;
+        NEXT_TAG_MAINT=$LAST_TAG_MAINT
     fi
 else
     if [ "$TAG_RC" == "RC" ]; then
@@ -121,9 +124,9 @@ else
             die "You can't make a rc tag of v$LAST_TAG_MAJOR.$LAST_TAG_MINOR.$LAST_TAG_MAINT \
             because a non rc tag of this version has already been released"
         else
-            NEXT_TAG_MAJOR=$LAST_TAG_MAJOR;
-            NEXT_TAG_MINOR=$LAST_TAG_MINOR;
-            NEXT_TAG_MAINT=$LAST_TAG_MAINT;
+            NEXT_TAG_MAJOR=$LAST_TAG_MAJOR
+            NEXT_TAG_MINOR=$LAST_TAG_MINOR
+            NEXT_TAG_MAINT=$LAST_TAG_MAINT
             NEXT_TAG_RC="-rc$(($LAST_TAG_RC + 1))"
         fi
     else
@@ -162,14 +165,14 @@ if [ "$VERSION_IN_AC" != "$NEXT_TAG_FULL" ]; then
     fi
 
     cat "$MIKE_PATH/configure.ac" | \
-    sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\AC_INIT([\1], [$NEXT_TAG_FULL], [\3], , [\4])#" > \
-        "$MIKE_PATH/configure.ac.tmp"
+        sed "s#AC_INIT($ACMATCH, $ACMATCH, $ACMATCH, , $ACMATCH)#\AC_INIT([\1], [$NEXT_TAG_FULL], [\3], , [\4])#" > \
+            "$MIKE_PATH/configure.ac.tmp"
 
     mv "$MIKE_PATH/configure.ac.tmp" "$MIKE_PATH/configure.ac"
-    $GIT add "$MIKE_PATH/configure.ac" &&
-    $GIT commit -as -m "Mike $NEXT_TAG_FULL"
+
+    $GIT add "$MIKE_PATH/configure.ac" && \
+        $GIT commit -as -m "Mike $NEXT_TAG_FULL"
 fi
 
 # tag
 $GIT tag -s "$NEXT_TAG_FULL" -m "Mike $NEXT_TAG_FULL"
-
