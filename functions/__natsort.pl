@@ -8,9 +8,11 @@ CREATE OR REPLACE FUNCTION mike.__natsort_pl(
     in_text         text
 ) RETURNS text AS $__$
 
-# Version: MIKE_VERSION
+## Version: MIKE_VERSION
 
-$_[0] =~ s/([0-9]+)/sprintf("%012s", $&)/eg;
+my $natsort = NATSORT_PADDING;
+
+$_[0] =~ s/([0-9]+)/sprintf("%0${natsort}s", $&)/eg;
 return $_[0];
 
 $__$ LANGUAGE plperl IMMUTABLE COST 1000;
