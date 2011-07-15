@@ -345,4 +345,3 @@ CREATE TABLE mike.as_file_xfile (
 );
 
 COMMENT ON TABLE mike.as_file_xfile IS 'associative table between mike.file and mike.xfile';
-
