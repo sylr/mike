@@ -245,7 +245,9 @@ MIKE_COMPILER_FLAGS : .FORCE
 # -- mike.o --------------------------------------------------------------------
 
 clean-target:
-	@$(ECHO) '    ' REMOVING $(TARGET_FILE); $(RM) $(RM_EXTRA) $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' REMOVING $(TARGET_FILE)
+	@$(RM) $(RM_EXTRA) $(TARGET_FILE)
+	@$(SLEEP) $(SLEEP_TIME)
 
 info:
 	@$(ECHO) '    ' LINK MIKE_VERSION $(MIKE_VERSION);
@@ -398,6 +400,8 @@ clean-git: clean-doc
 	@$(GIT) clean -fdx
 
 # -- development ---------------------------------------------------------------
+
+dev-object: clean-target $(DATABASE_FILES) info
 
 dev-functions: $(DATABASE_FUNCTIONS)
 
