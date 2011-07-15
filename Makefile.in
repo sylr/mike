@@ -284,8 +284,9 @@ info:
 	fi
 
 $(DATABASE_FILES): $(DATABASE_INSTALLED_SO)
-	@$(ECHO) '    ' LINK $@;
-	@$(GCC) -x c -E "$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK $@
+	@$(GCC) -x c -E -CC -P "$@" $(DEFINES) 2> /dev/null >> $(TARGET_FILE)
+	@$(SLEEP) $(SLEEP_TIME)
 
 # -- c files -------------------------------------------------------------------
 
@@ -402,13 +403,13 @@ dev-functions: $(DATABASE_FUNCTIONS)
 
 $(DATABASE_FUNCTIONS): $(DATABASE_INSTALLED_SO)
 	@$(ECHO) '    ' GCC $@;
-	@$(GCC) -x c -E "functions/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
+	@$(GCC) -x c -E -CC -P "functions/$@" $(DEFINES) 2>/dev/null | $(PSQL_FULL_CMD) > /dev/null
 
 dev-triggers: $(DATABASE_TRIGGERS)
 
 $(DATABASE_TRIGGERS):
 	@$(ECHO) '    ' GCC $@;
-	@$(GCC) -x c -E "triggers/$@" $(DEFINES) 2> /dev/null | $(GREP) -v -E "^# [0-9]+ .*" | $(PSQL_FULL_CMD) > /dev/null
+	@$(GCC) -x c -E -CC -P "triggers/$@" $(DEFINES) 2>/dev/null | $(PSQL_FULL_CMD) > /dev/null
 
 dev-volumes:
 	@$(ECHO) '    ' IMPORTING contrib/sql/mike-volumes.sql;
