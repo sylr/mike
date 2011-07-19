@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# vim: set tabstop=4 expandtab autoindent smartindent:
+# author: Sylvain Rabot <sylvain@abstraction.fr>
+# date: 03/07/2010
+# copyright: All rights reserved
+
+DOCUMENTATION_REALPATH=$(realpath $0)
+CONTRIB_PATH=$(dirname $DOCUMENTATION_REALPATH)
+MIKE_PATH=$(dirname $CONTRIB_PATH)
+ACMATCH="\[\(.*\)\]"
+
+# -- mike.conf -----------------------------------------------------------------
+
+if [ ! -f $MIKE_PATH/mike.conf ]; then
+    echo >&2 "$MIKE_PATH/mike.conf not found"
+    echo >&2 "You need to execute autoconf && ./configure"
+    exit 1
+fi
+
+source "$MIKE_PATH/mike.conf"
+
+# -- mike.sh -------------------------------------------------------------------
+
+source "$MIKE_PATH/lib/mike.sh"
+
+# -- usage ---------------------------------------------------------------------
+
+usage()
+{
+    echo >&2 "$0 usage:"
+    echo >&2 "   --ref   ref name to archive"
+}
+
+# ------------------------------------------------------------------------------
+
+ARGV=`getopt --long h,help,ref: -n "$0" -- "$0" "$@"`
+
+if [ "$?" -ne "0" ] ; then
+    die "Terminating ...";
+fi
+
+eval set -- "$ARGV"
+
+# ------------------------------------------------------------------------------
+
+while true ;
+do
+    case "$1" in
+        --ref)      REF_NAME=$2;        shift 2;;
+        --)         shift;              break;;
+        -h|--help)  usage;              exit 0;;
+        *)          usage;              exit 1;;
+    esac
+done
+
+# ------------------------------------------------------------------------------
+
+GIT_DIR="$MIKE_PATH/.git"
+export GIT_DIR
+
+# check refname value
+if [ -z "$REF_NAME" ]; then
+    die "you need to specify --ref option"
+fi
+
+# check if working tree is dirty
+if [ ! -z "$(git diff-index --name-only HEAD --)" ]; then
+    die "working tree can not be dirty to archive"
+else
+    CURRENT_HEAD=$($GIT show-ref $(cat .git/HEAD) | cut -d ' ' -f2 | cut -d "/" -f 3-)
+fi
+
+# last tag
+LAST_TAG=$(git describe --match "v[0-9]*.[0-9]*.[0-9]*" --abbrev $REF_NAME 2>/dev/null)
+
+# check refname validity
+if [ -z "$LAST_TAG" ]; then
+    die "unknown refname $REF_NAME"
+fi
+
+# checking out $REF_NAME
+echo "checking out ref $REF_NAME ..."
+$GIT checkout $REF_NAME >/dev/null 2>&1 || die "checking out ref $REF_NAME failed"
+$GIT clean -fd documentation/
+
+# moving to documentation
+cd $MIKE_PATH/documentation
+
+# make
+echo "generating documentation ..."
+make all -j3 >/dev/null || exit 1
+
+# cleaning tmp
+echo "cleaning tmp ..."
+rm -rf /tmp/mike-doc-$LAST_TAG
+
+# rsync
+echo "rsync ..."
+rsync -crv ./ /tmp/mike-doc-$LAST_TAG/ \
+    --exclude=Makefile\* \
+    --exclude=asciidoc.conf \
+    --exclude=*.xml \
+    --exclude=MIKE_ASCIIDOC_FLAGS \
+    --exclude=*.tar.gz >/dev/null || exit 1
+
+# moving to tmp
+cd /tmp/
+
+# tar
+echo "tar ..."
+tar -czvf mike-doc-$LAST_TAG.tar.gz mike-doc-$LAST_TAG
+mv /tmp/mike-doc-$LAST_TAG.tar.gz $MIKE_PATH

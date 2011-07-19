@@ -26,4 +26,5 @@ documentation/*.pdf
 documentation/relnotes/*.html
 stats
 mike-v*.tar.gz
+mike-doc-v*.tar.gz
 mike.conf
