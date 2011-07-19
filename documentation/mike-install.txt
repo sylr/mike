@@ -84,7 +84,7 @@ sylvain@kheops:~/postgresql[(REL9_0_3)]$ sudo su postgres -c "<prefix>/bin/pg_ct
 --------------------------
 
 WARNING: If you compile PostgreSQL from a git repository you might want to execute
-  'git clean -fdx' and 'git reset HARD <tag>' et ensure that everything is cleaned
+  'git clean -fdx' and 'git reset --hard <tag>' et ensure that everything is cleaned
   otherwise you could run into some troubles.
 
 You can also launch postgres using the debian init script located in 'contrib'.
