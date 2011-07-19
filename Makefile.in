@@ -264,8 +264,10 @@ info:
 	@($(ECHO) -n "INSERT INTO mike.info (key, value) VALUES ('MIKE_CONFIGURE_INVOCATION', E'"; \
 	 ($(ECHO) -n "$(CONFIGURE_INVOCATION)" | $(SED) "s/\(['\\]\)/\1\1/g"); \
 	  $(ECHO) "');";) >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
-	@$(ECHO) '    ' LINK MIKE_CPP_DEFINES "'$(DEFINES)'";
-	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CC_DEFINES', E'$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_DEFINES "$(DEFINES)";
+	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_DEFINES', E'$(DEFINES)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
+	@$(ECHO) '    ' LINK MIKE_CFLAGS "$(CFLAGS)";
+	@$(ECHO) "INSERT INTO mike.info (key, value) VALUES ('MIKE_CFLAGS', E'$(CFLAGS)');" >> $(TARGET_FILE); $(SLEEP) $(SLEEP_TIME)
 	
 	@# MIKE_TAG_DIFF_FILE
 	@$(ECHO) -n; \
