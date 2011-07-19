@@ -148,6 +148,8 @@ if [ -z "$NEXT_TAG_RC" ]; then
         die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt header does not match tag version"
     elif [ -n "$($GIT grep "Mike $NEXT_TAG_FULL Release Notes (draft)" HEAD -- "documentation/relnotes/mike-$NEXT_TAG_FULL.txt")" ]; then
         die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt is still a draft"
+    elif [ -z "$($GIT grep "link:relnotes/mike-$NEXT_TAG_FULL.html\[Mike-$NEXT_TAG_FULL\]" HEAD -- "documentation/mike.txt")" ]; then
+        die "documentation/relnotes/mike-$NEXT_TAG_FULL.txt not linked by documentation/mike.txt"
     fi
 fi
 
