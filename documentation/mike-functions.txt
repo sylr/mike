@@ -114,8 +114,8 @@ LOW LEVEL FUNCTIONS
  +
 (text) __natsort(in_text)::
  +
-    Rewrite input to do natural sorting. It left pads any suite of numbers with 0
-    in order to be able to sort string naturally.
+    Rewrite input to do natural sorting. It left pads any suite of numbers with
+    zeros in order to be able to sort string naturally.
  +
     The padding length is determined when text pre-processing stored procedures by
     the 'NATSORT_PADDING' define set when configuring.
