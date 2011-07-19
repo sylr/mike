@@ -63,6 +63,8 @@ mike=# EXPLAIN ANALYZE SELECT * FROM inode WHERE id_user = 1 AND (state = 0 OR s
  * 'BK' behavior has been changed, now the the father launch the desired number of
    children which sequentially spawn SQL requests through psql.
  * Add 'Release Notes' and made it mandatory for any non rc release.
+ * Default users during installation made optional.
+ * Various other improvements.
 
 Fixes since v0.4.0
 ------------------
@@ -70,3 +72,4 @@ Fixes since v0.4.0
    target directory was 'doomed', instead of doing what if was expecting to do it
    was checking that the new parent directory did not have the same name that the
    moved directory. Fixed by commit 0cd306db.
+ * Fix erroneous architecture detection during configure.
