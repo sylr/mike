@@ -42,7 +42,7 @@ TRUNCATE=$($PSQL_FULL_CMD -c "TRUNCATE inode, xfile CASCADE;")
 
 # -- noise ---------------------------------------------------------------------
 
-for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user;"); do
+for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user ORDER BY id_user LIMIT 3;"); do
     $PSQL_FULL_CMD -c "SELECT * FROM mike.__stream($id_user, 3, 3, true);" > /dev/null
     dieifnzero $? "something went wrong when streaming"
 done
@@ -74,7 +74,7 @@ dieifnzero $? "something went wrong when trashing mike.directory"
 
 export PGOPTIONS="--client-min-messages=error"
 
-for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user;"); do
+for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user ORDER BY id_user LIMIT 3;"); do
     $PSQL_FULL_CMD -c "SELECT * FROM mike.__fsck($id_user);" > /dev/null
     dieifnzero $? "something went wrong when fscking"
 done
