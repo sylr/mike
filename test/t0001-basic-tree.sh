@@ -96,7 +96,7 @@ for dir in $(seq 0 3); do
             dieifnzero $? "unable to create file '$base.$ext'" "file '$base.$ext' id ... $ID_FILE"
 
             # link
-            XLINK=$($PSQL_FULL_CMD -c "SELECT xlink($ID_FILE, $ID_XFILE)")
+            XLINK=$($PSQL_FULL_CMD -c "SELECT xlink($ID_USER, $ID_FILE, $ID_XFILE)")
             dieifnzero $? "unable to link $ID_FILE to xfile $ID_XFILE"
 
             # xfile for overwrite
@@ -104,7 +104,7 @@ for dir in $(seq 0 3); do
             dieifnzero $? "unable to create xfile" "xfile id ... $ID_XFILE"
 
             # xlink for overwrite
-            XLINK=$($PSQL_FULL_CMD -c "SELECT xlink($ID_FILE, $ID_XFILE)")
+            XLINK=$($PSQL_FULL_CMD -c "SELECT xlink($ID_USER, $ID_FILE, $ID_XFILE)")
             dieifnzero $? "unable to link $ID_FILE to xfile $ID_XFILE for overwrite"
          done
     done

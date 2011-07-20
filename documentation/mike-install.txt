@@ -20,6 +20,7 @@ SYNOPSIS
     [DATABASE_NAME=<database_name>]
     [DATABASE_HOST=<database_host>]
     [DATABASE_PORT=<database_port>]
+    [LVM_DEFAULT_LV_NUMBER=<default_lv_number>]
 'make'
 'make' [install|test|clean]
 'make' [def-functions|dev-volumes]
@@ -168,6 +169,9 @@ configure options
 --enable-dev-mode::
     do not install mike.so in postgresql's package lib directory but let it where
     it is built. Useful when developing.
+
+--enable-lvm-support::
+    enable lvm support. See linkmike:mike-lvm-support[7].
 
 --enable-no-volume-lock::
     creating a xfile using xtouch() update the virtual size of the volume chosen.

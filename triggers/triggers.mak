@@ -4,4 +4,6 @@
 # date: 13/11/2010
 # copyright: All rights reserved
 
-DATABASE_TRIGGERS   =
+DATABASE_TRIGGERS   = as_file_xfile.sql
+DATABASE_TRIGGERS  += directory.sql
+DATABASE_TRIGGERS  += file.sql

@@ -94,7 +94,7 @@ BEGIN
                         -- touch and xtouch
                         SELECT out_id_inode INTO v_id_inode_f   FROM mike.touch(in_id_user, v_id_inode_d, 'file-level-' || (v_i + 1)::text || '-' || v_ijkl::text || '.' || v_extension);
                         SELECT out_id_xfile INTO v_id_xfile     FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
-                        PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
+                        PERFORM mike.xlink(in_id_user, v_id_inode_f, v_id_xfile);
 
                         v_return.files  := v_return.files + 1;
                         v_return.xfiles := v_return.xfiles + 1;
@@ -107,7 +107,7 @@ BEGIN
                             v_sha1      := encode(digest(v_rand_f::text, 'sha1'), 'hex');
 
                             SELECT out_id_xfile INTO v_id_xfile FROM mike.xtouch(v_size, v_mimetype, v_md5, v_sha1);
-                            PERFORM mike.xlink(v_id_inode_f, v_id_xfile);
+                            PERFORM mike.xlink(in_id_user, v_id_inode_f, v_id_xfile);
 
                             v_return.xfiles := v_return.xfiles + 1;
                         END IF;

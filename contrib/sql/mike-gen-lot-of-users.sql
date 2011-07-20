@@ -4,7 +4,6 @@
 -- date: 09/03/2011
 -- copyright: All rights reserved
 
-INSERT INTO mike.user (id_sso, nickname)
 WITH last_user_seq AS (
     (
         SELECT 0::bigint AS last
@@ -23,8 +22,11 @@ WITH last_user_seq AS (
     LIMIT 1
 )
 SELECT
-    'mike-' || generate_series,
-    'mike-' || generate_series
+    mike.adduser(
+        'mike-' || generate_series,
+        'mike-' || generate_series,
+        1::smallint
+    ) AS id_user
 FROM generate_series(
     (SELECT last + 1 FROM last_user_seq),
     (SELECT last + 100 FROM last_user_seq)

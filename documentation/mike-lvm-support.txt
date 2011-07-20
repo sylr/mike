@@ -1,0 +1,32 @@
+mike-lvm-support(7)
+===================
+
+NAME
+----
+mike-lvm-support - mike's lvm support
+
+DESCRIPTION
+-----------
+The 'LVM Support' for mike allow to share users' data accross multiple smaller tables
+of the same kind instead of having all users' data in the same set of unique tables
+in order to reduce the amount of time spent to search user data.
+
+A 'logical volume', 'lv', is composed of 'three tables' directory_<lv>, file_<lv> and
+as_file_xfile_<lv> which 'inherit' directory, file and as_file_xfile. Each user is
+linked to one lv allowing the application to search its data into a particular lv.
+
+The users lv is chosen at the creation of the user with the 'adduser' function.
+However, it is possible to migrate a user from one lv to another using the '__lvmvuser'
+function in order to balance the amount of data and / or the load of lvs.
+
+Congigurations
+--------------
+See linkmike:mike-configurations[7] and 'lvm_*' configurations.
+
+Authors
+-------
+Written by Sylvain Rabot <sylvain@abstraction.fr>
+
+MIKE
+----
+Part of the linkmike:mike[3] suite.

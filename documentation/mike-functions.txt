@@ -95,6 +95,11 @@ LOW LEVEL FUNCTIONS
     Return the id of a mimetype.
  +
  +
+(text) __get_least_used_lv()::
+ +
+    Return the name of the least used lv.
+ +
+ +
 (text) __get_mimetype(smallint)::
  +
     Return mimetype label.
@@ -105,6 +110,21 @@ LOW LEVEL FUNCTIONS
     Return the id of an active and not full volume. You can override the volume
     security windows defaulted to 10% by setting the 'volume_security_window'
     configuration. See mike linkmike:mike-configurations[7].
+ +
+ +
+(void) __lvcreate(in_lv_name)::
+ +
+    Create a logical volume. This function creates all children tables composing
+    a logical volume (directory, file, as_file_xfile).
+ +
+ +
+(integer[]) __lvusers(in_lv_name)::
+ +
+    Return an array with the list of id_user which are linked to the logical volume
+    given as input. This function is declared as 'immutable' but it is not as its
+    output can change with the same input. This immutable property is used in the
+    check conditions used by constraint exclusions, so it must be insured that users
+    data are always in the correct lv.
  +
  +
 (integer) __mod_cons_hash(in_dividend bigint, in_divisor integer)::
@@ -132,6 +152,26 @@ __natsort('file-1589.sql') = 'file-000000001589.sql'
 (text) __natsort_pl(in_text)::
  +
     natsort version written in Perl.
+ +
+ +
+(trigger) __trigger_as_file_xfile_before_insert()
+ +
+    Trigger used on 'as_file_xfile' to insert users directory data into the correct
+    logical volume.
+ +
+ +
+(trigger) __trigger_directory_before_insert()
+ +
+    Trigger used on 'directory' to insert users directory data into the correct
+    logical volume.
+ +
+ +
+(trigger) __trigger_file_before_insert()
+ +
+    Trigger used on 'file' to insert users directory data into the correct
+    logical volume.
+ +
+ +
 
 HIGH LEVEL FUNCTIONS
 --------------------
@@ -217,7 +257,7 @@ HIGH LEVEL FUNCTIONS
     Create a file record.
  +
  +
-(void) xlink(in_id_inode bigint, in_id_xfile bigint, in_ctime timestamptz)::
+(void) xlink(in_id_user integer,in_id_inode bigint, in_id_xfile bigint, in_ctime timestamptz)::
  +
     Link a xfile record to a file one. It basically creates a record in the table
     'as_file_xfile' and updates the file record with the data of the xfile record.
