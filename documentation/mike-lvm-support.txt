@@ -11,6 +11,12 @@ The 'LVM Support' for mike allow to share users' data accross multiple smaller t
 of the same kind instead of having all users' data in the same set of unique tables
 in order to reduce the amount of time spent to search user data.
 
+This feature is currently 'experimental' as it does not perform well due to some
+PostgreSQL limitation that prevent the use of contraint exclusion when an array
+used in a WHERE clause is greater than 100 elements, the elements here being users
+identifier. This limit can be removed by increasing the MAX_SAOP_ARRAY_SIZE define
+in 'src/backend/optimizer/util/predtest.c' but that is not recommended.
+
 A 'logical volume', 'lv', is composed of 'three tables' directory_<lv>, file_<lv> and
 as_file_xfile_<lv> which 'inherit' directory, file and as_file_xfile. Each user is
 linked to one lv allowing the application to search its data into a particular lv.
