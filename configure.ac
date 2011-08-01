@@ -448,7 +448,7 @@ AC_SUBST(DEFAULT_USERS)
 
 AC_ARG_ENABLE(
     [lvm-support],
-    AS_HELP_STRING([--enable-lvm], [enable lvm support]),
+    AS_HELP_STRING([--enable-lvm-support], [enable lvm support]),
     [LVM_SUPPORT=$enable_lvm_support],
     [LVM_SUPPORT=no]
 )
