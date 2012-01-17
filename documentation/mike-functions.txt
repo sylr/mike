@@ -154,19 +154,19 @@ __natsort('file-1589.sql') = 'file-000000001589.sql'
     natsort version written in Perl.
  +
  +
-(trigger) __trigger_as_file_xfile_before_insert()
+(trigger) __trigger_as_file_xfile_before_insert()::
  +
     Trigger used on 'as_file_xfile' to insert users directory data into the correct
     logical volume.
  +
  +
-(trigger) __trigger_directory_before_insert()
+(trigger) __trigger_directory_before_insert()::
  +
     Trigger used on 'directory' to insert users directory data into the correct
     logical volume.
  +
  +
-(trigger) __trigger_file_before_insert()
+(trigger) __trigger_file_before_insert()::
  +
     Trigger used on 'file' to insert users directory data into the correct
     logical volume.
