@@ -161,11 +161,10 @@ MIKE_PARSE_WITH(gcc)
 AC_PATH_PROG([GCC], [gcc], , [$GCC_DIR])
 MIKE_ERROR_IF_EMPTY([$GCC], [gcc not found])
 
-# looking for gcc
+# looking for nasm
 MIKE_ARG_SET_PATH(nasm)
 MIKE_PARSE_WITH(nasm)
 AC_PATH_PROG([NASM], [nasm], , [$NASM_DIR])
-MIKE_ERROR_IF_EMPTY([$NASM], [nasm not found])
 
 # looking for grep
 MIKE_ARG_SET_PATH(grep)
