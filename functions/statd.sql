@@ -96,8 +96,8 @@ SELECT
     inner_file_count
 FROM mike.directory
 WHERE
-    id_inode    = $1 AND
-    id_user     = $2;
+    id_user     = $1 AND
+    id_inode    = $2;
 
 $__$ LANGUAGE sql STABLE COST 10;
 
