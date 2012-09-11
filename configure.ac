@@ -308,7 +308,28 @@ PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
 AC_SUBST(PG_PKGLIBDIR_SERVER)
 
 # contribs / extensions
-if test "$PG_VERSION_9_1_PLUS" == "yes"; then
+if test "$PG_VERSION_9_2_PLUS" == "yes"; then
+    # ltree
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/ltree--1.0.sql],
+        [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree--1.0.sql],
+        AC_MSG_ERROR([ltree extension not found in $PG_SHAREDIR/extension])
+    )
+
+    # pgcrypto
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        AC_MSG_ERROR([pgcrypto extension not found in $PG_SHAREDIR/extension])
+    )
+
+    # hstore
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/hstore--1.1.sql],
+        [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.1.sql],
+        AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
+    )
+elif test "$PG_VERSION_9_1_PLUS" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],

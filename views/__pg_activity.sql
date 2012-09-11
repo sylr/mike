@@ -6,6 +6,22 @@
 
 DROP VIEW IF EXISTS mike.__pg_activity CASCADE;
 
+#ifdef PG_VERSION_9_2_PLUS
+CREATE OR REPLACE VIEW mike.__pg_activity AS
+SELECT
+    datname,
+    pid,
+    usename,
+    waiting AS wait,
+    now() - query_start AS duration,
+    query
+FROM
+    pg_stat_activity
+WHERE
+    datname = current_database()
+ORDER BY
+    duration DESC;
+#else
 CREATE OR REPLACE VIEW mike.__pg_activity AS
 SELECT
     datname,
@@ -20,3 +36,4 @@ WHERE
     datname = current_database()
 ORDER BY
     duration DESC;
+#endif
