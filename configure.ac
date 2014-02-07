@@ -325,8 +325,8 @@ if test "$PG_VERSION_9_2_PLUS" == "yes"; then
 
     # hstore
     AC_CHECK_FILE(
-        [$PG_SHAREDIR/extension/hstore--1.1.sql],
-        [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.1.sql],
+        [$PG_SHAREDIR/extension/hstore--1.2.sql],
+        [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.2.sql],
         AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
     )
 elif test "$PG_VERSION_9_1_PLUS" == "yes"; then

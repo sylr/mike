@@ -98,59 +98,14 @@ if [[ "$STREAMS" -gt "1" || -n "$DETACH" ]]; then
     fi
 fi
 
-# -- main forked ---------------------------------------------------------------
+# -- main ---------------------------------------------------------------
 
-declare -a PIDS
+OFFSET=0
 
-if [ "$STREAMS" -gt "1" ]; then
-    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
-        $PSQL_FULL_CMD -c "SELECT * FROM __stream($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);" > /dev/null &
-        PIDS["$!"]="true"
-
-        echo "stream started: `strlpad $! 7 ' '` [${#PIDS[@]}]"
-        sleep $SLEEP_TIME
-
-        # waiting for finished jobs if limit reached
-        while [ "${#PIDS[@]}" -ge "$STREAMS" ]; do
-            for pid in "${!PIDS[@]}"; do
-                if [ $(ps ax | grep "psql" | grep -E "^ *$pid" | wc -l) -eq "0" ]; then
-                    echo "stream finished: `strlpad $pid 6 ' '`"
-                    unset PIDS[$pid];
-                fi
-            done
-
-            sleep $SLEEP_TIME
-        done
-    done;
-fi
-
-# -- main ----------------------------------------------------------------------
-
-if [ "$STREAMS" -eq "1" ]; then
-    for id_user in $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user;"); do
-        output=$($PSQL_FULL_CMD -c "SELECT * FROM __stream($id_user, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);")
-        dirs=$(echo "$output" | cut -d '|' -f2);
-        files=$(echo "$output" | cut -d '|' -f3);
-        xfiles=$(echo "$output" | cut -d '|' -f4);
-
-        echo "stream finished[$id_user]: directories = $dirs; files = $files; xfiles = $xfiles";
-    done;
-fi
-
-# -- gc ------------------------------------------------------------------------
-
-# waiting for remaining jobs
-while [ "${#PIDS[@]}" -gt "0" ]; do
-    for pid in "${!PIDS[@]}"; do
-        if [ $(ps ax | grep "psql" | grep -E "^ *$pid"  | wc -l) -eq "0" ]; then
-            echo "stream finished: `strlpad $pid 6 ' '`"
-            unset PIDS[$pid];
-        fi
-    done
-
-    sleep $SLEEP_TIME
+while [[ -n $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user LIMIT 20 OFFSET $OFFSET;") ]]; do 
+    STREAM_QUERY="SELECT * FROM __stream({1}, ARRAY[$DIR_BY_LEVEL], ARRAY[$FILE_BY_LEVEL], $VERSIONING);"
+    parallel --gnu  -u -j $STREAMS "echo stream started: {1}; $PSQL_FULL_CMD -c '$STREAM_QUERY' > /dev/null; echo stream finished: {1};" ::: $($PSQL_FULL_CMD -c "SELECT id_user FROM mike.user WHERE id_user >= $START ORDER BY id_user LIMIT 20 OFFSET $OFFSET;")
+    OFFSET=$((OFFSET + 20))
 done
-
-# -- exit ----------------------------------------------------------------------
 
 exit 0

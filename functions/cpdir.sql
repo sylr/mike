@@ -68,9 +68,9 @@ BEGIN
             v_treepath          := v_directory_target.treepath || v_nextval::text::ltree;
             v_id_inode_parent   := v_directory_target.id_inode;
 
-            v_path_target_hstore            := (v_nextval::text             => v_path::text)::hstore;
-            v_treepath_target_hstore        := (v_nextval::text             => v_treepath::text)::hstore;
-            v_id_inode_parent_target_hstore := (v_directory.id_inode::text  => v_nextval::text)::hstore;
+            v_path_target_hstore            := (v_nextval::text            || '=>' || v_path::text)::hstore;
+            v_treepath_target_hstore        := (v_nextval::text            || '=>' || v_treepath::text)::hstore;
+            v_id_inode_parent_target_hstore := (v_directory.id_inode::text || '=>' || v_nextval::text)::hstore;
 
             v_return    := v_nextval;
         ELSE
@@ -78,9 +78,9 @@ BEGIN
             v_treepath          := (v_treepath_target_hstore   -> (v_id_inode_parent_target_hstore -> v_directory.id_inode_parent::text)) || v_nextval::text::ltree;
             v_id_inode_parent   := (v_id_inode_parent_target_hstore -> v_directory.id_inode_parent::text)::bigint;
 
-            v_path_target_hstore            := v_path_target_hstore             || (v_nextval::text             => v_path::text)::hstore;
-            v_treepath_target_hstore        := v_treepath_target_hstore         || (v_nextval::text             => v_treepath::text)::hstore;
-            v_id_inode_parent_target_hstore := v_id_inode_parent_target_hstore  || (v_directory.id_inode::text  => v_nextval::text)::hstore;
+            v_path_target_hstore            := v_path_target_hstore             || (v_nextval::text            || '=>' || v_path::text)::hstore;
+            v_treepath_target_hstore        := v_treepath_target_hstore         || (v_nextval::text            || '=>' || v_treepath::text)::hstore;
+            v_id_inode_parent_target_hstore := v_id_inode_parent_target_hstore  || (v_directory.id_inode::text || '=>' || v_nextval::text)::hstore;
         END IF;
 
         -- insert in_id_inode children directory
