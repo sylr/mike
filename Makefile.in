@@ -87,6 +87,33 @@ NATSORT_PADDING         = @NATSORT_PADDING@
 LVM_SUPPORT             = @LVM_SUPPORT@
 LVM_DEFAULT_LV_NUMBER   = @LVM_DEFAULT_LV_NUMBER@
 
+# -- custom files --------------------------------------------------------------
+
+MIKE_VERSION_FILE       = MIKE_VERSION_FILE
+MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
+MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
+INSTALL_LOG             = install.log
+
+# -- git -----------------------------------------------------------------------
+
+ifneq ($(GIT),)
+	GIT_DIR=$(realpath $(shell $(GIT) rev-parse --git-dir 2>/dev/null))
+	ifneq ($(GIT_DIR),)
+		IS_BARE_REPOSITORY=`$(GIT) rev-parse --is-bare-repository 2>/dev/null`
+		IS_INSIDE_WORK_TREE=`$(GIT) rev-parse --is-inside-work-tree 2>/dev/null`
+	endif
+endif
+
+# -- version -------------------------------------------------------------------
+
+$(MIKE_VERSION_FILE):
+ifneq ($(GIT_DIR),)
+	@$(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE)
+	@$(SHELL) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
+endif
+
+-include $(MIKE_VERSION_FILE)
+
 # -- database schema -----------------------------------------------------------
 
 # include database files list
@@ -122,13 +149,6 @@ DATABASE_INSTALLED_SO   = functions/mike-$(MIKE_VERSION).so
 else
 DATABASE_INSTALLED_SO   = $(PG_PKGLIBDIR_SERVER)/mike-$(MIKE_VERSION).so
 endif
-
-# -- custom files --------------------------------------------------------------
-
-MIKE_VERSION_FILE       = MIKE_VERSION_FILE
-MIKE_TAG_DIFF_FILE      = MIKE_TAG_DIFF_FILE
-MIKE_HEAD_DIFF_FILE     = MIKE_HEAD_DIFF_FILE
-INSTALL_LOG             = install.log
 
 # -- gcc defines ---------------------------------------------------------------
 
@@ -207,27 +227,9 @@ ifneq ($(DATABASE_PORT),)
 	PSQL_PORT = -p $(DATABASE_PORT)
 endif
 
-ifneq ($(GIT),)
-	GIT_DIR=$(realpath $(shell $(GIT) rev-parse --git-dir 2>/dev/null))
-	ifneq ($(GIT_DIR),)
-		IS_BARE_REPOSITORY=`$(GIT) rev-parse --is-bare-repository 2>/dev/null`
-		IS_INSIDE_WORK_TREE=`$(GIT) rev-parse --is-inside-work-tree 2>/dev/null`
-	endif
-endif
-
 # -- psql ----------------------------------------------------------------------
 
 PSQL_FULL_CMD = PGOPTIONS='--client-min-messages=warning' $(PSQL) -U $(DATABASE_USER) -d $(DATABASE_NAME) $(PSQL_EXTRA) $(PSQL_HOST) $(PSQL_PORT)
-
-# -- version -------------------------------------------------------------------
-
-$(MIKE_VERSION_FILE):
-ifneq ($(GIT_DIR),)
-	@$(RM) $(RM_EXTRA) $(MIKE_VERSION_FILE)
-	@$(SHELL) ./MIKE_VERSION_GEN $(MIKE_VERSION_FILE) $(MIKE_HEAD_DIFF_FILE) $(MIKE_TAG_DIFF_FILE)
-endif
-
--include $(MIKE_VERSION_FILE)
 
 # -- compiler flags ------------------------------------------------------------
 
