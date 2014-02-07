@@ -264,36 +264,35 @@ AC_PATH_PROG([A2X], [a2x], , [$A2X_DIR])
 PG_VERSION=$($PG_CONFIG | $GREP "VERSION" | $SED "s#VERSION = PostgreSQL \([0-9]*\)\(.[0-9]*\)\(.[0-9]*\)\?#\1\2\3#i")
 
 AX_COMPARE_VERSION(
-    [$PG_VERSION], [lt], [8.4.4],
+    [$PG_VERSION], [lt], [9.1.0],
     AC_MSG_ERROR([PostgreSQL version too old])
 )
 
 AX_COMPARE_VERSION(
-    [$PG_VERSION], [ge], [9.0.0],
-    [PG_VERSION_9=yes; PG_VERSION_9_0=yes; PG_VERSION_9_0_PLUS=yes],
-    [PG_VERSION_9=no; PG_VERSION_9_0=no; PG_VERSION_9_0_PLUS=no]
-)
-
-AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.1.0],
-    [PG_VERSION_9_1=yes; PG_VERSION_9_0=no; PG_VERSION_9_1_PLUS=yes],
+    [PG_VERSION_9_1=yes; PG_VERSION_9_1_PLUS=yes],
     [PG_VERSION_9_1=no; PG_VERSION_9_1_PLUS=no]
 )
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.2.0],
-    [PG_VERSION_9_2=yes; PG_VERSION_9_1=no; PG_VERSION_9_0=no; PG_VERSION_9_2_PLUS=yes],
+    [PG_VERSION_9_2=yes; PG_VERSION_9_1=no; PG_VERSION_9_2_PLUS=yes],
     [PG_VERSION_9_2=no; PG_VERSION_9_2_PLUS=no]
 )
 
+AX_COMPARE_VERSION(
+    [$PG_VERSION], [ge], [9.3.0],
+    [PG_VERSION_9_3=yes; PG_VERSION_9_2=no; PG_VERSION_9_1=no; PG_VERSION_9_3_PLUS=yes],
+    [PG_VERSION_9_3=no; PG_VERSION_9_3_PLUS=no]
+)
+
 AC_SUBST(PG_VERSION)
-AC_SUBST(PG_VERSION_9)
-AC_SUBST(PG_VERSION_9_0)
-AC_SUBST(PG_VERSION_9_0_PLUS)
 AC_SUBST(PG_VERSION_9_1)
 AC_SUBST(PG_VERSION_9_1_PLUS)
 AC_SUBST(PG_VERSION_9_2)
 AC_SUBST(PG_VERSION_9_2_PLUS)
+AC_SUBST(PG_VERSION_9_3)
+AC_SUBST(PG_VERSION_9_3_PLUS)
 
 # postgresql sharedir
 PG_SHAREDIR=$($PG_CONFIG --sharedir)
@@ -308,7 +307,28 @@ PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
 AC_SUBST(PG_PKGLIBDIR_SERVER)
 
 # contribs / extensions
-if test "$PG_VERSION_9_2_PLUS" == "yes"; then
+if test "$PG_VERSION_9_3_PLUS" == "yes"; then
+    # ltree
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/ltree--1.0.sql],
+        [PG_CONTRIB_LTREE=$PG_SHAREDIR/contrib/ltree--1.0.sql],
+        AC_MSG_ERROR([ltree extension not found in $PG_SHAREDIR/extension])
+    )
+
+    # pgcrypto
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        [PG_CONTRIB_PGCRYPTO=$PG_SHAREDIR/extension/pgcrypto--1.0.sql],
+        AC_MSG_ERROR([pgcrypto extension not found in $PG_SHAREDIR/extension])
+    )
+
+    # hstore
+    AC_CHECK_FILE(
+        [$PG_SHAREDIR/extension/hstore--1.2.sql],
+        [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.2.sql],
+        AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
+    )
+elif test "$PG_VERSION_9_2_PLUS" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],

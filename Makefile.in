@@ -69,13 +69,12 @@ PG_INCLUDEDIR_SERVER    = @PG_INCLUDEDIR_SERVER@
 PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
 
 PG_VERSION              = @PG_VERSION@
-PG_VERSION_9            = @PG_VERSION_9@
-PG_VERSION_9_0          = @PG_VERSION_9_0@
-PG_VERSION_9_0_PLUS     = @PG_VERSION_9_0_PLUS@
 PG_VERSION_9_1          = @PG_VERSION_9_1@
 PG_VERSION_9_1_PLUS     = @PG_VERSION_9_1_PLUS@
 PG_VERSION_9_2          = @PG_VERSION_9_2@
 PG_VERSION_9_2_PLUS     = @PG_VERSION_9_2_PLUS@
+PG_VERSION_9_3          = @PG_VERSION_9_3@
+PG_VERSION_9_3_PLUS     = @PG_VERSION_9_3_PLUS@
 
 X86_64                  = @X86_64@
 DEV_MODE                = @DEV_MODE@
@@ -172,18 +171,6 @@ ifeq ($(X86_64),yes)
     DEFINES += -D X86_64
 endif
 
-ifeq ($(PG_VERSION_9),yes)
-    DEFINES += -D PG_VERSION_9
-endif
-
-ifeq ($(PG_VERSION_9_0),yes)
-    DEFINES += -D PG_VERSION_9_0
-endif
-
-ifeq ($(PG_VERSION_9_0_PLUS),yes)
-    DEFINES += -D PG_VERSION_9_0_PLUS
-endif
-
 ifeq ($(PG_VERSION_9_1),yes)
     DEFINES += -D PG_VERSION_9_1
 endif
@@ -198,6 +185,14 @@ endif
 
 ifeq ($(PG_VERSION_9_2_PLUS),yes)
     DEFINES += -D PG_VERSION_9_2_PLUS
+endif
+
+ifeq ($(PG_VERSION_9_3),yes)
+    DEFINES += -D PG_VERSION_9_3
+endif
+
+ifeq ($(PG_VERSION_9_3_PLUS),yes)
+    DEFINES += -D PG_VERSION_9_3_PLUS
 endif
 
 # -- tests ---------------------------------------------------------------------
@@ -332,18 +327,10 @@ ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@PGOPTIONS='--client-min-messages=warning' $(CREATEDB) $(PSQL_HOST) $(PSQL_PORT) -U $(DATABASE_USER) $(DATABASE_NAME) --encoding UTF8
 	@$(ECHO) '    ' ALTERING DATABASE;
 	@$(ECHO) "ALTER DATABASE $(DATABASE_NAME) SET client_min_messages TO 'log';" | $(PSQL_FULL_CMD) --quiet
-# languages
-ifeq ($(PG_VERSION_9),yes)
 	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
 	@$(ECHO) "CREATE OR REPLACE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
 	@$(ECHO) "CREATE OR REPLACE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
-else
-	@$(ECHO) '    ' CREATING LANGUAGE plpgsql;
-	@$(ECHO) "CREATE LANGUAGE plpgsql;" | $(PSQL_FULL_CMD) --quiet
-	@$(ECHO) '    ' CREATING LANGUAGE plperl;
-	@$(ECHO) "CREATE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
-endif # PG_VERSION_9
 # contribs
 ifeq ($(PG_VERSION_9_1_PLUS),yes)
 	@$(ECHO) '    ' CREATING EXTENSION ltree;
