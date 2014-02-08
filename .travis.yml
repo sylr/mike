@@ -13,7 +13,6 @@ before_script:
 script:
     - autoconf
     - ./configure --enable-create-database --enable-dev-mode
-    - make
     - make drop-database install dev-volumes
     - make test
 
