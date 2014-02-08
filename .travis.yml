@@ -15,6 +15,9 @@ script:
     - ./configure --enable-create-database --enable-dev-mode
     - make drop-database install dev-volumes
     - make test
+    - ./configure --enable-create-database --enable-dev-mode --enable-no-atime
+    - make drop-database install dev-volumes
+    - make test
 
 env:
     global:
