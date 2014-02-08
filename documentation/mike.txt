@@ -3,7 +3,7 @@ mike(3)
 
 NAME
 ----
-mike - a lightweight, robust, efficient virtual file system
+mike - an experimental virtual file system
 
 SYNOPSIS
 --------
@@ -31,9 +31,8 @@ SYNOPSIS
 
 DESCRIPTION
 -----------
-Mike is a 'Virtual File System' which primary goals are to be 'lightweight', 'robust'
-and 'efficient'. In a few words mike is a 'PostgreSQL database' which comes with
-a 'SQL API' in order to manage directories and files (inodes). The API provides
+Mike is a 'Virtual File System'. In a few words mike is a 'PostgreSQL database' which comes
+with a 'SQL API' in order to manage directories and files (inodes). The API provides
 a set of functions needed to manipulate the inodes into the database.
 
 The main idea in Mike's design is that a file system is accessed and browsed
