@@ -1,0 +1,28 @@
+language: c
+
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq realpath build-essential autoconf postgresql-${POSTGRESQL_VERSION} postgresql-contrib-${POSTGRESQL_VERSION} postgresql-server-dev-${POSTGRESQL_VERSION} postgresql-plperl-${POSTGRESQL_VERSION} libpq-dev
+
+before_script:
+    - git checkout ${TRAVIS_BRANCH}
+    - git reset --hard ${TRAVIS_COMMIT}
+    - sudo service postgresql stop
+    - sudo service postgresql start ${POSTGRESQL_VERSION}
+
+script:
+    - autoconf
+    - ./configure --enable-create-database --enable-dev-mode
+    - make
+    - make drop-database install dev-volumes
+    - make test
+
+env:
+    global:
+        - DATABASE_USER=postgres
+        - DATABASE_NAME=mike
+        - SLEEP_TIME=0
+    matrix:
+        - POSTGRESQL_VERSION=9.1
+        - POSTGRESQL_VERSION=9.2
+        - POSTGRESQL_VERSION=9.3
