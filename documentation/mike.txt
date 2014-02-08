@@ -88,13 +88,17 @@ Contrib
 -------
 See linkmike:mike-contrib[7].
 
-Developers
-----------
+Contributors
+------------
 Mike designer, maintainer and main developer is Sylvain Rabot <sylvain@abstraction.fr>.
 
-Others developers :
+Other contribtors :
 
  - Jean-Yves Eckert <jean-yves.eckert@f-secure.com> (C, ASM)
+
+License
+-------
+See linkmike:mike-license[3].
 
 Tools of the trade
 ------------------
