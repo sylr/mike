@@ -5,8 +5,6 @@ before_install:
     - sudo apt-get install -qq realpath build-essential autoconf postgresql-${POSTGRESQL_VERSION} postgresql-contrib-${POSTGRESQL_VERSION} postgresql-server-dev-${POSTGRESQL_VERSION} postgresql-plperl-${POSTGRESQL_VERSION} libpq-dev
 
 before_script:
-    - git checkout ${TRAVIS_BRANCH}
-    - git reset --hard ${TRAVIS_COMMIT}
     - sudo service postgresql stop
     - sudo service postgresql start ${POSTGRESQL_VERSION}
 
