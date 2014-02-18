@@ -3,28 +3,31 @@ language: c
 before_install:
     - sudo apt-get update -qq
     - sudo apt-get install -qq realpath build-essential autoconf postgresql-${POSTGRESQL_VERSION} postgresql-contrib-${POSTGRESQL_VERSION} postgresql-server-dev-${POSTGRESQL_VERSION} postgresql-plperl-${POSTGRESQL_VERSION} libpq-dev
+    - test -z "${MAKE_DOC}" || sudo apt-get install -qq asciidoc source-highlight
 
 before_script:
-    - git checkout ${TRAVIS_BRANCH}
-    - git reset --hard ${TRAVIS_COMMIT}
     - sudo service postgresql stop
     - sudo service postgresql start ${POSTGRESQL_VERSION}
 
 script:
     - autoconf
-    - ./configure --enable-create-database --enable-dev-mode
-    - make drop-database install dev-volumes
-    - make test
-    - ./configure --enable-create-database --enable-dev-mode --enable-no-atime
-    - make drop-database install dev-volumes
-    - make test
+    - test -z "${MAKE_DOC}" || ./configure
+    - test -z "${MAKE_DOC}" || make doc
+    - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database --enable-dev-mode
+    - test -z "${MAKE_INSTALL}" || make drop-database install dev-volumes
+    - test -z "${MAKE_INSTALL}" || make test
+    - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database --enable-dev-mode --enable-no-atime
+    - test -z "${MAKE_INSTALL}" || make drop-database install dev-volumes
+    - test -z "${MAKE_INSTALL}" || make test
 
 env:
     global:
         - DATABASE_USER=postgres
         - DATABASE_NAME=mike
         - SLEEP_TIME=0
-    matrix:
-        - POSTGRESQL_VERSION=9.1
-        - POSTGRESQL_VERSION=9.2
         - POSTGRESQL_VERSION=9.3
+    matrix:
+        - MAKE_DOC=1
+        - MAKE_INSTALL=1 POSTGRESQL_VERSION=9.1
+        - MAKE_INSTALL=1 POSTGRESQL_VERSION=9.2
+        - MAKE_INSTALL=1 POSTGRESQL_VERSION=9.3
