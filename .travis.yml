@@ -13,12 +13,25 @@ script:
     - autoconf
     - test -z "${MAKE_DOC}" || ./configure
     - test -z "${MAKE_DOC}" || make doc
+    - test -z "${MAKE_DOC}" || make clean
     - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database --enable-dev-mode
     - test -z "${MAKE_INSTALL}" || make drop-database install dev-volumes
     - test -z "${MAKE_INSTALL}" || make test
+    - test -z "${MAKE_INSTALL}" || make clean
     - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database --enable-dev-mode --enable-no-atime
     - test -z "${MAKE_INSTALL}" || make drop-database install dev-volumes
     - test -z "${MAKE_INSTALL}" || make test
+    - test -z "${MAKE_INSTALL}" || make clean
+    - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database --enable-dev-mode --enable-no-atime --enable-lvm-support
+    - test -z "${MAKE_INSTALL}" || make drop-database install dev-volumes
+    - test -z "${MAKE_INSTALL}" || make test
+    - test -z "${MAKE_INSTALL}" || make clean
+    - test -z "${MAKE_INSTALL}" || ./configure --enable-create-database
+    - test -z "${MAKE_INSTALL}" || make drop-database
+    - test -z "${MAKE_INSTALL}" || sudo make install
+    - test -z "${MAKE_INSTALL}" || make dev-volumes
+    - test -z "${MAKE_INSTALL}" || make test
+    - test -z "${MAKE_INSTALL}" || make clean
 
 env:
     global:
