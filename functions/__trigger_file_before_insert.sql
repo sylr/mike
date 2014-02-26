@@ -25,9 +25,9 @@ BEGIN
 #endif /* NO_ATIME */
 #else
 #ifndef NO_ATIME
-            $11, $12
+            $11, $12, $13
 #else
-            $11
+            $11, $12
 #endif /* NO_ATIME */
 #endif /* INODE_RAND_COLUMN */
         )
@@ -50,7 +50,7 @@ BEGIN
         NEW.versioning_size,
         NEW.atime;
 #else
-        NEW.atime;
+        NEW.versioning_size;
 #endif /* NO_ATIME */
 
     RETURN null;
