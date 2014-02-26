@@ -270,29 +270,29 @@ AX_COMPARE_VERSION(
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.1.0],
-    [PG_VERSION_9_1=yes; PG_VERSION_9_1_PLUS=yes],
-    [PG_VERSION_9_1=no; PG_VERSION_9_1_PLUS=no]
+    [PG_VERSION_9_1=yes; PG_VERSION_GE_9_1=yes],
+    [PG_VERSION_9_1=no; PG_VERSION_GE_9_1=no]
 )
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.2.0],
-    [PG_VERSION_9_2=yes; PG_VERSION_9_1=no; PG_VERSION_9_2_PLUS=yes],
-    [PG_VERSION_9_2=no; PG_VERSION_9_2_PLUS=no]
+    [PG_VERSION_9_2=yes; PG_VERSION_9_1=no; PG_VERSION_GE_9_2=yes],
+    [PG_VERSION_9_2=no; PG_VERSION_GE_9_2=no]
 )
 
 AX_COMPARE_VERSION(
     [$PG_VERSION], [ge], [9.3.0],
-    [PG_VERSION_9_3=yes; PG_VERSION_9_2=no; PG_VERSION_9_1=no; PG_VERSION_9_3_PLUS=yes],
-    [PG_VERSION_9_3=no; PG_VERSION_9_3_PLUS=no]
+    [PG_VERSION_9_3=yes; PG_VERSION_9_2=no; PG_VERSION_9_1=no; PG_VERSION_GE_9_3=yes],
+    [PG_VERSION_9_3=no; PG_VERSION_GE_9_3=no]
 )
 
 AC_SUBST(PG_VERSION)
 AC_SUBST(PG_VERSION_9_1)
-AC_SUBST(PG_VERSION_9_1_PLUS)
+AC_SUBST(PG_VERSION_GE_9_1)
 AC_SUBST(PG_VERSION_9_2)
-AC_SUBST(PG_VERSION_9_2_PLUS)
+AC_SUBST(PG_VERSION_GE_9_2)
 AC_SUBST(PG_VERSION_9_3)
-AC_SUBST(PG_VERSION_9_3_PLUS)
+AC_SUBST(PG_VERSION_GE_9_3)
 
 # postgresql sharedir
 PG_SHAREDIR=$($PG_CONFIG --sharedir)
@@ -307,7 +307,7 @@ PG_PKGLIBDIR_SERVER=$($PG_CONFIG --pkglibdir)
 AC_SUBST(PG_PKGLIBDIR_SERVER)
 
 # contribs / extensions
-if test "$PG_VERSION_9_3_PLUS" == "yes"; then
+if test "$PG_VERSION_GE_9_3" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],
@@ -328,7 +328,7 @@ if test "$PG_VERSION_9_3_PLUS" == "yes"; then
         [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.2.sql],
         AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
     )
-elif test "$PG_VERSION_9_2_PLUS" == "yes"; then
+elif test "$PG_VERSION_GE_9_2" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],
@@ -349,7 +349,7 @@ elif test "$PG_VERSION_9_2_PLUS" == "yes"; then
         [PG_CONTRIB_HSTORE=$PG_SHAREDIR/extension/hstore--1.1.sql],
         AC_MSG_ERROR([hstore extension not found in $PG_SHAREDIR/extension])
     )
-elif test "$PG_VERSION_9_1_PLUS" == "yes"; then
+elif test "$PG_VERSION_GE_9_1" == "yes"; then
     # ltree
     AC_CHECK_FILE(
         [$PG_SHAREDIR/extension/ltree--1.0.sql],

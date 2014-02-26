@@ -70,11 +70,11 @@ PG_PKGLIBDIR_SERVER     = @PG_PKGLIBDIR_SERVER@
 
 PG_VERSION              = @PG_VERSION@
 PG_VERSION_9_1          = @PG_VERSION_9_1@
-PG_VERSION_9_1_PLUS     = @PG_VERSION_9_1_PLUS@
+PG_VERSION_GE_9_1       = @PG_VERSION_GE_9_1@
 PG_VERSION_9_2          = @PG_VERSION_9_2@
-PG_VERSION_9_2_PLUS     = @PG_VERSION_9_2_PLUS@
+PG_VERSION_GE_9_2       = @PG_VERSION_GE_9_2@
 PG_VERSION_9_3          = @PG_VERSION_9_3@
-PG_VERSION_9_3_PLUS     = @PG_VERSION_9_3_PLUS@
+PG_VERSION_GE_9_3       = @PG_VERSION_GE_9_3@
 
 X86_64                  = @X86_64@
 DEV_MODE                = @DEV_MODE@
@@ -154,6 +154,7 @@ endif
 
 DEFINES  = -D MIKE_VERSION="$(MIKE_VERSION)"
 DEFINES += -D NATSORT_PADDING=$(NATSORT_PADDING)
+DEFINES += -D PG_VERSION=$(PG_VERSION)
 
 ifneq ($(TREE_MAX_DEPTH),no)
     ifneq ($(TREE_MAX_DEPTH),yes)
@@ -195,24 +196,24 @@ ifeq ($(PG_VERSION_9_1),yes)
     DEFINES += -D PG_VERSION_9_1
 endif
 
-ifeq ($(PG_VERSION_9_1_PLUS),yes)
-    DEFINES += -D PG_VERSION_9_1_PLUS
+ifeq ($(PG_VERSION_GE_9_1),yes)
+    DEFINES += -D PG_VERSION_GE_9_1
 endif
 
 ifeq ($(PG_VERSION_9_2),yes)
     DEFINES += -D PG_VERSION_9_2
 endif
 
-ifeq ($(PG_VERSION_9_2_PLUS),yes)
-    DEFINES += -D PG_VERSION_9_2_PLUS
+ifeq ($(PG_VERSION_GE_9_2),yes)
+    DEFINES += -D PG_VERSION_GE_9_2
 endif
 
 ifeq ($(PG_VERSION_9_3),yes)
     DEFINES += -D PG_VERSION_9_3
 endif
 
-ifeq ($(PG_VERSION_9_3_PLUS),yes)
-    DEFINES += -D PG_VERSION_9_3_PLUS
+ifeq ($(PG_VERSION_GE_9_3),yes)
+    DEFINES += -D PG_VERSION_GE_9_3
 endif
 
 # -- tests ---------------------------------------------------------------------
@@ -334,7 +335,7 @@ ifeq ($(ENABLE_CREATE_DATABASE),yes)
 	@$(ECHO) '    ' CREATING LANGUAGE plperl;
 	@$(ECHO) "CREATE OR REPLACE LANGUAGE plperl;" | $(PSQL_FULL_CMD) --quiet
 # contribs
-ifeq ($(PG_VERSION_9_1_PLUS),yes)
+ifeq ($(PG_VERSION_GE_9_1),yes)
 	@$(ECHO) '    ' CREATING EXTENSION ltree;
 	@$(PSQL_FULL_CMD) --single-transaction -c "CREATE EXTENSION ltree;" --quiet
 	@$(ECHO) '    ' CREATING EXTENSION pgcrypto;
@@ -348,7 +349,7 @@ else
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_PGCRYPTO) --quiet
 	@$(ECHO) '    ' IMPORTING CONTRIB hstore;
 	@$(PSQL_FULL_CMD) --single-transaction --file $(PG_CONTRIB_HSTORE) --quiet
-endif # PG_VERSION_9_1_PLUS
+endif # PG_VERSION_GE_9_1
 endif # ENABLE_CREATE_DATABASE
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),yes)

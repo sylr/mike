@@ -6,7 +6,7 @@
 
 DROP VIEW IF EXISTS mike.__pg_activity CASCADE;
 
-#ifdef PG_VERSION_9_2_PLUS
+#ifdef PG_VERSION_GE_9_2
 CREATE OR REPLACE VIEW mike.__pg_activity AS
 SELECT
     datname,
