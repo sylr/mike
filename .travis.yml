@@ -1,12 +1,12 @@
 language: c
 
 before_install:
+    - sudo service postgresql stop || true
     - sudo apt-get update -qq
     - sudo apt-get install -qq realpath build-essential autoconf postgresql-${POSTGRESQL_VERSION} postgresql-contrib-${POSTGRESQL_VERSION} postgresql-server-dev-${POSTGRESQL_VERSION} postgresql-plperl-${POSTGRESQL_VERSION} libpq-dev
     - test -z "${MAKE_DOC}" || sudo apt-get install -qq asciidoc source-highlight
 
 before_script:
-    - sudo service postgresql stop
     - sudo service postgresql start ${POSTGRESQL_VERSION}
 
 script:
