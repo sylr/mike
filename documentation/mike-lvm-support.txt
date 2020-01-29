@@ -7,7 +7,7 @@ mike-lvm-support - mike's lvm support
 
 DESCRIPTION
 -----------
-The 'LVM Support' for mike allow to share users' data accross multiple smaller tables
+The 'LVM Support' for mike allow to share users' data across multiple smaller tables
 of the same kind instead of having all users' data in the same set of unique tables
 in order to reduce the amount of time spent to search user data.
 

@@ -18,7 +18,7 @@ operations.
 
 In order to be scalable Mike relies on the 'replication' capabilities of PostgreSQL '9.x'.
 As of today, PostgreSQL 9.x has no Debian stable package so Mike is 'compatible'
-with Postgresql '8.4.x'. This compatiblity will probably be 'dropped' the day that '9.x'
+with Postgresql '8.4.x'. This compatibility will probably be 'dropped' the day that '9.x'
 becomes stable in Debian repository.
 
 .Architecture

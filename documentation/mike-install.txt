@@ -55,7 +55,7 @@ Debian requirements
   - postgresql-plperl-<version>
   - libpq-dev
   - asciidoc
-  - source-highlight (recomended, for documentation)
+  - source-highlight (recommended, for documentation)
   - apgdiff (optional)
   - git-core (optional, for development)
   - gource (optional, for development)

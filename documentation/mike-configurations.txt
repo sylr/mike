@@ -28,7 +28,7 @@ possible values :
  * 'user_count' : use the lv with the less users
  * 'live_tuples' : use the lv with the less data
 
-When creating a database and populating users without data it is prefered to use
+When creating a database and populating users without data it is preferred to use
 the 'user_count' mode otherwise all the users will end up in the same lv. The 'live_tuples'
 mode should only be considered after a certain period of production to balance the
 amount of data.

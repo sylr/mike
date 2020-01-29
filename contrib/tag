@@ -63,7 +63,7 @@ done
 
 # checking current repo state
 if [ -n "$($GIT status --porcelain)" ]; then
-    die "Your tree is dirty or the index has not been commited"
+    die "Your tree is dirty or the index has not been committed"
 fi
 
 LAST_TAG=$($GIT describe --match "v[0-9]*.[0-9]*.[0-9]*" --no-abbrev 2>/dev/null)
