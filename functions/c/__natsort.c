@@ -44,52 +44,42 @@ Datum __natsort(PG_FUNCTION_ARGS)
     /*
      * compute size of output
      */
-    while (iPtr < size)
-    {
+    while (iPtr < size) {
         c = input[iPtr++];
 
-        if (state) // NUM state
-        {
-            if ((c >= '0') && (c  <= '9'))
-            {
+        // NUM state
+        if (state)  {
+            if ((c >= '0') && (c  <= '9')) {
                 counter++;
             }
-            else
-            {
+            else {
                 state = 0;
                 result_size++;
 
-                if (counter < NATSORT_PADDING)
-                {
+                if (counter < NATSORT_PADDING) {
                     result_size += NATSORT_PADDING;
                 }
-                else
-                {
+                else {
                     result_size += counter;
                 }
             }
         }
-        else // non NUM state
-        {
-            if ((c >= '0') && (c  <= '9'))
-            {
+        // non NUM state
+        else {
+            if ((c >= '0') && (c  <= '9')) {
                 counter = state = 1;
             }
-            else
-            {
+            else {
                 result_size++;
             }
         }
     }
 
-    if (state)
-    {
-        if (counter < NATSORT_PADDING)
-        {
+    if (state) {
+        if (counter < NATSORT_PADDING) {
             result_size += NATSORT_PADDING;
         }
-        else
-        {
+        else {
             result_size += counter;
         }
     }
@@ -103,38 +93,30 @@ Datum __natsort(PG_FUNCTION_ARGS)
     /*
      * compute output result
      */
-    while (iPtr < size)
-    {
+    while (iPtr < size) {
         c = input[iPtr++];
 
-        if (state) // NUM state
-        {
-            if ((c >= '0') && (c <= '9'))
-            {
+        // NUM state
+        if (state)  {
+            if ((c >= '0') && (c <= '9')) {
                 counter++;
             }
-            else
-            {
+            else {
                 state = 0;
 
-                if (counter < NATSORT_PADDING)
-                {
+                if (counter < NATSORT_PADDING) {
                     n = NATSORT_PADDING - counter;
 
-                    for (i = 0; i < n; i++)
-                    {
+                    for (i = 0; i < n; i++) {
                         output[oPtr++] = '0';
                     }
 
-                    for (i = 0; i < counter; i++)
-                    {
+                    for (i = 0; i < counter; i++) {
                         output[oPtr++] = input[iPtr - 1 - counter + i];
                     }
                 }
-                else
-                {
-                    for (i = 0; i < counter; i++)
-                    {
+                else {
+                    for (i = 0; i < counter; i++) {
                         output[oPtr++] = input[iPtr - 1 - counter + i];
                     }
                 }
@@ -142,39 +124,31 @@ Datum __natsort(PG_FUNCTION_ARGS)
                 output[oPtr++] = c;
             }
         }
-        else // non NUM state
-        {
-            if ((c >= '0') && (c <= '9'))
-            {
+        // non NUM state
+        else {
+            if ((c >= '0') && (c <= '9')) {
                 counter = state = 1;
             }
-            else
-            {
+            else {
                 output[oPtr++] = c;
             }
         }
     }
 
-    if (state)
-    {
-        if (counter < NATSORT_PADDING)
-        {
+    if (state) {
+        if (counter < NATSORT_PADDING) {
             n = NATSORT_PADDING - counter;
 
-            for (i = 0; i < n; i++)
-            {
+            for (i = 0; i < n; i++) {
                 output[oPtr++] = '0';
             }
 
-            for (i = 0; i < counter; i++)
-            {
+            for (i = 0; i < counter; i++) {
                 output[oPtr++] = input[size - counter + i];
             }
         }
-        else
-        {
-            for (i = 0; i < counter; i++)
-            {
+        else {
+            for (i = 0; i < counter; i++) {
                 output[oPtr++] = input[size - counter + i];
             }
         }
