@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION mike.__get_random_volume(
 -- max size has not been reached with a security window.
 
 -- the randomness instead of selecting the least used volume allows
--- to spread to io load due to uploads and asynchronous treatements
+-- to spread to io load due to uploads and asynchronous treatments
 
 DECLARE
     v_percentage    bigint;

@@ -12,7 +12,7 @@ of the same kind instead of having all users' data in the same set of unique tab
 in order to reduce the amount of time spent to search user data.
 
 This feature is currently 'experimental' as it does not perform well due to some
-PostgreSQL limitation that prevent the use of contraint exclusion when an array
+PostgreSQL limitation that prevent the use of constraint exclusion when an array
 used in a WHERE clause is greater than 100 elements, the elements here being users
 identifier. This limit can be removed by increasing the MAX_SAOP_ARRAY_SIZE define
 in 'src/backend/optimizer/util/predtest.c' but that is not recommended.

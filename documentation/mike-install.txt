@@ -105,7 +105,7 @@ Mike relies on 'autotools' and 'make' for easy install.
 First, you have to generate the 'configure' script by running the 'autoconf' tool
 at the 'root' of Mike. Then, launch the './configure' script with the desired options,
 it will check for external programs needed for Mike's install and prepare the 'Makefile'
-with 'configuration' values passed as arguments. Proceed by lauching 'make' with
+with 'configuration' values passed as arguments. Proceed by launching 'make' with
 the desired target, the default one being 'install'.
 
 WARNING: The 'PostgreSQL user' used to install Mike must be 'superuser' because mike

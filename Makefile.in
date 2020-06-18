@@ -353,7 +353,7 @@ endif # PG_VERSION_GE_9_1
 endif # ENABLE_CREATE_DATABASE
 # create schema
 ifeq ($(ENABLE_CREATE_SCHEMA),yes)
-	@$(ECHO) '    ' DROPING SCHEMA mike IF EXISTS;
+	@$(ECHO) '    ' DROPPING SCHEMA mike IF EXISTS;
 	@$(ECHO) "DROP SCHEMA IF EXISTS mike CASCADE;" | $(PSQL_FULL_CMD) --quiet
 	@$(ECHO) '    ' CREATING SCHEMA mike;
 	@$(ECHO) "CREATE SCHEMA mike;" | $(PSQL_FULL_CMD) --quiet
@@ -489,7 +489,7 @@ install-man:
 
 clean-doc:
 	@$(MAKE) --no-print-directory -C documentation clean
-	@$(RM) $(RM_EXTRA) documention/Makefile
+	@$(RM) $(RM_EXTRA) documentation/Makefile
 
 # -- test ----------------------------------------------------------------------
 

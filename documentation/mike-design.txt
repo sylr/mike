@@ -48,7 +48,7 @@ becomes stable in Debian repository.
 All the write operations are made by calling the 'Master server'. All the other read
 operations are made by calling one of the 'Slave servers' using a consistent hash
 algorithm to select the same server for each user in order to optimize the cache
-of each slave (chosing servers randomly would cause to have the same data in several
+of each slave (choosing servers randomly would cause to have the same data in several
 servers' cache).
 
 .Consistent Hash Algorithm example

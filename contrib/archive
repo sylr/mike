@@ -96,7 +96,7 @@ $GIT archive --format=tar --prefix=mike-$LAST_TAG/ -o mike-$LAST_TAG.tar $REF_NA
 echo "uncompressing mike-$LAST_TAG.tar ..."
 tar xf mike-$LAST_TAG.tar
 
-# adding unversionned file
+# adding unversioned file
 echo "adding untracked version files ..."
 [ -f $MIKE_PATH/MIKE_VERSION_FILE ] && cp $MIKE_PATH/MIKE_VERSION_FILE $MIKE_PATH/mike-$LAST_TAG/
 [ -f $MIKE_PATH/MIKE_TAG_DIFF_FILE ] && cp $MIKE_PATH/MIKE_TAG_DIFF_FILE $MIKE_PATH/mike-$LAST_TAG/

@@ -45,7 +45,7 @@ LOT_OF_DIR=$($PSQL_FULL_CMD -c "SELECT * FROM mike.__make_lot_of_directories($ID
 dieifnzero $? "something went wrong when making lot of directories"
 
 RANDOM_DIR=$($PSQL_FULL_CMD -c "SELECT id_inode FROM mike.directory WHERE id_user = $ID_USER AND treepath ~ '*{3}' ORDER BY random() LIMIT 1;")
-dieifnzero $? "something went wrong when chosing random directory"
+dieifnzero $? "something went wrong when choosing random directory"
 
 cat <<EOT | $PSQL_FULL_CMD -f - --single-transaction > /dev/null
     -- removing some dir

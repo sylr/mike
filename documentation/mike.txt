@@ -50,7 +50,7 @@ Mike's releases' names follow the following pattern :
 
  - 'Major' releases contain new major feature(s) and 'are not' constrained to respect 'backward compatibility'.
  - 'Minor' releases contain new feature(s) and 'are' constrained to respect 'backward compatibility'.
- - 'Maintenance' realeases contain fixes for Major and Minor releases.
+ - 'Maintenance' releases contain fixes for Major and Minor releases.
  - 'Release Candidate' releases are milestones before upcoming Major, Minor or Maint releases.
 
 [NOTE]

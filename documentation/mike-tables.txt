@@ -65,7 +65,7 @@ group::
  +
 info::
  +
-    Info gives information about the version of the database and its deployement.
+    Info gives information about the version of the database and its deployment.
  +
  +
 inode::

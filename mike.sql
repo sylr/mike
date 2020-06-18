@@ -12,7 +12,7 @@
 
 -- mike ------------------------------------------------------------------------
 
-COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient vitual file system';
+COMMENT ON SCHEMA mike IS 'mike, a lightweight, robust, efficient virtual file system';
 
 -- mike.info -------------------------------------------------------------------
 
